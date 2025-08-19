@@ -1,0 +1,64 @@
+.nav-bar-container {
+  background-color: #026aa7;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 14px;
+}
+.nav-buttons-container {
+  display: flex;
+  gap: 4px;
+  border: 1px solid green;
+}
+.logout-button-and-profile {
+  display: flex;
+  gap: 4px;
+}
+.home-link {
+  width: 24px;
+  height: 24px;
+}
+.organization-button {
+  width: 24px;
+  height: 24px;
+  padding: 0px 0px 0px 0px;
+  background-color: transparent;
+  border: 0px;
+}
+.search-icon {
+  width: 24px;
+  height: 24px;
+}
+.trello-logo-title-icon {
+  width: 109px;
+  height: 25px;
+}
+.logout-button {
+  padding: 0px;
+  width: 53px;
+  height: 24px;
+  border: 0px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: transparent;
+  border: 1px solid green;
+}
+
+.profile-bg {
+  background-color: #bae3ff;
+  border-radius: 14px;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid green;
+}
+.profile-text {
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  color: #0967d2;
+  font-size: 12px;
+  font-weight: 600;
+}

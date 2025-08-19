@@ -37,6 +37,7 @@ class LoginForm extends Component {
   }
 
   setAccessTokenInLocalStorage = token => {
+    console.log(token)
     localStorage.setItem('pa_token', token)
     localStorage.setItem('pa_expires', new Date().getTime() + 60)
     window.location.replace('/')
@@ -63,12 +64,11 @@ class LoginForm extends Component {
 
   openLoginModal = () => {
     // YOU NEED TO ADD YOUR API KEY HERE
-    const apiKey = 'ADD YOUR API KEY HERE'
+    const apiKey = '23335c9526346209ad2255ae52d79303'
 
     const returnURL = this.getReturnURL()
 
     const url = `https://trello.com/1/OAuthAuthorizeToken?expiration=never&name=TaskManager&scope=read,write,account&key=${apiKey}&callback_method=fragment&return_url=${returnURL}`
-
     window.open(url, '_self', ``)
   }
 
@@ -82,7 +82,7 @@ class LoginForm extends Component {
       <div className="login-form-container">
         <div className="title-container">
           <img
-            src="https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-login.png"
+            src="https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-logo.png"
             className="login-website-title-logo"
             alt="title logo"
           />
@@ -90,7 +90,7 @@ class LoginForm extends Component {
         </div>
         <form className="form-container" onSubmit={this.submitForm}>
           <img
-            src="https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-logo.png"
+            src="https://assets.ccbp.in/frontend/react-js/task-manager-mini-project/task-manager-login.png"
             className="login-website-logo-desktop-image"
             alt="website logo"
           />
