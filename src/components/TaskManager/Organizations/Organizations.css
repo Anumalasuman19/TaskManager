@@ -1,0 +1,40 @@
+.workspace-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 16px;
+  animation: slideUp 0.3s ease;
+}
+
+.workspace-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0px;
+  margin-bottom: 24px;
+}
+
+.workspace-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7b8794;
+  margin: 0px;
+  padding: 0px;
+}
+
+.close-btn {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.workspace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

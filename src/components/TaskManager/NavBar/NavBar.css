@@ -9,7 +9,6 @@
 .nav-buttons-container {
   display: flex;
   gap: 4px;
-  border: 1px solid green;
 }
 .logout-button-and-profile {
   display: flex;
@@ -43,7 +42,6 @@
   font-size: 14px;
   font-weight: 500;
   background-color: transparent;
-  border: 1px solid green;
 }
 
 .profile-bg {
@@ -52,7 +50,6 @@
   padding: 4px;
   width: 24px;
   height: 24px;
-  border: 1px solid green;
 }
 .profile-text {
   padding: 0px;

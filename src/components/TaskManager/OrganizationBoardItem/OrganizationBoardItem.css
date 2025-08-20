@@ -1,0 +1,20 @@
+.board-item {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 49px 0px 49px 0px;
+  cursor: hand;
+  text-decoration: none;
+}
+
+.board-item:hover {
+  background-color: #f3f4f6;
+}
+
+.board-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0079bf;
+  text-align: center;
+  margin: 0px;
+  text-decoration: none;
+}

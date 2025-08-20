@@ -1,0 +1,33 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* full screen height */
+  background-color: #0a67a3; /* blue background like your screenshot */
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #3998dc; /* light grey */
+  border-top: 6px solid #039eff; /* blue */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  margin-top: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

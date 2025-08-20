@@ -1,4 +1,5 @@
 .home-page-content-container {
+  height: 100vh;
   background-color: #0079bf;
   padding: 16px 16px 20px 16px;
 }
@@ -29,32 +30,4 @@
   font-size: 18px;
   font-weight: 600;
   color: #ffffff;
-}
-.sub-heading-container {
-  display: flex;
-  gap: 8px;
-}
-.sub-heading {
-  margin: 0px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffffff;
-}
-.create-new-board-button {
-  background-color: #ffffff;
-  border-radius: 4px;
-  border: 0px;
-  padding: 49px 70px 49px 70px;
-  display: flex;
-  gap: 8px;
-}
-.plus-icon {
-  width: 24px;
-  height: 24px;
-}
-.create-new-board-text {
-  margin: 0px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #475569;
 }

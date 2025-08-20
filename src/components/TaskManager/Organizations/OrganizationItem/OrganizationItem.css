@@ -1,0 +1,32 @@
+.workspace-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f9fafb;
+  border-radius: 4px;
+  cursor: hand;
+  transition: background 0.2s ease;
+}
+
+.workspace-item:hover {
+  background-color: #e5e7eb;
+}
+
+.workspace-item.active {
+  background-color: #e0eff7;
+}
+
+.workspace-icon {
+  padding: 22px;
+  align-self: stretch;
+  background-color: #0079bf;
+  border-radius: 4px 0px 0px 4px;
+}
+
+.workspace-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #475569;
+  padding: 0px;
+  margin: 0px;
+}
