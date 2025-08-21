@@ -15,7 +15,7 @@ const TaskManager = () => {
   const [activeOrganizationId, setActiveOrganizationId] = useState('')
   const [showPopup, setShowPopup] = useState(false)
   const [showCreateBoardPopup, setShowCreateBoardPopup] = useState(false)
-  const [isBoardAddedOrCall, setIsBoardAddedOrCall] = useState('')
+  const [noOfTimesBoardsAdded, setNoOfTimesBoardsAdded] = useState(0)
 
   const getOrganizationData = async () => {
     setOrganizationDataApiStatus(ApiStatus.inProgress)
@@ -60,6 +60,7 @@ const TaskManager = () => {
     const data = await response.json()
     console.log('✅ API Response:', data)
     setShowCreateBoardPopup(false)
+    setNoOfTimesBoardsAdded(prevState => prevState + 1)
     return null
   }
 
@@ -84,7 +85,7 @@ const TaskManager = () => {
               <OrganizationBoardsSection
                 organizationId={activeOrganizationId}
                 onClickOfCreateBoard={onClickOfCreateNewBoard}
-                isBoardAdded={isBoardAddedOrCall}
+                noOfTimesAdded={noOfTimesBoardsAdded}
               />
             ) : (
               <></>

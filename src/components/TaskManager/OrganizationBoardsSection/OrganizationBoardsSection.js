@@ -5,7 +5,7 @@ import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardIte
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 
 const OrganizationBoardsSection = props => {
-  const {organizationId, onClickOfCreateBoard, isBoardAdded} = props
+  const {organizationId, onClickOfCreateBoard, noOfTimesAdded} = props
   const [organizationBoardsData, setOrganizationBoardsData] = useState()
   const [
     organizationBoardsApiStatus,
@@ -40,7 +40,7 @@ const OrganizationBoardsSection = props => {
   }
   useEffect(() => {
     getOrganizationBoards()
-  }, [])
+  }, [noOfTimesAdded])
   return (
     <div className="boards-container">
       <div className="sub-heading-container">

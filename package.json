@@ -14,7 +14,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-router-dom": "5.3.4",
-    "uuid": "11.1.0"
+    "uuid": "8.3.2"
   },
   "devDependencies": {
     "eslint-config-airbnb": "18.2.1",
@@ -65,5 +65,10 @@
       "Firefox ESR",
       "not ie < 11"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "uuid": "3.4.0"
+    }
   }
 }
