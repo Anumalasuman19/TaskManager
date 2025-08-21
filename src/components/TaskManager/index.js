@@ -12,32 +12,23 @@ const TaskManager = () => {
   const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
     ApiStatus.initial,
   )
-  const [activeOrganizationId, setActiveOrganizationId] = useState('')
   const [showPopup, setShowPopup] = useState(false)
   const [showCreateBoardPopup, setShowCreateBoardPopup] = useState(false)
   const [noOfTimesBoardsAdded, setNoOfTimesBoardsAdded] = useState(0)
 
-  const getOrganizationData = async () => {
-    setOrganizationDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
-    const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/members/me/organizations?key=${apiKey}&token=${token}`
-    const options = {
-      method: 'GET',
-    }
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-    if (apiResponse.ok) {
-      setOrganizationData(jsonResponse)
-      setActiveOrganizationId(jsonResponse[0].id)
-      setOrganizationDataApiStatus(ApiStatus.success)
-      console.log(jsonResponse)
-    }
+  const onClickOfOrganizations = organizationsData => {
+    setOrganizationData(organizationsData)
+    setOrganizationDataApiStatus(ApiStatus.success)
+    console.log('Got Organization Data')
   }
-  const onClickOfOrganizations = () => {
+  const openOrganizationsPopUp = () => {
     setShowPopup(true)
+    console.log('Organization Popup Opened')
   }
   const getWorkspaceName = () => {
+    const activeOrganizationId = localStorage.getItem('organization_id')
+    console.log(activeOrganizationId)
+    console.log('Active ArganizationId')
     const organization = organizationData.find(
       item => item.id === activeOrganizationId,
     )
@@ -83,7 +74,6 @@ const TaskManager = () => {
             </div>
             {organizationDataApiStatus === ApiStatus.success ? (
               <OrganizationBoardsSection
-                organizationId={activeOrganizationId}
                 onClickOfCreateBoard={onClickOfCreateNewBoard}
                 noOfTimesAdded={noOfTimesBoardsAdded}
               />
@@ -95,7 +85,6 @@ const TaskManager = () => {
                 <Organizations
                   workspacesOrganizations={organizationData}
                   onClose={() => setShowPopup(false)}
-                  activeOrganizationId={activeOrganizationId}
                 />
               )}
               {showCreateBoardPopup && (
@@ -114,14 +103,12 @@ const TaskManager = () => {
     }
     return sectionView
   }
-  useEffect(() => {
-    getOrganizationData()
-  }, [])
 
   return (
     <div className="home-page-container">
       <NavBar
-        onClickOfOrganizations={onClickOfOrganizations}
+        getOrganizationsData={onClickOfOrganizations}
+        openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showPopup}
       />
       {getContentContainerView()}

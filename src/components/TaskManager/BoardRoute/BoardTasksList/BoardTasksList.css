@@ -18,7 +18,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 7px 48px 7px 8px;
+  padding: 7px 48px 7px 0px;
   display: flex;
   gap: 4px;
 }
@@ -26,6 +26,7 @@
 .add-task:hover {
   background-color: #cbd5e1;
   border-radius: 4px;
+  padding: 7px 48px 7px 8px;
   border: 0px;
 }
 .add-task-text {
@@ -43,4 +44,16 @@
   font-weight: 500;
   color: #475569;
   margin: 0px;
+}
+.task-list-body {
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-bottom: 12px;
+}
+.cards-list {
+  list-style-type: none;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }

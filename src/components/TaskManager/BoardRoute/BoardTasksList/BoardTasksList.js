@@ -1,10 +1,28 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import './BoardTasksList.css'
 import TaskCard from '../TaskCard/TaskCard'
-import ApiStatus from '../../CommonComponents/Constants'
+import AddTask from '../AddTask/AddTask'
 
 const BoardTasksList = props => {
-  const {listId, listName} = props
+  const {listId, listName, cards, onTaskAdded} = props
+  const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
+
+  const onClickOfAddTask = () => {
+    setIsNewTaskEntryPopUpOpen(true)
+  }
+
+  const onAddTask = async taskName => {
+    const apiKey = '23335c9526346209ad2255ae52d79303'
+    const token = localStorage.getItem('pa_token')
+    const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${token}&name=${taskName}&idList=${listId}`
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({taskName}),
+    })
+    const data = await response.json()
+    setIsNewTaskEntryPopUpOpen(false)
+    onTaskAdded()
+  }
 
   return (
     <div className="task-list" id={listId}>
@@ -16,16 +34,32 @@ const BoardTasksList = props => {
           className="list-menu-dots"
         />
       </div>
+      <div className="task-list-body">
+        <ul className="cards-list">
+          {cards.map(task => (
+            <TaskCard key={task.id} name={task.name} />
+          ))}
+        </ul>
+      </div>
 
       <div className="task-list-footer">
-        <button type="button" className="add-task">
-          <img
-            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754226/add-task-plus-icon_ftfcmq.png"
-            alt="plus-icon"
-            className="add-task-plus-icon"
+        {isNewTaskEntryPopUpOpen ? (
+          <AddTask
+            onClickOfAddTask={onAddTask}
+            onClickOfClose={() => {
+              setIsNewTaskEntryPopUpOpen(false)
+            }}
           />
-          <p className="add-task-text">Add Task</p>
-        </button>
+        ) : (
+          <button type="button" className="add-task" onClick={onClickOfAddTask}>
+            <img
+              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754226/add-task-plus-icon_ftfcmq.png"
+              alt="plus-icon"
+              className="add-task-plus-icon"
+            />
+            <p className="add-task-text">Add Task</p>
+          </button>
+        )}
       </div>
     </div>
   )

@@ -2,7 +2,8 @@ import OrganizationItem from './OrganizationItem/OrganizationItem'
 import './Organizations.css'
 
 const Organizations = props => {
-  const {workspacesOrganizations, onClose, activeOrganizationId} = props
+  const {workspacesOrganizations, onClose} = props
+  const activeOrganizationId = localStorage.getItem('organization_id')
   return (
     <div className="workspace-popup">
       <div className="workspace-popup-header">
@@ -11,7 +12,7 @@ const Organizations = props => {
           ×
         </button>
       </div>
-      <div className="workspace-list">
+      <ul className="workspace-list">
         {workspacesOrganizations.map(ws => (
           <OrganizationItem
             key={ws.id}
@@ -19,7 +20,7 @@ const Organizations = props => {
             isActive={activeOrganizationId === ws.id}
           />
         ))}
-      </div>
+      </ul>
     </div>
   )
 }

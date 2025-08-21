@@ -5,7 +5,7 @@ import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardIte
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 
 const OrganizationBoardsSection = props => {
-  const {organizationId, onClickOfCreateBoard, noOfTimesAdded} = props
+  const {onClickOfCreateBoard, noOfTimesAdded} = props
   const [organizationBoardsData, setOrganizationBoardsData] = useState()
   const [
     organizationBoardsApiStatus,
@@ -16,8 +16,8 @@ const OrganizationBoardsSection = props => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
     const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
-    console.log(organizationId)
-    const url = `https://api.trello.com/1/organizations/${organizationId}/boards?key=${apiKey}&token=${token}`
+    const activeOrganizationId = localStorage.getItem('organization_id')
+    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${apiKey}&token=${token}`
     const options = {
       method: 'GET',
     }
@@ -53,13 +53,15 @@ const OrganizationBoardsSection = props => {
       </div>
       {organizationBoardsApiStatus === ApiStatus.success ? (
         <div className="board-list">
-          {organizationBoardsData.map(board => (
-            <OrganizationBoardItem
-              key={board.id}
-              id={board.id}
-              boardName={board.name}
-            />
-          ))}
+          <ul className="boards-list">
+            {organizationBoardsData.map(board => (
+              <OrganizationBoardItem
+                key={board.id}
+                id={board.id}
+                boardName={board.name}
+              />
+            ))}
+          </ul>
           <button
             type="button"
             className="create-new-board-button"

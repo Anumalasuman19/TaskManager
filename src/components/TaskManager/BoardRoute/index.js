@@ -5,6 +5,7 @@ import Organizations from '../Organizations/Organizations'
 import ApiStatus from '../CommonComponents/Constants'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 import BoardTaskList from './BoardTasksList/BoardTasksList'
+import AddList from './AddList/AddList'
 
 const Board = props => {
   const [showPopup, setShowPopup] = useState(false)
@@ -21,6 +22,7 @@ const Board = props => {
   const [tasksDataApiStatus, setTasksDataApiStatus] = useState(
     ApiStatus.initial,
   )
+  const [isNewListEntryPopUpOpen, setIsNewListEntryPopUpOpen] = useState(false)
 
   const onClickOfOrganizations = () => {
     setShowPopup(true)
@@ -41,7 +43,6 @@ const Board = props => {
       setOrganizationDataApiStatus(ApiStatus.success)
     }
   }
-
   const getBoardsList = async () => {
     setBoardListsDataApiStatus(ApiStatus.inProgress)
     const apiKey = '23335c9526346209ad2255ae52d79303'
@@ -82,14 +83,25 @@ const Board = props => {
     }
   }
 
-  const groupCardsByList = () =>
-    tasksData.reduce((groups, card) => {
-      const listId = card.idList
-      return {
-        ...groups,
-        [listId]: [...(groups[listId] || []), card],
-      }
-    }, {})
+  const onClickOfAddListButton = () => {
+    setIsNewListEntryPopUpOpen(true)
+  }
+  const addListApi = async listName => {
+    const apiKey = '23335c9526346209ad2255ae52d79303'
+    const token = localStorage.getItem('pa_token')
+    const {match} = props
+    const {params} = match
+    const {id} = params
+    const url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${token}&name=${listName}`
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({listName}),
+    })
+
+    const data = await response.json()
+    setIsNewListEntryPopUpOpen(false)
+    getBoardsList()
+  }
 
   const getContentContainerView = () => {
     let sectionView
@@ -101,17 +113,44 @@ const Board = props => {
         sectionView = (
           <div className="board-lists-container">
             <ul className="lists-container">
-              {boardListsData.map(list => (
-                <BoardTaskList
-                  key={list.id}
-                  listId={list.id}
-                  listName={list.name}
-                />
-              ))}
+              {boardListsData.map(list => {
+                // filter cards belonging to this list
+                const listCards = tasksData
+                  ? tasksData.filter(card => card.idList === list.id)
+                  : []
+
+                return (
+                  <BoardTaskList
+                    key={list.id}
+                    listId={list.id}
+                    listName={list.name}
+                    cards={listCards}
+                    onTaskAdded={getTasks}
+                  />
+                )
+              })}
             </ul>
-            <button type="button" className="add-list-button">
-              Add list
-            </button>
+            {isNewListEntryPopUpOpen ? (
+              <AddList
+                onAddList={addListApi}
+                onClose={() => {
+                  setIsNewListEntryPopUpOpen(false)
+                }}
+              />
+            ) : (
+              <button
+                type="button"
+                className="add-list-button"
+                onClick={onClickOfAddListButton}
+              >
+                <img
+                  src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755762120/white-plus-icon_f1tutx.png"
+                  alt="add-list-plus-icon"
+                  className="add-list-plus-icon"
+                />
+                <p className="add-list-text">Add list</p>
+              </button>
+            )}
           </div>
         )
         break

@@ -1,0 +1,42 @@
+.add-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #f4f5f7;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.add-list-input {
+  padding: 6px 6px 6px 16px;
+  border: 1px solid #0967d2;
+  border-radius: 4px;
+  outline: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-list-btn {
+  background-color: #1d4ed8;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #64748b;
+}

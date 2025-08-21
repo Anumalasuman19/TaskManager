@@ -34,6 +34,9 @@
 }
 
 .workspace-list {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
   display: flex;
   flex-direction: column;
   gap: 8px;

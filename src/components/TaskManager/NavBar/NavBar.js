@@ -1,14 +1,57 @@
+import {useEffect, useState} from 'react'
 import {Link, withRouter} from 'react-router-dom'
 import './NavBar.css'
 
 const NavBar = props => {
-  const {onClickOfOrganizations, showOrganizationPopup} = props
+  const {
+    getOrganizationsData,
+    showOrganizationPopup,
+    openOrganizationsPopUp,
+  } = props
+  const [initialOrganizationId, setInitialOrganizationId] = useState('')
 
   const onClickOfLogout = () => {
     localStorage.removeItem('pa_token')
     const {history} = props
     history.replace('/login')
   }
+  const storeInitialOrganizationStoreId = orgId => {
+    console.log(initialOrganizationId)
+    console.log('Initial id stored')
+    localStorage.setItem('organization_id', orgId)
+  }
+
+  const OrganizationsDataApi = async () => {
+    const apiKey = '23335c9526346209ad2255ae52d79303'
+    const token = localStorage.getItem('pa_token')
+    const url = `https://api.trello.com/1/members/me/organizations?key=${apiKey}&token=${token}`
+    const options = {method: 'GET'}
+
+    const apiResponse = await fetch(url, options)
+    const jsonResponse = await apiResponse.json()
+
+    if (apiResponse.ok) {
+      getOrganizationsData(jsonResponse)
+      const firstOrgId = jsonResponse[0].id
+      setInitialOrganizationId(firstOrgId)
+      return firstOrgId // ✅ return it so useEffect can use it
+    }
+    return null
+  }
+
+  const onClickOfOrganizations = () => {
+    OrganizationsDataApi()
+    openOrganizationsPopUp()
+  }
+  useEffect(() => {
+    const fetchAndStoreInitialOrg = async () => {
+      const orgId = await OrganizationsDataApi() // return id from API
+      storeInitialOrganizationStoreId(orgId) // store only once
+    }
+
+    fetchAndStoreInitialOrg()
+  }, [])
+
   return (
     <div className="nav-bar-container">
       <div className="nav-buttons-container">
