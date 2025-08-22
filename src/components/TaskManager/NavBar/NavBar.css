@@ -4,19 +4,19 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 16px;
-  gap: 14px;
 }
 .nav-buttons-container {
   display: flex;
   gap: 4px;
 }
-.logout-button-and-profile {
+.logout-button-and-profile-and-search-input {
   display: flex;
   gap: 4px;
 }
 .home-link {
   width: 24px;
   height: 24px;
+  text-decoration: none;
 }
 .organization-button {
   width: 24px;
@@ -58,4 +58,120 @@
   color: #0967d2;
   font-size: 12px;
   font-weight: 600;
+}
+.no-mobile-view-display {
+  display: none;
+}
+@media (min-width: 769px) {
+  .no-desktop-view-display {
+    display: none;
+  }
+  .nav-bar-container {
+    padding: 25px 48px;
+  }
+  .board-btn {
+    padding: 8px 16px;
+    border: none;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background-color: #4e97c2;
+    border-radius: 4px;
+  }
+  .board-text {
+    margin: 0px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #ffffff;
+  }
+  .home-link {
+    width: 41px;
+    height: 41px;
+  }
+  .home-icon {
+    width: 41px;
+    height: 41px;
+  }
+  .trello-logo-title-icon {
+    width: 184px;
+    height: 42px;
+  }
+  .logout-button {
+    font-size: 18px;
+    width: 69px;
+  }
+  .profile-bg {
+    border-radius: 20px;
+    text-align: center;
+    padding: 12px 0px 0px 0px;
+    width: 41px;
+    height: 41px;
+  }
+  .organization-dropdown {
+    position: absolute;
+  }
+  .org-dropdown-btn {
+    background-color: #4e97c2;
+    border: 0px;
+    padding: 8px 12px 9px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .org-dropdown-btn:hover {
+    background-color: #2fa9f1;
+  }
+  .org-dropdown-wrapper {
+    position: relative;
+    display: block;
+  }
+  .organization-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0px;
+  }
+  .dropdown-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    background-color: #4e97c2;
+    padding: 8px 16px;
+    border-radius: 4px;
+    width: 264px;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    color: #fff;
+  }
+
+  .search-box ::placeholder {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .logout-button-and-profile-and-search-input {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .nav-buttons-container {
+    gap: 12px;
+  }
 }

@@ -1,9 +1,15 @@
+.home-page-container {
+  height: 100vh;
+  background-color: #0079bf;
+  overflow-y: auto;
+}
 .home-page-content-container {
   background-color: #0079bf;
-  padding: 16px 16px 20px 16px;
 }
 .organization-member-details {
+  padding: 16px;
   display: flex;
+  align-items: center;
   gap: 12px;
 }
 .organization-member-profile-bg {
@@ -29,4 +35,14 @@
   font-size: 18px;
   font-weight: 600;
   color: #ffffff;
+}
+@media (min-width: 769px) {
+  .home-page-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 150px 32px 150px;
+  }
+  .organization-member-details {
+    align-self: center;
+  }
 }

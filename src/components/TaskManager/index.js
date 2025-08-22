@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import NavBar from './NavBar/NavBar'
 import ApiStatus from './CommonComponents/Constants'
 import Organizations from './Organizations/Organizations'
@@ -7,28 +7,34 @@ import LoadingView from './CommonComponents/LoadingView/LoadingView'
 import CreateBoardPopUp from './CommonComponents/CreateBoardPopUp/CreateBoardPopUp'
 import './index.css'
 
-const TaskManager = () => {
+const TaskManager = props => {
   const [organizationData, setOrganizationData] = useState()
   const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
     ApiStatus.initial,
   )
-  const [showPopup, setShowPopup] = useState(false)
+  const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
   const [showCreateBoardPopup, setShowCreateBoardPopup] = useState(false)
   const [noOfTimesBoardsAdded, setNoOfTimesBoardsAdded] = useState(0)
 
+  const onChangeOrganization = () => {
+    const {history} = props
+    history.replace('/')
+  }
+
   const onClickOfOrganizations = organizationsData => {
     setOrganizationData(organizationsData)
-    setOrganizationDataApiStatus(ApiStatus.success)
-    console.log('Got Organization Data')
   }
+
+  const getOrganizationApiStatus = organizationApiStatus => {
+    setOrganizationDataApiStatus(organizationApiStatus)
+  }
+
   const openOrganizationsPopUp = () => {
-    setShowPopup(true)
-    console.log('Organization Popup Opened')
+    setShowOrganizationsPopup(true)
   }
+
   const getWorkspaceName = () => {
     const activeOrganizationId = localStorage.getItem('organization_id')
-    console.log(activeOrganizationId)
-    console.log('Active ArganizationId')
     const organization = organizationData.find(
       item => item.id === activeOrganizationId,
     )
@@ -38,18 +44,16 @@ const TaskManager = () => {
   const onClickOfCreateNewBoard = () => {
     setShowCreateBoardPopup(true)
   }
+
   const onClickOfCreateBoard = async name => {
     const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/boards?key=${apiKey}&token=${token}&name=${name}`
-
     const response = await fetch(url, {
       method: 'POST',
-      body: JSON.stringify({name}), // send board name
+      body: JSON.stringify({name}),
     })
-
     const data = await response.json()
-    console.log('✅ API Response:', data)
     setShowCreateBoardPopup(false)
     setNoOfTimesBoardsAdded(prevState => prevState + 1)
     return null
@@ -76,15 +80,17 @@ const TaskManager = () => {
               <OrganizationBoardsSection
                 onClickOfCreateBoard={onClickOfCreateNewBoard}
                 noOfTimesAdded={noOfTimesBoardsAdded}
+                isShowCreateBoardPopupOpen={showCreateBoardPopup}
               />
             ) : (
               <></>
             )}
             <div>
-              {showPopup && (
+              {showOrganizationsPopup && (
                 <Organizations
                   workspacesOrganizations={organizationData}
-                  onClose={() => setShowPopup(false)}
+                  onClose={() => setShowOrganizationsPopup(false)}
+                  onChangeOrganizationItem={onChangeOrganization}
                 />
               )}
               {showCreateBoardPopup && (
@@ -108,8 +114,9 @@ const TaskManager = () => {
     <div className="home-page-container">
       <NavBar
         getOrganizationsData={onClickOfOrganizations}
+        getOrganizationApiStatus={getOrganizationApiStatus}
         openOrganizationsPopUp={openOrganizationsPopUp}
-        showOrganizationPopup={showPopup}
+        showOrganizationPopup={showOrganizationsPopup}
       />
       {getContentContainerView()}
     </div>

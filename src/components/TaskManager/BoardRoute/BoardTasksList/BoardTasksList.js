@@ -19,7 +19,6 @@ const BoardTasksList = props => {
       method: 'POST',
       body: JSON.stringify({taskName}),
     })
-    const data = await response.json()
     setIsNewTaskEntryPopUpOpen(false)
     onTaskAdded()
   }

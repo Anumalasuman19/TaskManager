@@ -1,13 +1,44 @@
+import {useState} from 'react'
+import NavBar from '../TaskManager/NavBar/NavBar'
+import Organizations from '../TaskManager/Organizations/Organizations'
 import './PageNotFoundRoute.css'
 
-const PageNotFound = () => (
-  <div className="page-not-found-container">
-    <h1 className="page-not-found-title">Page Not Found</h1>
-    <p className="page-not-found-text">
-      This page may be private. If someone gave you this link, they may need to
-      invite you to one of their boards or teams.
-    </p>
-  </div>
-)
+const PageNotFound = props => {
+  const [organizationData, setOrganizationData] = useState()
+  const [showPopup, setShowPopup] = useState(false)
+  const onClickOfOrganizations = organizationsData => {
+    setOrganizationData(organizationsData)
+  }
+  const openOrganizationsPopUp = () => {
+    setShowPopup(true)
+  }
+  const onChangeOrganization = () => {
+    const {history} = props
+    history.replace('/')
+  }
+  return (
+    <div className="page-not-found">
+      <NavBar
+        getOrganizationsData={onClickOfOrganizations}
+        openOrganizationsPopUp={openOrganizationsPopUp}
+        showOrganizationPopup={showPopup}
+      />
+      <div className="page-not-found-container">
+        <h1 className="page-not-found-title">Page Not Found</h1>
+        <p className="page-not-found-text">
+          This page may be private. If someone gave you this link, they may need
+          to invite you to one of their boards or teams.
+        </p>
+      </div>
+      {showPopup && (
+        <Organizations
+          workspacesOrganizations={organizationData}
+          onClose={() => setShowPopup(false)}
+          onChangeOrganizationItem={onChangeOrganization}
+        />
+      )}
+    </div>
+  )
+}
 
 export default PageNotFound

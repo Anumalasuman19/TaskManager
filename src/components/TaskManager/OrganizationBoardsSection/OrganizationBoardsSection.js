@@ -5,7 +5,11 @@ import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardIte
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 
 const OrganizationBoardsSection = props => {
-  const {onClickOfCreateBoard, noOfTimesAdded} = props
+  const {
+    onClickOfCreateBoard,
+    noOfTimesAdded,
+    isShowCreateBoardPopupOpen,
+  } = props
   const [organizationBoardsData, setOrganizationBoardsData] = useState()
   const [
     organizationBoardsApiStatus,
@@ -26,9 +30,9 @@ const OrganizationBoardsSection = props => {
     if (apiResponse.ok) {
       setOrganizationBoardsData(jsonResponse)
       setOrganizationBoardsApiStatus(ApiStatus.success)
-      console.log('boards API')
     }
   }
+
   const getSubHeaderText = () => {
     let subHeader
     if (organizationBoardsData === null) {
@@ -38,6 +42,7 @@ const OrganizationBoardsSection = props => {
     }
     return subHeader
   }
+
   useEffect(() => {
     getOrganizationBoards()
   }, [noOfTimesAdded])
@@ -52,7 +57,7 @@ const OrganizationBoardsSection = props => {
         <h2 className="sub-heading">{getSubHeaderText()}</h2>
       </div>
       {organizationBoardsApiStatus === ApiStatus.success ? (
-        <div className="board-list">
+        <div className="boards-list-container">
           <ul className="boards-list">
             {organizationBoardsData.map(board => (
               <OrganizationBoardItem
@@ -61,19 +66,23 @@ const OrganizationBoardsSection = props => {
                 boardName={board.name}
               />
             ))}
+            {isShowCreateBoardPopupOpen === false && (
+              <li>
+                <button
+                  type="button"
+                  className="create-new-board-button"
+                  onClick={onClickOfCreateBoard}
+                >
+                  <img
+                    src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png"
+                    alt="plus-icon"
+                    className="plus-icon"
+                  />
+                  <p className="create-new-board-text">Create new board</p>
+                </button>
+              </li>
+            )}
           </ul>
-          <button
-            type="button"
-            className="create-new-board-button"
-            onClick={onClickOfCreateBoard}
-          >
-            <img
-              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png"
-              alt="plus-icon"
-              className="plus-icon"
-            />
-            <p className="create-new-board-text">Create new board</p>
-          </button>
         </div>
       ) : (
         <LoadingView />

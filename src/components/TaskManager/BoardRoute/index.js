@@ -8,12 +8,8 @@ import BoardTaskList from './BoardTasksList/BoardTasksList'
 import AddList from './AddList/AddList'
 
 const Board = props => {
-  const [showPopup, setShowPopup] = useState(false)
   const [organizationData, setOrganizationData] = useState()
-  const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
-    ApiStatus.initial,
-  )
-  const [activeOrganizationId, setActiveOrganizationId] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
   const [boardListsData, setBoardListsData] = useState()
   const [boardListsDataApiStatus, setBoardListsDataApiStatus] = useState(
     ApiStatus.initial,
@@ -24,24 +20,11 @@ const Board = props => {
   )
   const [isNewListEntryPopUpOpen, setIsNewListEntryPopUpOpen] = useState(false)
 
-  const onClickOfOrganizations = () => {
-    setShowPopup(true)
+  const onClickOfOrganizations = organizationsData => {
+    setOrganizationData(organizationsData)
   }
-  const getOrganizationData = async () => {
-    setOrganizationDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
-    const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/members/me/organizations?key=${apiKey}&token=${token}`
-    const options = {
-      method: 'GET',
-    }
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-    if (apiResponse.ok) {
-      setOrganizationData(jsonResponse)
-      setActiveOrganizationId(jsonResponse[0].id)
-      setOrganizationDataApiStatus(ApiStatus.success)
-    }
+  const openOrganizationsPopUp = () => {
+    setShowPopup(true)
   }
   const getBoardsList = async () => {
     setBoardListsDataApiStatus(ApiStatus.inProgress)
@@ -102,7 +85,10 @@ const Board = props => {
     setIsNewListEntryPopUpOpen(false)
     getBoardsList()
   }
-
+  const onChangeOrganization = () => {
+    const {history} = props
+    history.replace('/')
+  }
   const getContentContainerView = () => {
     let sectionView
     switch (boardListsDataApiStatus) {
@@ -161,14 +147,14 @@ const Board = props => {
   }
 
   useEffect(() => {
-    getOrganizationData()
     getBoardsList()
     getTasks()
   }, [])
   return (
     <div className="board-container">
       <NavBar
-        onClickOfOrganizations={onClickOfOrganizations}
+        getOrganizationsData={onClickOfOrganizations}
+        openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showPopup}
       />
       {getContentContainerView()}
@@ -177,7 +163,7 @@ const Board = props => {
         <Organizations
           workspacesOrganizations={organizationData}
           onClose={() => setShowPopup(false)}
-          activeOrganizationId={activeOrganizationId}
+          onChangeOrganizationItem={onChangeOrganization}
         />
       )}
     </div>

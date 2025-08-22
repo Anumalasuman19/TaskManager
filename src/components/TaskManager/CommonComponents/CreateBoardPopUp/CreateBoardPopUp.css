@@ -1,53 +1,95 @@
 .create-board-container {
-  padding: 16px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px 16px;
+  background-color: #fdfcfc;
+  border-radius: 4px 4px 0px 0px;
   margin-top: 10px;
-  width: 280px; /* adjust width as needed */
 }
 .input-and-close-button {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: 22px;
   margin: 0px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
 
 .create-board-input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
+  border: 0px;
+  font-size: 16px;
+  color: #f4f4f4;
+  background-color: #a7b1bf;
+  font-weight: 700;
+}
+.create-board-input::placeholder {
+  color: #f4f4f4;
+  font-weight: 700;
+  font-size: 16px;
 }
 .close-btn {
   border: none;
-  background: none;
-  font-size: 20px;
   cursor: pointer;
-  color: #64748b;
+  background-color: transparent;
+  align-self: flex-start;
 }
 .create-board-workspace {
   font-size: 14px;
-  margin-bottom: 12px;
-  color: #333;
+  font-weight: 600;
+  margin: 0px;
+  margin-bottom: 24px;
+  color: #475569;
+  margin-left: 16px;
 }
 
 .create-board-button {
-  padding: 10px 16px;
-  width: 100%;
-  background: linear-gradient(to right, #635bff, #3b82f6);
+  padding: 12px 24px;
+  background: #1d4ed8;
   color: #ffffff;
+  font-weight: 600;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
   font-size: 14px;
-  transition: background 0.3s ease;
 }
 
-.create-board-button:hover {
-  background: linear-gradient(to right, #4f46e5, #2563eb);
+.popup-overlay {
+  display: block;
+}
+.no-mobile-view-display-popup-element {
+  display: none;
+}
+@media (min-width: 769px) {
+  .close-btn {
+    display: block;
+    align-self: flex-end;
+  }
+  .no-desktop-view-display-popup-element {
+    display: none;
+  }
+
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  .create-board-input {
+    width: 352px;
+  }
+  .create-board-container {
+    margin-top: 0;
+    padding: 24px 24px 53px 48px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 514px;
+  }
 }

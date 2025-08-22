@@ -1,6 +1,9 @@
 .board-container {
+  height: 100vh;
+  overflow-y: auto;
   background-color: #0079bf;
 }
+
 .board-lists-container {
   display: flex;
   flex-direction: row;

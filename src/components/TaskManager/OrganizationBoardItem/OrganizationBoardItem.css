@@ -17,4 +17,12 @@
   text-align: center;
   margin: 0px;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (min-width: 798px) {
+  .board-item {
+    min-width: 341px;
+    padding: 67px 80px;
+  }
 }

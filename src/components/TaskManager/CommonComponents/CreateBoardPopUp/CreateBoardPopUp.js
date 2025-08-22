@@ -7,37 +7,54 @@ const CreateBoardPopUp = props => {
 
   const handleCreate = () => {
     if (title.trim() === '') return
-    onCreateBoard(title) // callback to parent
-    setTitle('') // reset input
+    onCreateBoard(title)
+    setTitle('')
   }
 
   return (
-    <div className="create-board-container">
-      <div className="input-and-close-button">
-        <input
-          type="text"
-          placeholder="Add board title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          className="create-board-input"
-        />
+    <div className="popup-overlay">
+      <div className="create-board-container">
         <button
           type="button"
-          className="close-btn"
+          className="close-btn no-mobile-view-display-popup-element "
           onClick={onCreateBoardPopUpClose}
         >
-          ×
+          <img
+            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755864143/close_oyomr8.png"
+            alt="close-icon"
+            className="close-icon"
+          />
+        </button>
+        <div className="input-and-close-button">
+          <input
+            type="text"
+            placeholder="Add board title"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            className="create-board-input"
+          />
+          <button
+            type="button"
+            className="close-btn no-desktop-view-display-popup-element"
+            onClick={onCreateBoardPopUpClose}
+          >
+            <img
+              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755864143/close_oyomr8.png"
+              alt="close-icon"
+              className="close-icon"
+            />
+          </button>
+        </div>
+
+        <p className="create-board-workspace">{organizationName}</p>
+        <button
+          type="button"
+          onClick={handleCreate}
+          className="create-board-button"
+        >
+          Create Board
         </button>
       </div>
-
-      <p className="create-board-workspace">{organizationName}</p>
-      <button
-        type="button"
-        onClick={handleCreate}
-        className="create-board-button"
-      >
-        Create Board
-      </button>
     </div>
   )
 }

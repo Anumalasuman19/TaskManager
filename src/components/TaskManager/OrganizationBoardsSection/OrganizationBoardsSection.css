@@ -1,5 +1,6 @@
 .boards-container {
-  margin-top: 50px;
+  margin-top: 48px;
+  padding: 16px;
 }
 .sub-heading-container {
   display: flex;
@@ -9,10 +10,10 @@
 .sub-heading {
   margin: 0px;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: #ffffff;
 }
-.board-list {
+.boards-list-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -32,6 +33,7 @@
   border: 0px;
   padding: 49px 0px 49px 0px;
   display: flex;
+  width: 100%;
   justify-content: center;
   gap: 8px;
 }
@@ -45,4 +47,17 @@
   font-weight: 600;
   color: #475569;
   text-align: center;
+}
+@media (min-width: 769px) {
+  .boards-list-container {
+    margin-top: 36px;
+  }
+  .boards-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .create-new-board-button {
+    padding: 67px 80px;
+  }
 }

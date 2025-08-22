@@ -4,7 +4,8 @@
   gap: 8px;
   background-color: #f9fafb;
   border-radius: 4px;
-  cursor: hand;
+  padding: 0px 36px 0px 0px;
+  cursor: pointer;
   transition: background 0.2s ease;
 }
 
@@ -25,8 +26,9 @@
 
 .workspace-name {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   color: #475569;
   padding: 0px;
   margin: 0px;
+  white-space: nowrap;
 }
