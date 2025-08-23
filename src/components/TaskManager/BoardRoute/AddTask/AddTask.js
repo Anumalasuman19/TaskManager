@@ -7,7 +7,7 @@ const AddTask = ({onClickOfAddTask, onClickOfClose}) => {
   const handleAddTask = () => {
     if (taskName.trim() === '') return
     onClickOfAddTask(taskName.trim())
-    setTaskName('') // reset input after adding
+    setTaskName('')
   }
 
   return (

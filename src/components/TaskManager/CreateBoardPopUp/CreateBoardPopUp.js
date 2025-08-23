@@ -46,7 +46,7 @@ const CreateBoardPopUp = props => {
           </button>
         </div>
 
-        <p className="create-board-workspace">{organizationName}</p>
+        <p className="workspace-name-text">{organizationName}</p>
         <button
           type="button"
           onClick={handleCreate}

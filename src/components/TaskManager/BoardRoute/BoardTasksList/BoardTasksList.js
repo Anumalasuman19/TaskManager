@@ -41,25 +41,23 @@ const BoardTasksList = props => {
         </ul>
       </div>
 
-      <div className="task-list-footer">
-        {isNewTaskEntryPopUpOpen ? (
-          <AddTask
-            onClickOfAddTask={onAddTask}
-            onClickOfClose={() => {
-              setIsNewTaskEntryPopUpOpen(false)
-            }}
+      {isNewTaskEntryPopUpOpen ? (
+        <AddTask
+          onClickOfAddTask={onAddTask}
+          onClickOfClose={() => {
+            setIsNewTaskEntryPopUpOpen(false)
+          }}
+        />
+      ) : (
+        <button type="button" className="add-task" onClick={onClickOfAddTask}>
+          <img
+            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754226/add-task-plus-icon_ftfcmq.png"
+            alt="plus-icon"
+            className="add-task-plus-icon"
           />
-        ) : (
-          <button type="button" className="add-task" onClick={onClickOfAddTask}>
-            <img
-              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754226/add-task-plus-icon_ftfcmq.png"
-              alt="plus-icon"
-              className="add-task-plus-icon"
-            />
-            <p className="add-task-text">Add Task</p>
-          </button>
-        )}
-      </div>
+          <p className="add-task-text">Add Task</p>
+        </button>
+      )}
     </div>
   )
 }

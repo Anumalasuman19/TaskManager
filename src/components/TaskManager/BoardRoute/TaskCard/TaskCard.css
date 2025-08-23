@@ -3,12 +3,10 @@
   border-radius: 4px;
   padding: 8px 16px;
   box-shadow: #00000026;
-  font-size: 14px;
-  color: #172b4d;
-  cursor: pointer;
 }
 .card-name {
   margin: 0px;
   font-size: 14px;
   font-weight: 500;
+  color: #475569;
 }

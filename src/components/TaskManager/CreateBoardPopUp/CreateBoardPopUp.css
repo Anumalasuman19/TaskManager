@@ -14,7 +14,7 @@
 
 .create-board-input {
   width: 100%;
-  padding: 10px;
+  padding: 8px 16px;
   border-radius: 4px;
   border: 0px;
   font-size: 16px;
@@ -33,7 +33,7 @@
   background-color: transparent;
   align-self: flex-start;
 }
-.create-board-workspace {
+.workspace-name-text {
   font-size: 14px;
   font-weight: 600;
   margin: 0px;

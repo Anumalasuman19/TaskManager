@@ -1,6 +1,6 @@
 .boards-container {
   margin-top: 48px;
-  padding: 16px;
+  padding: 0px 16px 16px 16px;
 }
 .sub-heading-container {
   display: flex;
@@ -35,9 +35,19 @@
   display: flex;
   width: 100%;
   justify-content: center;
+  cursor: pointer;
   gap: 8px;
 }
+.white-plus-icon {
+  display: none;
+}
 .plus-icon {
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+}
+.white-plus-icon {
+  display: block;
   width: 24px;
   height: 24px;
 }
@@ -48,9 +58,24 @@
   color: #475569;
   text-align: center;
 }
+.create-new-board-text-active {
+  color: #ffffff;
+}
+.create-new-board-button-active {
+  background-color: #2fa9f1;
+}
+.person-icon {
+  width: 32px;
+  height: 32px;
+}
 @media (min-width: 769px) {
   .boards-list-container {
     margin-top: 36px;
+  }
+
+  .boards-container {
+    margin-top: 127px;
+    padding: 0px 16px 16px 16px;
   }
   .boards-list {
     flex-direction: row;
@@ -59,5 +84,8 @@
   }
   .create-new-board-button {
     padding: 67px 80px;
+  }
+  .sub-heading {
+    font-size: 24px;
   }
 }

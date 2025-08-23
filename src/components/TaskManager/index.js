@@ -4,7 +4,7 @@ import ApiStatus from './CommonComponents/Constants'
 import Organizations from './Organizations/Organizations'
 import OrganizationBoardsSection from './OrganizationBoardsSection/OrganizationBoardsSection'
 import LoadingView from './CommonComponents/LoadingView/LoadingView'
-import CreateBoardPopUp from './CommonComponents/CreateBoardPopUp/CreateBoardPopUp'
+import CreateBoardPopUp from './CreateBoardPopUp/CreateBoardPopUp'
 import './index.css'
 
 const TaskManager = props => {

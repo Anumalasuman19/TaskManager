@@ -7,7 +7,7 @@ const AddList = ({onAddList, onClose}) => {
   const handleAdd = () => {
     if (listName.trim() === '') return
     onAddList(listName.trim())
-    setListName('') // reset input after adding
+    setListName('')
   }
 
   return (

@@ -1,12 +1,14 @@
 import './LoadingView.css'
 
-const LoadingView = () => (
-  <div className="loading-container">
-    <div className="spinner">
-      <></>
+const Loader = () => (
+  <div className="loader-container">
+    <div className="loader-circle">
+      <div className="loader-ring">
+        <></>
+      </div>
+      <span className="loader-text">Loading...</span>
     </div>
-    <p className="loading-text">Loading...</p>
   </div>
 )
 
-export default LoadingView
+export default Loader

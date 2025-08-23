@@ -17,7 +17,8 @@ const NavBar = props => {
     ApiStatus.initial,
   )
   const [showDropdown, setShowDropdown] = useState(false)
-
+  const [userData, setUserData] = useState()
+  const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
   const onClickOfLogout = () => {
     localStorage.removeItem('pa_token')
     const {history} = props
@@ -27,6 +28,22 @@ const NavBar = props => {
   const onChangeOrganization = () => {
     const {history} = props
     history.replace('/')
+  }
+
+  const getUserData = async () => {
+    setUserDataApiStatus(ApiStatus.inProgress)
+    const apiKey = '23335c9526346209ad2255ae52d79303'
+    const token = localStorage.getItem('pa_token')
+    const url = `https://api.trello.com/1/members/me?key=${apiKey}&token=${token}`
+    const options = {method: 'GET'}
+    const apiResponse = await fetch(url, options)
+    const jsonResponse = await apiResponse.json()
+
+    if (apiResponse.ok) {
+      setUserData(jsonResponse)
+      console.log(jsonResponse)
+      setUserDataApiStatus(ApiStatus.success)
+    }
   }
 
   const OrganizationsDataApi = async () => {
@@ -49,7 +66,6 @@ const NavBar = props => {
       setOrganizationData(jsonResponse)
       getOrganizationApiStatus(ApiStatus.success)
       setOrganizationDataApiStatus(ApiStatus.success)
-      console.log(jsonResponse)
     }
     return null
   }
@@ -59,6 +75,7 @@ const NavBar = props => {
   }
 
   useEffect(() => {
+    getUserData()
     OrganizationsDataApi()
   }, [])
 
@@ -155,6 +172,11 @@ const NavBar = props => {
         >
           Log Out
         </button>
+        <div className="profile-bg">
+          <p className="profile-text">
+            {userDataApiStatus === ApiStatus.success ? userData.initials : ''}
+          </p>
+        </div>
       </div>
     </div>
   )

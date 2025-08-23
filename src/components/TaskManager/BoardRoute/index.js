@@ -9,7 +9,7 @@ import AddList from './AddList/AddList'
 
 const Board = props => {
   const [organizationData, setOrganizationData] = useState()
-  const [showPopup, setShowPopup] = useState(false)
+  const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
   const [boardListsData, setBoardListsData] = useState()
   const [boardListsDataApiStatus, setBoardListsDataApiStatus] = useState(
     ApiStatus.initial,
@@ -23,9 +23,11 @@ const Board = props => {
   const onClickOfOrganizations = organizationsData => {
     setOrganizationData(organizationsData)
   }
+
   const openOrganizationsPopUp = () => {
-    setShowPopup(true)
+    setShowOrganizationsPopup(true)
   }
+
   const getBoardsList = async () => {
     setBoardListsDataApiStatus(ApiStatus.inProgress)
     const apiKey = '23335c9526346209ad2255ae52d79303'
@@ -69,6 +71,7 @@ const Board = props => {
   const onClickOfAddListButton = () => {
     setIsNewListEntryPopUpOpen(true)
   }
+
   const addListApi = async listName => {
     const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
@@ -85,10 +88,12 @@ const Board = props => {
     setIsNewListEntryPopUpOpen(false)
     getBoardsList()
   }
+
   const onChangeOrganization = () => {
     const {history} = props
     history.replace('/')
   }
+
   const getContentContainerView = () => {
     let sectionView
     switch (boardListsDataApiStatus) {
@@ -100,7 +105,6 @@ const Board = props => {
           <div className="board-lists-container">
             <ul className="lists-container">
               {boardListsData.map(list => {
-                // filter cards belonging to this list
                 const listCards = tasksData
                   ? tasksData.filter(card => card.idList === list.id)
                   : []
@@ -150,19 +154,20 @@ const Board = props => {
     getBoardsList()
     getTasks()
   }, [])
+
   return (
     <div className="board-container">
       <NavBar
         getOrganizationsData={onClickOfOrganizations}
         openOrganizationsPopUp={openOrganizationsPopUp}
-        showOrganizationPopup={showPopup}
+        showOrganizationPopup={showOrganizationsPopup}
       />
       {getContentContainerView()}
 
-      {showPopup && (
+      {showOrganizationsPopup && (
         <Organizations
           workspacesOrganizations={organizationData}
-          onClose={() => setShowPopup(false)}
+          onClose={() => setShowOrganizationsPopup(false)}
           onChangeOrganizationItem={onChangeOrganization}
         />
       )}

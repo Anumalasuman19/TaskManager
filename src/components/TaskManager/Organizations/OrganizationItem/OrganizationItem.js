@@ -5,21 +5,17 @@ const OrganizationItem = props => {
 
   const onClickOfOrganization = () => {
     localStorage.setItem('organization_id', id)
-    console.log(id)
-    console.log('onChangeOrganization:', onChangeOrganization) // Add this log
-    if (onChangeOrganization) {
-      onChangeOrganization()
-    }
+    onChangeOrganization()
   }
   return (
     <li
-      className={`workspace-item ${isActive ? 'active' : ''}`}
+      className={`organization-item ${isActive ? 'active' : ''}`}
       onClick={onClickOfOrganization}
     >
-      <div className="workspace-icon">
+      <div className="organization-icon">
         <></>
       </div>
-      <p className="workspace-name">{name}</p>
+      <p className="organization-name">{name}</p>
     </li>
   )
 }

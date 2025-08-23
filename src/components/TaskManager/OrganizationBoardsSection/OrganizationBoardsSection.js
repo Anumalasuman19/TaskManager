@@ -66,22 +66,36 @@ const OrganizationBoardsSection = props => {
                 boardName={board.name}
               />
             ))}
-            {isShowCreateBoardPopupOpen === false && (
-              <li>
-                <button
-                  type="button"
-                  className="create-new-board-button"
-                  onClick={onClickOfCreateBoard}
+            <li>
+              <button
+                type="button"
+                className={`create-new-board-button ${
+                  isShowCreateBoardPopupOpen
+                    ? 'create-new-board-button-active'
+                    : ''
+                }`}
+                onClick={onClickOfCreateBoard}
+              >
+                <img
+                  src={
+                    isShowCreateBoardPopupOpen
+                      ? 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755930805/plus_1_ihwyso.png'
+                      : 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png'
+                  }
+                  alt="plus-icon"
+                  className="plus-icon"
+                />
+                <p
+                  className={`create-new-board-text ${
+                    isShowCreateBoardPopupOpen
+                      ? 'create-new-board-text-active'
+                      : ''
+                  }`}
                 >
-                  <img
-                    src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png"
-                    alt="plus-icon"
-                    className="plus-icon"
-                  />
-                  <p className="create-new-board-text">Create new board</p>
-                </button>
-              </li>
-            )}
+                  Create new board
+                </p>
+              </button>
+            </li>
           </ul>
         </div>
       ) : (

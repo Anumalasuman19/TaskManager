@@ -6,7 +6,6 @@
   background-color: #ffffff;
   border-radius: 4px 4px 0px 0px;
   padding: 16px;
-  animation: slideUp 0.3s ease;
 }
 
 .workspace-popup-header {
@@ -25,14 +24,15 @@
   padding: 0px;
 }
 
-.close-btn {
+.workspace-close-btn {
   border: none;
-  background: none;
-  font-size: 20px;
+  background-color: transparent;
   cursor: pointer;
-  color: #64748b;
 }
-
+.workspace-close-btn-icon {
+  width: 16px;
+  height: 16px;
+}
 .workspace-list {
   list-style-type: none;
   padding: 0px;
@@ -45,6 +45,7 @@
 @media (min-width: 769px) {
   .workspace-popup {
     position: relative;
+    top: 8px;
     padding: 24px 16px 16px 16px;
   }
 }

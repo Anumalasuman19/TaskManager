@@ -1,23 +1,25 @@
 .board-container {
   height: 100vh;
-  overflow-y: auto;
   background-color: #0079bf;
+  display: flex;
+  flex-direction: column;
 }
 
 .board-lists-container {
+  flex: 1;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 12px; /* spacing between lists */
+  gap: 8px;
   padding: 16px 16px 24px 16px;
-  overflow-x: auto; /* scroll if too many lists */
+  overflow-x: auto;
 }
 
 .lists-container {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 8px; /* space between each list card */
+  gap: 8px;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -26,14 +28,14 @@
 .add-list-button {
   border: none;
   border-radius: 4px;
-  padding: 12px 120px 12px 16px; /* ✅ same left/right padding */
-  cursor: pointer; /* ✅ correct cursor */
+  padding: 12px 120px 12px 16px;
+  cursor: pointer;
   background-color: #2c90d0;
   display: flex;
-  gap: 8px; /* ✅ a bit more spacing between icon & text */
-  justify-content: center;
+  gap: 8px;
+  justify-content: flex-start;
   align-items: center;
-  white-space: nowrap; /* ✅ prevents wrapping */
+  white-space: nowrap;
 }
 
 .add-list-button:hover {

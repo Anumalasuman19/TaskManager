@@ -66,6 +66,9 @@
   .no-desktop-view-display {
     display: none;
   }
+  .profile-text {
+    font-size: 16px;
+  }
   .nav-bar-container {
     padding: 25px 48px;
   }
@@ -103,7 +106,7 @@
   .profile-bg {
     border-radius: 20px;
     text-align: center;
-    padding: 12px 0px 0px 0px;
+    padding: 8px 0px 0px 0px;
     width: 41px;
     height: 41px;
   }

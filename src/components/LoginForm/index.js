@@ -1,5 +1,5 @@
 import {Component} from 'react'
-
+import {Redirect} from 'react-router-dom'
 import './index.css'
 
 class LoginForm extends Component {
@@ -78,6 +78,10 @@ class LoginForm extends Component {
   }
 
   render() {
+    const token = localStorage.getItem('pa_token')
+    if (token !== null) {
+      return <Redirect to="/" />
+    }
     return (
       <div className="login-form-container">
         <div className="title-container">

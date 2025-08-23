@@ -3,6 +3,7 @@
   border-radius: 4px;
   padding: 8px 16px;
   min-width: 254px;
+  overflow-y: auto;
 }
 
 .task-list-header {
@@ -56,4 +57,5 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 400px;
 }

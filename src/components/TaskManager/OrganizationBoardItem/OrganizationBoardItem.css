@@ -1,13 +1,9 @@
 .board-item {
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 49px 0px 49px 0px;
-  cursor: hand;
+  cursor: pointer;
   text-decoration: none;
-}
-
-.board-item:hover {
-  background-color: #f3f4f6;
 }
 
 .board-name {

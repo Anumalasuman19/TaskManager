@@ -1,4 +1,4 @@
-.workspace-item {
+.organization-item {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -6,27 +6,25 @@
   border-radius: 4px;
   padding: 0px 36px 0px 0px;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.workspace-item:hover {
+.organization-item:hover {
   background-color: #e5e7eb;
 }
 
-.workspace-item.active {
+.organization-item.active {
   background-color: #e0eff7;
 }
 
-.workspace-icon {
+.organization-icon {
   padding: 22px;
-  align-self: stretch;
   background-color: #0079bf;
   border-radius: 4px 0px 0px 4px;
 }
 
-.workspace-name {
+.organization-name {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: #475569;
   padding: 0px;
   margin: 0px;
