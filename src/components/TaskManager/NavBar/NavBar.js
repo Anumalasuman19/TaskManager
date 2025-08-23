@@ -41,7 +41,6 @@ const NavBar = props => {
 
     if (apiResponse.ok) {
       setUserData(jsonResponse)
-      console.log(jsonResponse)
       setUserDataApiStatus(ApiStatus.success)
     }
   }

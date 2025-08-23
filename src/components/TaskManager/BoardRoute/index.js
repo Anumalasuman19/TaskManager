@@ -63,8 +63,6 @@ const Board = props => {
     if (apiResponse.ok) {
       setTasksData(jsonResponse)
       setTasksDataApiStatus(ApiStatus.success)
-      console.log('Tasks Data')
-      console.log(jsonResponse)
     }
   }
 
@@ -163,7 +161,6 @@ const Board = props => {
         showOrganizationPopup={showOrganizationsPopup}
       />
       {getContentContainerView()}
-
       {showOrganizationsPopup && (
         <Organizations
           workspacesOrganizations={organizationData}

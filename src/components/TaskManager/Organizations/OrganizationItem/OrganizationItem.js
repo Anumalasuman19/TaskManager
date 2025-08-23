@@ -7,6 +7,7 @@ const OrganizationItem = props => {
     localStorage.setItem('organization_id', id)
     onChangeOrganization()
   }
+
   return (
     <li
       className={`organization-item ${isActive ? 'active' : ''}`}

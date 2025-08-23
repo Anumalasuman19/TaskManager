@@ -37,7 +37,6 @@ class LoginForm extends Component {
   }
 
   setAccessTokenInLocalStorage = token => {
-    console.log(token)
     localStorage.setItem('pa_token', token)
     localStorage.setItem('pa_expires', new Date().getTime() + 60)
     window.location.replace('/')

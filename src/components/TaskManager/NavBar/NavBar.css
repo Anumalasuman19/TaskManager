@@ -42,12 +42,15 @@
   font-size: 14px;
   font-weight: 500;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .profile-bg {
   background-color: #bae3ff;
-  border-radius: 14px;
-  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 24px;
   height: 24px;
 }
@@ -104,9 +107,8 @@
     width: 69px;
   }
   .profile-bg {
-    border-radius: 20px;
+    border-radius: 50%;
     text-align: center;
-    padding: 8px 0px 0px 0px;
     width: 41px;
     height: 41px;
   }
