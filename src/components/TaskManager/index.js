@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import NavBar from './NavBar/NavBar'
-import ApiStatus from './CommonComponents/Constants'
+import ApiStatus, {ApiKey} from './CommonComponents/Constants'
 import Organizations from './Organizations/Organizations'
 import OrganizationBoardsSection from './OrganizationBoardsSection/OrganizationBoardsSection'
 import LoadingView from './CommonComponents/LoadingView/LoadingView'
@@ -14,7 +14,7 @@ const TaskManager = props => {
   )
   const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
   const [showCreateBoardPopup, setShowCreateBoardPopup] = useState(false)
-  const [noOfTimesBoardsAdded, setNoOfTimesBoardsAdded] = useState(0)
+  const [newCreatedBoard, setNewCreatedBoard] = useState()
 
   const onChangeOrganization = () => {
     const {history} = props
@@ -46,17 +46,22 @@ const TaskManager = props => {
   }
 
   const onClickOfCreateBoard = async name => {
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/boards?key=${apiKey}&token=${token}&name=${name}`
+    const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${token}&name=${name}`
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({name}),
     })
     const data = await response.json()
     setShowCreateBoardPopup(false)
-    setNoOfTimesBoardsAdded(prevState => prevState + 1)
-    return null
+    setNewCreatedBoard(data)
+  }
+
+  const onClickClose = () => {
+    setShowOrganizationsPopup(false)
+  }
+  const onClickCloseBoardPopup = () => {
+    setShowCreateBoardPopup(false)
   }
 
   const getContentContainerView = () => {
@@ -79,7 +84,7 @@ const TaskManager = props => {
             {organizationDataApiStatus === ApiStatus.success ? (
               <OrganizationBoardsSection
                 onClickOfCreateBoard={onClickOfCreateNewBoard}
-                noOfTimesAdded={noOfTimesBoardsAdded}
+                newCreatedBoard={newCreatedBoard}
                 isShowCreateBoardPopupOpen={showCreateBoardPopup}
               />
             ) : (
@@ -89,14 +94,14 @@ const TaskManager = props => {
               {showOrganizationsPopup && (
                 <Organizations
                   workspacesOrganizations={organizationData}
-                  onClose={() => setShowOrganizationsPopup(false)}
+                  onClose={onClickClose}
                   onChangeOrganizationItem={onChangeOrganization}
                 />
               )}
               {showCreateBoardPopup && (
                 <CreateBoardPopUp
                   onCreateBoard={onClickOfCreateBoard}
-                  onCreateBoardPopUpClose={() => setShowCreateBoardPopup(false)}
+                  onCreateBoardPopUpClose={onClickCloseBoardPopup}
                   organizationName={getWorkspaceName()}
                 />
               )}

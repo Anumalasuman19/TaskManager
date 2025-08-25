@@ -6,6 +6,16 @@
   background-color: #ffffff;
   border-radius: 4px 4px 0px 0px;
   padding: 16px;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .workspace-popup-header {
@@ -44,8 +54,10 @@
 
 @media (min-width: 769px) {
   .workspace-popup {
+    animation: none;
     position: relative;
     top: 8px;
     padding: 24px 16px 16px 16px;
+    border-radius: 4px;
   }
 }

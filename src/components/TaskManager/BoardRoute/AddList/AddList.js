@@ -4,31 +4,36 @@ import './AddList.css'
 const AddList = ({onAddList, onClose}) => {
   const [listName, setListName] = useState('')
 
-  const handleAdd = () => {
+  const handleAdd = event => {
+    event.preventDefault()
     if (listName.trim() === '') return
     onAddList(listName.trim())
     setListName('')
   }
 
+  const onChangeListName = event => {
+    setListName(event.target.value)
+  }
+
   return (
-    <div className="add-list-container">
+    <form onSubmit={handleAdd} className="add-list-container">
       <input
         type="text"
         value={listName}
         placeholder="Enter list name..."
-        onChange={e => setListName(e.target.value)}
+        onChange={onChangeListName}
         className="add-list-input"
       />
 
       <div className="add-list-actions">
-        <button type="button" className="add-list-btn" onClick={handleAdd}>
+        <button type="submit" className="add-list-btn">
           Add List
         </button>
         <button type="button" className="close-btn" onClick={onClose}>
           ✕
         </button>
       </div>
-    </div>
+    </form>
   )
 }
 

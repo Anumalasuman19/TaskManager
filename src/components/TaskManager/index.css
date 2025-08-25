@@ -1,10 +1,13 @@
 .home-page-container {
   height: 100vh;
   background-color: #0079bf;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 .home-page-content-container {
+  flex: 1;
   background-color: #0079bf;
+  overflow-y: auto;
 }
 .organization-member-details {
   padding: 16px;

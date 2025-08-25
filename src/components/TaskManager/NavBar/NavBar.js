@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Link, withRouter} from 'react-router-dom'
-import ApiStatus from '../CommonComponents/Constants'
+import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
 import Organizations from '../Organizations/Organizations'
 import './NavBar.css'
 
@@ -32,9 +32,8 @@ const NavBar = props => {
 
   const getUserData = async () => {
     setUserDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/members/me?key=${apiKey}&token=${token}`
+    const url = `https://api.trello.com/1/members/me?key=${ApiKey}&token=${token}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
@@ -45,12 +44,11 @@ const NavBar = props => {
     }
   }
 
-  const OrganizationsDataApi = async () => {
+  const organizationsDataApi = async () => {
     getOrganizationApiStatus(ApiStatus.inProgress)
     setOrganizationDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/members/me/organizations?key=${apiKey}&token=${token}`
+    const url = `https://api.trello.com/1/members/me/organizations?key=${ApiKey}&token=${token}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
@@ -73,9 +71,16 @@ const NavBar = props => {
     openOrganizationsPopUp()
   }
 
+  const setOrganizationPopup = () => {
+    setShowDropdown(prev => !prev)
+  }
+
+  const onClickClose = () => {
+    setShowDropdown(false)
+  }
   useEffect(() => {
     getUserData()
-    OrganizationsDataApi()
+    organizationsDataApi()
   }, [])
 
   return (
@@ -106,7 +111,7 @@ const NavBar = props => {
           <button
             type="button"
             className="org-dropdown-btn"
-            onClick={() => setShowDropdown(prev => !prev)}
+            onClick={setOrganizationPopup}
           >
             <p className="organization-text">Organization</p>
             <img
@@ -120,9 +125,7 @@ const NavBar = props => {
             <div className="organization-dropdown">
               <Organizations
                 workspacesOrganizations={organizationData}
-                onClose={() => {
-                  setShowDropdown(false)
-                }}
+                onClose={onClickClose}
                 onChangeOrganizationItem={onChangeOrganization}
               />
             </div>

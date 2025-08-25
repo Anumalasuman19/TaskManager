@@ -16,6 +16,10 @@ const PageNotFound = props => {
     const {history} = props
     history.replace('/')
   }
+
+  const onClickClose = () => {
+    setShowPopup(false)
+  }
   return (
     <div className="page-not-found">
       <NavBar
@@ -33,7 +37,7 @@ const PageNotFound = props => {
       {showPopup && (
         <Organizations
           workspacesOrganizations={organizationData}
-          onClose={() => setShowPopup(false)}
+          onClose={onClickClose}
           onChangeOrganizationItem={onChangeOrganization}
         />
       )}

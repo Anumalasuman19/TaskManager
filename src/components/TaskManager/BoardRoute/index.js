@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import './index.css'
 import NavBar from '../NavBar/NavBar'
 import Organizations from '../Organizations/Organizations'
-import ApiStatus from '../CommonComponents/Constants'
+import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 import BoardTaskList from './BoardTasksList/BoardTasksList'
 import AddList from './AddList/AddList'
@@ -30,12 +30,11 @@ const Board = props => {
 
   const getBoardsList = async () => {
     setBoardListsDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${token}`
+    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${token}`
     const options = {
       method: 'GET',
     }
@@ -49,12 +48,11 @@ const Board = props => {
 
   const getTasks = async () => {
     setTasksDataApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/cards?key=${apiKey}&token=${token}&filter=open`
+    const url = `https://api.trello.com/1/boards/${id}/cards?key=${ApiKey}&token=${token}&filter=open`
     const options = {
       method: 'GET',
     }
@@ -66,30 +64,39 @@ const Board = props => {
     }
   }
 
+  const onTaskAdded = addedTask => {
+    setTasksData(prev => [...prev, addedTask])
+  }
+
   const onClickOfAddListButton = () => {
     setIsNewListEntryPopUpOpen(true)
   }
 
   const addListApi = async listName => {
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/lists?key=${apiKey}&token=${token}&name=${listName}`
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({listName}),
-    })
 
-    const data = await response.json()
+    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${token}&name=${listName}`
+
+    const response = await fetch(url, {method: 'POST'})
+    const newList = await response.json()
+    // Append new list without reloading whole list
+    setBoardListsData(prev => [...prev, newList])
     setIsNewListEntryPopUpOpen(false)
-    getBoardsList()
   }
 
   const onChangeOrganization = () => {
     const {history} = props
     history.replace('/')
+  }
+
+  const onClickClose = () => {
+    setShowOrganizationsPopup(false)
+  }
+  const onClickAddListClose = () => {
+    setIsNewListEntryPopUpOpen(false)
   }
 
   const getContentContainerView = () => {
@@ -113,18 +120,13 @@ const Board = props => {
                     listId={list.id}
                     listName={list.name}
                     cards={listCards}
-                    onTaskAdded={getTasks}
+                    onTaskAdded={onTaskAdded}
                   />
                 )
               })}
             </ul>
             {isNewListEntryPopUpOpen ? (
-              <AddList
-                onAddList={addListApi}
-                onClose={() => {
-                  setIsNewListEntryPopUpOpen(false)
-                }}
-              />
+              <AddList onAddList={addListApi} onClose={onClickAddListClose} />
             ) : (
               <button
                 type="button"
@@ -164,7 +166,7 @@ const Board = props => {
       {showOrganizationsPopup && (
         <Organizations
           workspacesOrganizations={organizationData}
-          onClose={() => setShowOrganizationsPopup(false)}
+          onClose={onClickClose}
           onChangeOrganizationItem={onChangeOrganization}
         />
       )}

@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import './BoardTasksList.css'
+import {ApiKey} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
 import AddTask from '../AddTask/AddTask'
 
@@ -11,16 +12,19 @@ const BoardTasksList = props => {
     setIsNewTaskEntryPopUpOpen(true)
   }
 
+  const onClickClose = () => {
+    setIsNewTaskEntryPopUpOpen(false)
+  }
+
   const onAddTask = async taskName => {
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${token}&name=${taskName}&idList=${listId}`
+    const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${token}&name=${taskName}&idList=${listId}`
     const response = await fetch(url, {
       method: 'POST',
-      body: JSON.stringify({taskName}),
     })
+    const data = await response.json()
     setIsNewTaskEntryPopUpOpen(false)
-    onTaskAdded()
+    onTaskAdded(data)
   }
 
   return (
@@ -42,12 +46,7 @@ const BoardTasksList = props => {
       </div>
 
       {isNewTaskEntryPopUpOpen ? (
-        <AddTask
-          onClickOfAddTask={onAddTask}
-          onClickOfClose={() => {
-            setIsNewTaskEntryPopUpOpen(false)
-          }}
-        />
+        <AddTask onClickOfAddTask={onAddTask} onClickOfClose={onClickClose} />
       ) : (
         <button type="button" className="add-task" onClick={onClickOfAddTask}>
           <img

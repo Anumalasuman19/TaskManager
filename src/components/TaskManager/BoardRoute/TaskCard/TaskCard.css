@@ -3,6 +3,7 @@
   border-radius: 4px;
   padding: 8px 16px;
   box-shadow: #00000026;
+  min-width: 222px;
 }
 .card-name {
   margin: 0px;

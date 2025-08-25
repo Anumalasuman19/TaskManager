@@ -5,15 +5,20 @@ const CreateBoardPopUp = props => {
   const {onCreateBoard, organizationName, onCreateBoardPopUpClose} = props
   const [title, setTitle] = useState('')
 
-  const handleCreate = () => {
+  const handleCreate = event => {
+    event.preventDefault()
     if (title.trim() === '') return
     onCreateBoard(title)
     setTitle('')
   }
 
+  const onChangeInput = event => {
+    setTitle(event.target.value)
+  }
+
   return (
     <div className="popup-overlay">
-      <div className="create-board-container">
+      <form onSubmit={handleCreate} className="create-board-container">
         <button
           type="button"
           className="close-btn no-mobile-view-display-popup-element "
@@ -30,7 +35,7 @@ const CreateBoardPopUp = props => {
             type="text"
             placeholder="Add board title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={onChangeInput}
             className="create-board-input"
           />
           <button
@@ -47,14 +52,10 @@ const CreateBoardPopUp = props => {
         </div>
 
         <p className="workspace-name-text">{organizationName}</p>
-        <button
-          type="button"
-          onClick={handleCreate}
-          className="create-board-button"
-        >
+        <button type="submit" className="create-board-button">
           Create Board
         </button>
-      </div>
+      </form>
     </div>
   )
 }

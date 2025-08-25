@@ -1,13 +1,13 @@
 import {useState, useEffect} from 'react'
 import './OrganizationBoardsSection.css'
-import ApiStatus from '../CommonComponents/Constants'
+import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
 import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardItem'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 
 const OrganizationBoardsSection = props => {
   const {
     onClickOfCreateBoard,
-    noOfTimesAdded,
+    newCreatedBoard,
     isShowCreateBoardPopupOpen,
   } = props
   const [organizationBoardsData, setOrganizationBoardsData] = useState()
@@ -15,13 +15,13 @@ const OrganizationBoardsSection = props => {
     organizationBoardsApiStatus,
     setOrganizationBoardsApiStatus,
   ] = useState(ApiStatus.initial)
+  const [isMouseHover, setIsMouseHover] = useState(false)
 
   const getOrganizationBoards = async () => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
-    const apiKey = '23335c9526346209ad2255ae52d79303'
     const token = localStorage.getItem('pa_token')
     const activeOrganizationId = localStorage.getItem('organization_id')
-    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${apiKey}&token=${token}`
+    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${token}`
     const options = {
       method: 'GET',
     }
@@ -43,9 +43,23 @@ const OrganizationBoardsSection = props => {
     return subHeader
   }
 
+  const onMouseMouseOnCreateBoard = () => {
+    setIsMouseHover(true)
+  }
+  const onMouseLeaveOnCreateBoard = () => {
+    setIsMouseHover(false)
+  }
+
   useEffect(() => {
     getOrganizationBoards()
-  }, [noOfTimesAdded])
+  }, [])
+
+  useEffect(() => {
+    if (newCreatedBoard) {
+      setOrganizationBoardsData(prev => [...prev, newCreatedBoard])
+    }
+  }, [newCreatedBoard])
+
   return (
     <div className="boards-container">
       <div className="sub-heading-container">
@@ -69,8 +83,10 @@ const OrganizationBoardsSection = props => {
             <li>
               <button
                 type="button"
+                onMouseEnter={onMouseMouseOnCreateBoard}
+                onMouseLeave={onMouseLeaveOnCreateBoard}
                 className={`create-new-board-button ${
-                  isShowCreateBoardPopupOpen
+                  isShowCreateBoardPopupOpen || isMouseHover
                     ? 'create-new-board-button-active'
                     : ''
                 }`}
@@ -78,7 +94,7 @@ const OrganizationBoardsSection = props => {
               >
                 <img
                   src={
-                    isShowCreateBoardPopupOpen
+                    isShowCreateBoardPopupOpen || isMouseHover
                       ? 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755930805/plus_1_ihwyso.png'
                       : 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png'
                   }
@@ -87,7 +103,7 @@ const OrganizationBoardsSection = props => {
                 />
                 <p
                   className={`create-new-board-text ${
-                    isShowCreateBoardPopupOpen
+                    isShowCreateBoardPopupOpen || isMouseHover
                       ? 'create-new-board-text-active'
                       : ''
                   }`}
