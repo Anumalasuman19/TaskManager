@@ -10,6 +10,7 @@ const NavBar = props => {
     getOrganizationsData,
     showOrganizationPopup,
     openOrganizationsPopUp,
+    newCreatedOrganization,
   } = props
   const [isOrganizationInitialApi, setIsOrganizationInitialApi] = useState(true)
   const [organizationData, setOrganizationData] = useState()
@@ -78,10 +79,17 @@ const NavBar = props => {
   const onClickClose = () => {
     setShowDropdown(false)
   }
+
   useEffect(() => {
     getUserData()
     organizationsDataApi()
   }, [])
+
+  useEffect(() => {
+    if (newCreatedOrganization) {
+      setOrganizationData(prev => [...prev, newCreatedOrganization])
+    }
+  }, [newCreatedOrganization])
 
   return (
     <div className="nav-bar-container">

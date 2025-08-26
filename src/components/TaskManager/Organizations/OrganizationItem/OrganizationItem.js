@@ -13,9 +13,7 @@ const OrganizationItem = props => {
       className={`organization-item ${isActive ? 'active' : ''}`}
       onClick={onClickOfOrganization}
     >
-      <div className="organization-icon">
-        <></>
-      </div>
+      <div className="organization-icon" />
       <p className="organization-name">{name}</p>
     </li>
   )

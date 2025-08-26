@@ -10,7 +10,6 @@
   overflow-y: auto;
 }
 .organization-member-details {
-  padding: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -41,11 +40,56 @@
   font-weight: 600;
   color: #ffffff;
 }
+.no-desktop-view {
+  display: none;
+}
+.organization-member-details-and-create-new-organization-button {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid green;
+  padding: 16px;
+}
+.create-new-organization {
+  background-color: transparent;
+  border: 0px;
+  padding: 0px;
+}
+.create-new-organization:hover {
+  background-color: #2fa9f1;
+}
+
 @media (min-width: 769px) {
+  .no-mobile-view {
+    display: none;
+  }
+  .organization-member-details-and-create-new-organization-button {
+    padding: 0px;
+  }
+  .create-new-organization {
+    background-color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    margin-top: -8px;
+    justify-self: flex-end;
+    cursor: pointer;
+  }
+  .create-new-organization-active {
+    background-color: #2fa9f1;
+  }
+  .create-organization-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+  }
+  .create-organization-text-active {
+    color: #ffffff;
+  }
   .home-page-content-container {
     display: flex;
     flex-direction: column;
-    padding: 32px 150px 32px 150px;
+    padding: 32px 48px 32px 150px;
   }
   .organization-member-details {
     align-self: center;

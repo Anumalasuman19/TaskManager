@@ -99,6 +99,10 @@ const Board = props => {
     setIsNewListEntryPopUpOpen(false)
   }
 
+  const handleListClosed = closedListId => {
+    setBoardListsData(prev => prev.filter(list => list.id !== closedListId))
+  }
+
   const getContentContainerView = () => {
     let sectionView
     switch (boardListsDataApiStatus) {
@@ -121,6 +125,7 @@ const Board = props => {
                     listName={list.name}
                     cards={listCards}
                     onTaskAdded={onTaskAdded}
+                    onListClosed={handleListClosed}
                   />
                 )
               })}

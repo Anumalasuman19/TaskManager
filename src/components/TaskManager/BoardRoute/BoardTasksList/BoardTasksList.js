@@ -3,13 +3,41 @@ import './BoardTasksList.css'
 import {ApiKey} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
 import AddTask from '../AddTask/AddTask'
+import EditListName from './EditListName/EditListName'
 
 const BoardTasksList = props => {
-  const {listId, listName, cards, onTaskAdded} = props
+  const {listId, listName, cards, onTaskAdded, onListClosed} = props
   const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
+  const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
+  const [updatedListName, setUpdatedListName] = useState(listName)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const onToggleMenu = () => setIsMenuOpen(prev => !prev)
+
+  const onCloseList = async () => {
+    const token = localStorage.getItem('pa_token')
+    const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${token}&value=true`
+    await fetch(url, {method: 'PUT'})
+    onListClosed(listId)
+  }
 
   const onClickOfAddTask = () => {
     setIsNewTaskEntryPopUpOpen(true)
+  }
+
+  const onClickListName = () => {
+    setIsEditNameFormOpen(true)
+  }
+
+  const updateListNameApi = async name => {
+    const token = localStorage.getItem('pa_token')
+    const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${token}&name=${name}`
+    const response = await fetch(url, {
+      method: 'PUT',
+    })
+    const data = await response.json()
+    setUpdatedListName(data.name)
+    setIsEditNameFormOpen(false)
   }
 
   const onClickClose = () => {
@@ -30,12 +58,37 @@ const BoardTasksList = props => {
   return (
     <div className="task-list" id={listId}>
       <div className="task-list-header">
-        <p className="list-name">{listName}</p>
-        <img
-          src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754020/list-menu-icon_vd1ips.png"
-          alt="list-menu"
-          className="list-menu-dots"
-        />
+        {isEditNameFormOpen ? (
+          <EditListName onEditListName={updateListNameApi} />
+        ) : (
+          <button type="button" className="list-name" onClick={onClickListName}>
+            {updatedListName}
+          </button>
+        )}
+        <div className="list-menu-wrapper">
+          <button
+            type="button"
+            onClick={onToggleMenu}
+            className="list-menu-button"
+          >
+            <img
+              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755754020/list-menu-icon_vd1ips.png"
+              alt="list-menu"
+              className="list-menu-dots"
+            />
+          </button>
+          {isMenuOpen && (
+            <div className="list-menu-dropdown list-no-mobile-view">
+              <button
+                type="button"
+                onClick={onCloseList}
+                className="list-menu-item"
+              >
+                Close List
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div className="task-list-body">
         <ul className="cards-list">
@@ -56,6 +109,24 @@ const BoardTasksList = props => {
           />
           <p className="add-task-text">Add Task</p>
         </button>
+      )}
+      {isMenuOpen && (
+        <div className="close-list-container list-no-desktop-view">
+          <button type="button" className="close-button" onClick={onToggleMenu}>
+            <img
+              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755864143/close_oyomr8.png"
+              alt="close-icon"
+              className="close-icon"
+            />
+          </button>
+          <button
+            type="button"
+            className="close-list-button"
+            onClick={onCloseList}
+          >
+            Close List
+          </button>
+        </div>
       )}
     </div>
   )

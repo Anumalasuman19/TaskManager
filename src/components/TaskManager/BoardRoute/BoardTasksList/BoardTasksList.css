@@ -41,6 +41,8 @@
   height: 16px;
 }
 .list-name {
+  background-color: transparent;
+  border: 0px;
   font-size: 16px;
   font-weight: 500;
   color: #475569;
@@ -58,4 +60,87 @@
   flex-direction: column;
   gap: 8px;
   max-height: 400px;
+}
+
+.close-list-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background-color: #fdfcfc;
+  border-radius: 4px 4px 0px 0px;
+  animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.close-list-button {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 12px 167px 12px 16px;
+}
+.close-button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  align-self: flex-end;
+}
+.list-no-mobile-view {
+  display: none;
+}
+.list-menu-item:hover {
+  background: #1d4ed8;
+}
+.list-menu-button {
+  background-color: transparent;
+  border: 0px;
+  padding: 0px;
+  cursor: pointer;
+}
+@media (min-width: 769px) {
+  .task-list {
+    overflow-y: visible;
+  }
+  .list-no-desktop-view {
+    display: none;
+  }
+  .list-menu-wrapper {
+    position: relative;
+  }
+  .list-menu-dropdown {
+    display: block;
+    position: absolute;
+    top: 24px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+  .list-menu-item {
+    display: block;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .list-menu-dots {
+    margin: 0px;
+  }
 }

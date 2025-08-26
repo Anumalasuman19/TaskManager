@@ -9,6 +9,7 @@ const OrganizationBoardsSection = props => {
     onClickOfCreateBoard,
     newCreatedBoard,
     isShowCreateBoardPopupOpen,
+    activeOrganizationId,
   } = props
   const [organizationBoardsData, setOrganizationBoardsData] = useState()
   const [
@@ -20,7 +21,7 @@ const OrganizationBoardsSection = props => {
   const getOrganizationBoards = async () => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
     const token = localStorage.getItem('pa_token')
-    const activeOrganizationId = localStorage.getItem('organization_id')
+    console.log(activeOrganizationId)
     const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${token}`
     const options = {
       method: 'GET',
@@ -51,8 +52,10 @@ const OrganizationBoardsSection = props => {
   }
 
   useEffect(() => {
-    getOrganizationBoards()
-  }, [])
+    if (activeOrganizationId) {
+      getOrganizationBoards()
+    }
+  }, [activeOrganizationId])
 
   useEffect(() => {
     if (newCreatedBoard) {
