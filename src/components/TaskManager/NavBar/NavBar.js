@@ -3,6 +3,7 @@ import {Link, withRouter} from 'react-router-dom'
 import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
 import Organizations from '../Organizations/Organizations'
 import './NavBar.css'
+import SearchTasks from '../SearchTasks/SearchTasks'
 
 const NavBar = props => {
   const {
@@ -11,6 +12,7 @@ const NavBar = props => {
     showOrganizationPopup,
     openOrganizationsPopUp,
     newCreatedOrganization,
+    onClickSearchIcon,
   } = props
   const [isOrganizationInitialApi, setIsOrganizationInitialApi] = useState(true)
   const [organizationData, setOrganizationData] = useState()
@@ -20,10 +22,17 @@ const NavBar = props => {
   const [showDropdown, setShowDropdown] = useState(false)
   const [userData, setUserData] = useState()
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+
   const onClickOfLogout = () => {
     localStorage.removeItem('pa_token')
     const {history} = props
     history.replace('/login')
+  }
+
+  const onClickSearch = () => {
+    setIsSearchOpen(prev => !prev)
+    onClickSearchIcon(isSearchOpen)
   }
 
   const onChangeOrganization = () => {
@@ -156,11 +165,17 @@ const NavBar = props => {
             className="no-desktop-view-display"
           />
         </Link>
-        <img
-          src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604225/search-icon_tvkupn.png"
-          alt="search-icon"
-          className="search-icon no-desktop-view-display"
-        />
+        <button
+          type="button"
+          className="search-button  no-desktop-view-display"
+          onClick={onClickSearch}
+        >
+          <img
+            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604225/search-icon_tvkupn.png"
+            alt="search-icon"
+            className="search-icon"
+          />
+        </button>
       </div>
       <img
         src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604235/task-manager-text-icon_xlcvhz.png"
@@ -169,12 +184,7 @@ const NavBar = props => {
       />
       <div className="logout-button-and-profile-and-search-input">
         <div className="search-box no-mobile-view-display">
-          <input type="text" placeholder="Search" className="search-input" />
-          <img
-            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755854561/search_p1o08q.png"
-            className="search-icon"
-            alt="search-icon"
-          />
+          <SearchTasks />
         </div>
         <button
           type="button"

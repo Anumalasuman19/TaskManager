@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import {DragDropContext} from '@hello-pangea/dnd'
 import './index.css'
 import NavBar from '../NavBar/NavBar'
 import Organizations from '../Organizations/Organizations'
@@ -103,6 +104,56 @@ const Board = props => {
     setBoardListsData(prev => prev.filter(list => list.id !== closedListId))
   }
 
+  const onTaskDeleted = (taskId, listId) => {
+    setTasksData(prev => prev.filter(task => task.id !== taskId))
+  }
+
+  const onDragEnd = async result => {
+    const {source, destination, draggableId} = result
+
+    if (!destination) return
+
+    // Allow only reorder inside the same list
+    if (source.droppableId !== destination.droppableId) return
+
+    // No change if dropped in same spot
+    if (source.index === destination.index) return
+
+    setTasksData(prev => {
+      const updated = Array.from(prev)
+
+      // Filter only tasks of this list
+      const listTasks = updated.filter(
+        task => task.idList === source.droppableId,
+      )
+
+      // Remove dragged task from list
+      const [movedTask] = listTasks.splice(source.index, 1)
+
+      // Insert it at new position
+      listTasks.splice(destination.index, 0, movedTask)
+
+      // Rebuild the array: replace only this list’s tasks
+      const reordered = [
+        ...updated.filter(task => task.idList !== source.droppableId),
+        ...listTasks,
+      ]
+
+      return reordered
+    })
+
+    // ---- Trello API Update ----
+    const token = localStorage.getItem('pa_token')
+    const cardId = draggableId
+
+    // Trello "pos" param → use "top" if index 0 else "bottom"
+    let pos = 'bottom'
+    if (destination.index === 0) pos = 'top'
+
+    const url = `https://api.trello.com/1/cards/${cardId}?key=${ApiKey}&token=${token}&pos=${pos}`
+    await fetch(url, {method: 'PUT'})
+  }
+
   const getContentContainerView = () => {
     let sectionView
     switch (boardListsDataApiStatus) {
@@ -112,40 +163,48 @@ const Board = props => {
       case ApiStatus.success:
         sectionView = (
           <div className="board-lists-container">
-            <ul className="lists-container">
-              {boardListsData.map(list => {
-                const listCards = tasksData
-                  ? tasksData.filter(card => card.idList === list.id)
-                  : []
+            <DragDropContext onDragEnd={onDragEnd}>
+              <div className="board-lists-container">
+                <ul className="lists-container">
+                  {boardListsData.map(list => {
+                    const listCards = tasksData
+                      ? tasksData.filter(card => card.idList === list.id)
+                      : []
 
-                return (
-                  <BoardTaskList
-                    key={list.id}
-                    listId={list.id}
-                    listName={list.name}
-                    cards={listCards}
-                    onTaskAdded={onTaskAdded}
-                    onListClosed={handleListClosed}
+                    return (
+                      <BoardTaskList
+                        key={list.id}
+                        listId={list.id}
+                        listName={list.name}
+                        cards={listCards}
+                        onTaskAdded={onTaskAdded}
+                        onListClosed={handleListClosed}
+                        onTaskDeleted={onTaskDeleted}
+                      />
+                    )
+                  })}
+                </ul>
+                {isNewListEntryPopUpOpen ? (
+                  <AddList
+                    onAddList={addListApi}
+                    onClose={onClickAddListClose}
                   />
-                )
-              })}
-            </ul>
-            {isNewListEntryPopUpOpen ? (
-              <AddList onAddList={addListApi} onClose={onClickAddListClose} />
-            ) : (
-              <button
-                type="button"
-                className="add-list-button"
-                onClick={onClickOfAddListButton}
-              >
-                <img
-                  src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755762120/white-plus-icon_f1tutx.png"
-                  alt="add-list-plus-icon"
-                  className="add-list-plus-icon"
-                />
-                <p className="add-list-text">Add list</p>
-              </button>
-            )}
+                ) : (
+                  <button
+                    type="button"
+                    className="add-list-button"
+                    onClick={onClickOfAddListButton}
+                  >
+                    <img
+                      src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755762120/white-plus-icon_f1tutx.png"
+                      alt="add-list-plus-icon"
+                      className="add-list-plus-icon"
+                    />
+                    <p className="add-list-text">Add list</p>
+                  </button>
+                )}
+              </div>
+            </DragDropContext>
           </div>
         )
         break

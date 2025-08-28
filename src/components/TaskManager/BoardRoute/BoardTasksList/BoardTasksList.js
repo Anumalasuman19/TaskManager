@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import {Droppable, Draggable} from '@hello-pangea/dnd'
 import './BoardTasksList.css'
 import {ApiKey} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
@@ -6,7 +7,14 @@ import AddTask from '../AddTask/AddTask'
 import EditListName from './EditListName/EditListName'
 
 const BoardTasksList = props => {
-  const {listId, listName, cards, onTaskAdded, onListClosed} = props
+  const {
+    listId,
+    listName,
+    cards,
+    onTaskAdded,
+    onListClosed,
+    onTaskDeleted,
+  } = props
   const [tasks, setTasks] = useState(cards)
   const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
   const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
@@ -60,6 +68,7 @@ const BoardTasksList = props => {
       const filteredTasks = prev.filter(item => item.id !== taskId)
       return filteredTasks
     })
+    onTaskDeleted(taskId, listId)
   }
 
   useEffect(() => {
@@ -101,17 +110,39 @@ const BoardTasksList = props => {
         </div>
       </div>
       <div className="task-list-body">
-        <ul className="cards-list">
-          {tasks.map(task => (
-            <TaskCard
-              key={task.id}
-              name={task.name}
-              taskId={task.id}
-              onDeleteTask={onDeleteTask}
-              description={task.desc}
-            />
-          ))}
-        </ul>
+        <Droppable droppableId={String(listId)}>
+          {(droppableProvided, droppableSnapshot) => (
+            <ul
+              className="cards-list"
+              ref={droppableProvided.innerRef}
+              {...droppableProvided.droppableProps}
+            >
+              {tasks.map((task, index) => (
+                <Draggable
+                  key={task.id}
+                  draggableId={String(task.id)}
+                  index={index}
+                >
+                  {(draggableProvided, draggableSnapshot) => (
+                    <li
+                      ref={draggableProvided.innerRef}
+                      {...draggableProvided.draggableProps}
+                      {...draggableProvided.dragHandleProps}
+                    >
+                      <TaskCard
+                        name={task.name}
+                        taskId={task.id}
+                        onDeleteTask={onDeleteTask}
+                        description={task.desc}
+                      />
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {droppableProvided.placeholder}
+            </ul>
+          )}
+        </Droppable>
       </div>
 
       {isNewTaskEntryPopUpOpen ? (

@@ -6,6 +6,7 @@ import OrganizationBoardsSection from './OrganizationBoardsSection/OrganizationB
 import LoadingView from './CommonComponents/LoadingView/LoadingView'
 import CreateBoardPopUp from './CreateBoardPopUp/CreateBoardPopUp'
 import CreateOrganizationPopUp from './CreateOrganizationPopUp/CreateOrganizationPopUp'
+import SearchTasks from './SearchTasks/SearchTasks'
 import './index.css'
 
 const TaskManager = props => {
@@ -24,7 +25,11 @@ const TaskManager = props => {
     showCreateNewOrganizationPopup,
     setShowCreateNewOrganizationPopup,
   ] = useState(false)
+  const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
 
+  const onClickSearchIcon = isSearchEnabled => {
+    setIsSearchTasksEnabled(isSearchEnabled)
+  }
   const onChangeOrganization = () => {
     const {history} = props
     history.replace('/')
@@ -203,8 +208,9 @@ const TaskManager = props => {
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
         newCreatedOrganization={newOrganizationItem}
+        onClickSearchIcon={onClickSearchIcon}
       />
-      {getContentContainerView()}
+      {isSearchTasksEnabled ? <SearchTasks /> : getContentContainerView()}
     </div>
   )
 }
