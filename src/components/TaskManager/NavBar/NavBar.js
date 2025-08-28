@@ -41,6 +41,7 @@ const NavBar = props => {
 
     if (apiResponse.ok) {
       setUserData(jsonResponse)
+      localStorage.setItem('user_initials', jsonResponse.initials)
       setUserDataApiStatus(ApiStatus.success)
     }
   }

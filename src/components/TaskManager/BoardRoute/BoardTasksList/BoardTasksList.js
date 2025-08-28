@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import './BoardTasksList.css'
 import {ApiKey} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
@@ -7,11 +7,11 @@ import EditListName from './EditListName/EditListName'
 
 const BoardTasksList = props => {
   const {listId, listName, cards, onTaskAdded, onListClosed} = props
+  const [tasks, setTasks] = useState(cards)
   const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
   const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
   const [updatedListName, setUpdatedListName] = useState(listName)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-
   const onToggleMenu = () => setIsMenuOpen(prev => !prev)
 
   const onCloseList = async () => {
@@ -55,6 +55,16 @@ const BoardTasksList = props => {
     onTaskAdded(data)
   }
 
+  const onDeleteTask = taskId => {
+    setTasks(prev => {
+      const filteredTasks = prev.filter(item => item.id !== taskId)
+      return filteredTasks
+    })
+  }
+
+  useEffect(() => {
+    setTasks(cards)
+  }, [cards])
   return (
     <div className="task-list" id={listId}>
       <div className="task-list-header">
@@ -92,8 +102,14 @@ const BoardTasksList = props => {
       </div>
       <div className="task-list-body">
         <ul className="cards-list">
-          {cards.map(task => (
-            <TaskCard key={task.id} name={task.name} />
+          {tasks.map(task => (
+            <TaskCard
+              key={task.id}
+              name={task.name}
+              taskId={task.id}
+              onDeleteTask={onDeleteTask}
+              description={task.desc}
+            />
           ))}
         </ul>
       </div>
