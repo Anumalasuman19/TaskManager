@@ -9,33 +9,31 @@ const SearchTasks = () => {
   const [searchApiStatus, setSearchApiStatus] = useState(ApiStatus.initial)
   const [isInputFocused, setIsInputFocused] = useState(false)
 
-  // API function
-  const searchTasksApi = async () => {
+  const searchTasksApi = async searchQuery => {
     setSearchApiStatus(ApiStatus.loading)
     const token = localStorage.getItem('pa_token')
 
     const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${token}&query=${encodeURIComponent(
-      query,
+      searchQuery,
     )}&modelTypes=cards&card_fields=id,name,desc,closed,pos,idList,idBoard,url`
+
     const response = await fetch(url)
     const data = await response.json()
-    console.log(data)
-
-    // Trello search returns an object with cards & boards
     const tasks = data.cards || []
     setResults(tasks)
-    if (tasks) {
+    if (response.ok) {
       setSearchApiStatus(ApiStatus.success)
     } else {
       setSearchApiStatus(ApiStatus.failure)
     }
   }
 
-  const handleSearch = async e => {
-    await setQuery(e.target.value)
+  const handleSearch = e => {
+    const newQuery = e.target.value
+    setQuery(newQuery)
 
-    if (query.trim() !== '') {
-      searchTasksApi()
+    if (newQuery.trim() !== '') {
+      searchTasksApi(newQuery)
     } else {
       setResults([])
       setSearchApiStatus(ApiStatus.initial)
@@ -45,6 +43,7 @@ const SearchTasks = () => {
   const onSearchFocus = () => {
     setIsInputFocused(true)
   }
+
   const onSearchBlur = () => {
     setIsInputFocused(false)
   }
@@ -55,15 +54,16 @@ const SearchTasks = () => {
         return <p className="loading-text">Searching...</p>
       case ApiStatus.success:
         return results.length > 0 ? (
-          <ul>
+          <ul className="search-result-list">
             {results.map(task => (
-              <TaskCard
-                key={task.id}
-                name={task.name}
-                taskId={task.id}
-                onDeleteTask={() => {}}
-                description={task.desc}
-              />
+              <li className="search-result-item" key={task.id}>
+                <TaskCard
+                  name={task.name}
+                  taskId={task.id}
+                  onDeleteTask={() => {}}
+                  description={task.desc}
+                />
+              </li>
             ))}
           </ul>
         ) : (
@@ -73,7 +73,7 @@ const SearchTasks = () => {
         )
       case ApiStatus.failure:
         return (
-          <p className="error-text">Something went wrong. Please try again.</p>
+          <p className="no-results">Something went wrong. Please try again.</p>
         )
       default:
         return null
@@ -82,23 +82,31 @@ const SearchTasks = () => {
 
   return (
     <div className="search-container">
-      <input
-        type="search"
-        value={query}
-        onChange={handleSearch}
-        onFocus={onSearchFocus}
-        onBlur={onSearchBlur}
-        placeholder="Search"
-        className="search-input"
-      />
-      <img
-        src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755854561/search_p1o08q.png"
-        className="search-icon"
-        alt="search-icon"
-      />
+      <div className="search-input-container">
+        <input
+          type="search"
+          value={query}
+          onChange={handleSearch}
+          onFocus={onSearchFocus}
+          onBlur={onSearchBlur}
+          placeholder="Search"
+          className="search-input"
+        />
+        {isInputFocused ? (
+          <></>
+        ) : (
+          <img
+            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755854561/search_p1o08q.png"
+            className="search-input-icon"
+            alt="search-icon"
+          />
+        )}
+      </div>
 
-      {onSearchFocus && (
+      {isInputFocused && query !== '' ? (
         <div className="results-container">{getResultView()}</div>
+      ) : (
+        <></>
       )}
     </div>
   )

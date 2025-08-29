@@ -1,12 +1,13 @@
 import {useState, useEffect} from 'react'
-import {DragDropContext} from '@hello-pangea/dnd'
+import {DragDropContext, Droppable, Draggable} from '@hello-pangea/dnd'
 import './index.css'
 import NavBar from '../NavBar/NavBar'
 import Organizations from '../Organizations/Organizations'
 import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
-import BoardTaskList from './BoardTasksList/BoardTasksList'
+import BoardTasksList from './BoardTasksList/BoardTasksList'
 import AddList from './AddList/AddList'
+import SearchTasks from '../SearchTasks/SearchTasks'
 
 const Board = props => {
   const [organizationData, setOrganizationData] = useState()
@@ -16,10 +17,13 @@ const Board = props => {
     ApiStatus.initial,
   )
   const [tasksData, setTasksData] = useState()
-  const [tasksDataApiStatus, setTasksDataApiStatus] = useState(
-    ApiStatus.initial,
-  )
   const [isNewListEntryPopUpOpen, setIsNewListEntryPopUpOpen] = useState(false)
+  const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
+  const token = localStorage.getItem('pa_token')
+
+  const onClickSearchIcon = isSearchEnabled => {
+    setIsSearchTasksEnabled(isSearchEnabled)
+  }
 
   const onClickOfOrganizations = organizationsData => {
     setOrganizationData(organizationsData)
@@ -31,7 +35,6 @@ const Board = props => {
 
   const getBoardsList = async () => {
     setBoardListsDataApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
@@ -48,8 +51,6 @@ const Board = props => {
   }
 
   const getTasks = async () => {
-    setTasksDataApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
@@ -60,8 +61,8 @@ const Board = props => {
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
     if (apiResponse.ok) {
-      setTasksData(jsonResponse)
-      setTasksDataApiStatus(ApiStatus.success)
+      const sortedTasks = jsonResponse.sort((a, b) => a.pos - b.pos)
+      setTasksData(sortedTasks)
     }
   }
 
@@ -74,16 +75,12 @@ const Board = props => {
   }
 
   const addListApi = async listName => {
-    const token = localStorage.getItem('pa_token')
     const {match} = props
     const {params} = match
     const {id} = params
-
     const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${token}&name=${listName}`
-
     const response = await fetch(url, {method: 'POST'})
     const newList = await response.json()
-    // Append new list without reloading whole list
     setBoardListsData(prev => [...prev, newList])
     setIsNewListEntryPopUpOpen(false)
   }
@@ -93,9 +90,10 @@ const Board = props => {
     history.replace('/')
   }
 
-  const onClickClose = () => {
+  const onClickCloseOrganization = () => {
     setShowOrganizationsPopup(false)
   }
+
   const onClickAddListClose = () => {
     setIsNewListEntryPopUpOpen(false)
   }
@@ -104,54 +102,89 @@ const Board = props => {
     setBoardListsData(prev => prev.filter(list => list.id !== closedListId))
   }
 
-  const onTaskDeleted = (taskId, listId) => {
+  const onTaskDeleted = taskId => {
     setTasksData(prev => prev.filter(task => task.id !== taskId))
   }
 
   const onDragEnd = async result => {
-    const {source, destination, draggableId} = result
-
+    const {source, destination, draggableId, type} = result
     if (!destination) return
 
-    // Allow only reorder inside the same list
-    if (source.droppableId !== destination.droppableId) return
+    if (type === 'CARD') {
+      const sourceListId = source.droppableId
+      const destListId = destination.droppableId
 
-    // No change if dropped in same spot
-    if (source.index === destination.index) return
+      let destTasks = tasksData
+        .filter(task => task.idList === destListId)
+        .sort((a, b) => a.pos - b.pos)
 
-    setTasksData(prev => {
-      const updated = Array.from(prev)
+      if (sourceListId === destListId) {
+        destTasks = [...destTasks]
+        destTasks.splice(source.index, 1)
+      }
 
-      // Filter only tasks of this list
-      const listTasks = updated.filter(
-        task => task.idList === source.droppableId,
+      let newPos
+      if (destination.index === 0) {
+        newPos = destTasks.length > 0 ? destTasks[0].pos / 2 : 65536
+      } else if (destination.index >= destTasks.length) {
+        newPos = destTasks[destTasks.length - 1].pos + 65536
+      } else {
+        const before = destTasks[destination.index - 1]
+        const after = destTasks[destination.index]
+        newPos = (before.pos + after.pos) / 2
+      }
+
+      setTasksData(prev => {
+        const updated = [...prev]
+        const idx = updated.findIndex(t => t.id === draggableId)
+        if (idx !== -1) {
+          updated[idx] = {
+            ...updated[idx],
+            idList: destListId,
+            pos: newPos,
+          }
+        }
+        return updated
+      })
+
+      try {
+        const url = `https://api.trello.com/1/cards/${draggableId}?key=${ApiKey}&token=${token}&idList=${destListId}&pos=${newPos}`
+        await fetch(url, {method: 'PUT'})
+      } catch (err) {
+        console.error('Error updating Trello card:', err)
+        getTasks()
+      }
+    }
+    if (type === 'LIST') {
+      let newPos
+      const reorderedLists = [...boardListsData]
+      const [moved] = reorderedLists.splice(source.index, 1)
+      reorderedLists.splice(destination.index, 0, moved)
+
+      if (destination.index === 0) {
+        newPos = reorderedLists[1] ? reorderedLists[1].pos / 2 : 65536
+      } else if (destination.index === reorderedLists.length - 1) {
+        newPos = reorderedLists[reorderedLists.length - 2].pos + 65536
+      } else {
+        const before = reorderedLists[destination.index - 1]
+        const after = reorderedLists[destination.index + 1]
+        newPos = (before.pos + after.pos) / 2
+      }
+
+      setBoardListsData(prev =>
+        prev.map(list =>
+          list.id === draggableId ? {...list, pos: newPos} : list,
+        ),
       )
 
-      // Remove dragged task from list
-      const [movedTask] = listTasks.splice(source.index, 1)
-
-      // Insert it at new position
-      listTasks.splice(destination.index, 0, movedTask)
-
-      // Rebuild the array: replace only this list’s tasks
-      const reordered = [
-        ...updated.filter(task => task.idList !== source.droppableId),
-        ...listTasks,
-      ]
-
-      return reordered
-    })
-
-    // ---- Trello API Update ----
-    const token = localStorage.getItem('pa_token')
-    const cardId = draggableId
-
-    // Trello "pos" param → use "top" if index 0 else "bottom"
-    let pos = 'bottom'
-    if (destination.index === 0) pos = 'top'
-
-    const url = `https://api.trello.com/1/cards/${cardId}?key=${ApiKey}&token=${token}&pos=${pos}`
-    await fetch(url, {method: 'PUT'})
+      try {
+        const url = `https://api.trello.com/1/lists/${draggableId}?key=${ApiKey}&token=${token}&pos=${newPos}`
+        await fetch(url, {method: 'PUT'})
+      } catch (err) {
+        console.error('Error updating Trello list:', err)
+        getBoardsList()
+      }
+    }
   }
 
   const getContentContainerView = () => {
@@ -162,50 +195,79 @@ const Board = props => {
         break
       case ApiStatus.success:
         sectionView = (
-          <div className="board-lists-container">
-            <DragDropContext onDragEnd={onDragEnd}>
-              <div className="board-lists-container">
-                <ul className="lists-container">
-                  {boardListsData.map(list => {
-                    const listCards = tasksData
-                      ? tasksData.filter(card => card.idList === list.id)
-                      : []
-
-                    return (
-                      <BoardTaskList
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable
+              droppableId="all-lists"
+              direction="horizontal"
+              type="LIST"
+            >
+              {(provided, snapshot) => (
+                <div
+                  className="board-lists-container"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {boardListsData
+                    .sort((a, b) => a.pos - b.pos)
+                    .map((list, index) => (
+                      <Draggable
                         key={list.id}
-                        listId={list.id}
-                        listName={list.name}
-                        cards={listCards}
-                        onTaskAdded={onTaskAdded}
-                        onListClosed={handleListClosed}
-                        onTaskDeleted={onTaskDeleted}
-                      />
-                    )
-                  })}
-                </ul>
-                {isNewListEntryPopUpOpen ? (
-                  <AddList
-                    onAddList={addListApi}
-                    onClose={onClickAddListClose}
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    className="add-list-button"
-                    onClick={onClickOfAddListButton}
-                  >
-                    <img
-                      src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755762120/white-plus-icon_f1tutx.png"
-                      alt="add-list-plus-icon"
-                      className="add-list-plus-icon"
+                        draggableId={String(list.id)}
+                        index={index}
+                      >
+                        {(draggableProvided, draggableSnapshot) => (
+                          <div
+                            ref={draggableProvided.innerRef}
+                            {...draggableProvided.draggableProps}
+                            {...draggableProvided.dragHandleProps}
+                            style={{
+                              ...draggableProvided.draggableProps.style,
+                              opacity: draggableSnapshot.isDragging ? 0.9 : 1,
+                            }}
+                          >
+                            <BoardTasksList
+                              listId={list.id}
+                              listName={list.name}
+                              cards={
+                                tasksData
+                                  ? tasksData.filter(
+                                      card => card.idList === list.id,
+                                    )
+                                  : []
+                              }
+                              onTaskAdded={onTaskAdded}
+                              onListClosed={handleListClosed}
+                              onTaskDeleted={onTaskDeleted}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  {provided.placeholder}
+
+                  {isNewListEntryPopUpOpen ? (
+                    <AddList
+                      onAddList={addListApi}
+                      onClose={onClickAddListClose}
                     />
-                    <p className="add-list-text">Add list</p>
-                  </button>
-                )}
-              </div>
-            </DragDropContext>
-          </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="add-list-button"
+                      onClick={onClickOfAddListButton}
+                    >
+                      <img
+                        src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755762120/white-plus-icon_f1tutx.png"
+                        alt="add-list-plus-icon"
+                        className="add-list-plus-icon"
+                      />
+                      <p className="add-list-text">Add list</p>
+                    </button>
+                  )}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         )
         break
       default:
@@ -225,16 +287,18 @@ const Board = props => {
         getOrganizationsData={onClickOfOrganizations}
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
+        onClickSearchIcon={onClickSearchIcon}
       />
-      {getContentContainerView()}
+      {isSearchTasksEnabled ? <SearchTasks /> : getContentContainerView()}
       {showOrganizationsPopup && (
         <Organizations
           workspacesOrganizations={organizationData}
-          onClose={onClickClose}
+          onClose={onClickCloseOrganization}
           onChangeOrganizationItem={onChangeOrganization}
         />
       )}
     </div>
   )
 }
+
 export default Board

@@ -89,6 +89,10 @@
     align-items: center;
     background-color: #4e97c2;
     border-radius: 4px;
+    cursor: pointer;
+  }
+  .board-btn:hover {
+    background-color: #2fa9f1;
   }
   .board-text {
     margin: 0px;
@@ -152,15 +156,6 @@
   .search-box {
     display: flex;
     align-items: center;
-  }
-
-  .search-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 16px;
-    color: #fff;
   }
 
   .search-box ::placeholder {

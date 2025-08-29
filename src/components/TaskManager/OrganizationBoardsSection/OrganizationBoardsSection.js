@@ -16,12 +16,13 @@ const OrganizationBoardsSection = props => {
     organizationBoardsApiStatus,
     setOrganizationBoardsApiStatus,
   ] = useState(ApiStatus.initial)
-  const [isMouseHover, setIsMouseHover] = useState(false)
+  const [isMouseHoverOnCreateBoard, setIsMouseHoverOnCreateBoard] = useState(
+    false,
+  )
 
   const getOrganizationBoards = async () => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
     const token = localStorage.getItem('pa_token')
-    console.log(activeOrganizationId)
     const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${token}`
     const options = {
       method: 'GET',
@@ -44,11 +45,12 @@ const OrganizationBoardsSection = props => {
     return subHeader
   }
 
-  const onMouseMouseOnCreateBoard = () => {
-    setIsMouseHover(true)
+  const onMouseEnterCreateBoard = () => {
+    setIsMouseHoverOnCreateBoard(true)
   }
-  const onMouseLeaveOnCreateBoard = () => {
-    setIsMouseHover(false)
+
+  const onMouseLeaveCreateBoard = () => {
+    setIsMouseHoverOnCreateBoard(false)
   }
 
   useEffect(() => {
@@ -86,10 +88,10 @@ const OrganizationBoardsSection = props => {
             <li>
               <button
                 type="button"
-                onMouseEnter={onMouseMouseOnCreateBoard}
-                onMouseLeave={onMouseLeaveOnCreateBoard}
+                onMouseEnter={onMouseEnterCreateBoard}
+                onMouseLeave={onMouseLeaveCreateBoard}
                 className={`create-new-board-button ${
-                  isShowCreateBoardPopupOpen || isMouseHover
+                  isShowCreateBoardPopupOpen || isMouseHoverOnCreateBoard
                     ? 'create-new-board-button-active'
                     : ''
                 }`}
@@ -97,7 +99,7 @@ const OrganizationBoardsSection = props => {
               >
                 <img
                   src={
-                    isShowCreateBoardPopupOpen || isMouseHover
+                    isShowCreateBoardPopupOpen || isMouseHoverOnCreateBoard
                       ? 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755930805/plus_1_ihwyso.png'
                       : 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755662935/plus_dq7zet.png'
                   }
@@ -106,7 +108,7 @@ const OrganizationBoardsSection = props => {
                 />
                 <p
                   className={`create-new-board-text ${
-                    isShowCreateBoardPopupOpen || isMouseHover
+                    isShowCreateBoardPopupOpen || isMouseHoverOnCreateBoard
                       ? 'create-new-board-text-active'
                       : ''
                   }`}

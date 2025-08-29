@@ -5,6 +5,7 @@ import './TaskCard.css'
 
 const TaskCard = ({name, taskId, onDeleteTask, description}) => {
   const [taskName, setTaskName] = useState(name)
+  const [taskDescription, setDescription] = useState(description)
   const [
     isTaskAdditionalDetailsOpen,
     setIsTaskAdditionalDetailsOpen,
@@ -18,6 +19,7 @@ const TaskCard = ({name, taskId, onDeleteTask, description}) => {
     })
     const data = await response.json()
     setTaskName(data.name)
+    setDescription(data.desc)
     setIsTaskAdditionalDetailsOpen(false)
   }
 
@@ -40,16 +42,22 @@ const TaskCard = ({name, taskId, onDeleteTask, description}) => {
 
   return (
     <div className="task-card-container">
-      <button type="button" className="task-card" onClick={onClickTask}>
+      <div
+        role="button"
+        tabIndex={0}
+        className="task-card"
+        onClick={onClickTask}
+      >
         {taskName}
-      </button>
+      </div>
       {isTaskAdditionalDetailsOpen && (
         <UpdateTaskDetailsPopUp
           onDelete={onDeleteTaskApi}
           onUpdateTask={onUpdateTaskApi}
           onClosePopup={onCloseAdditionalDetailsPopUp}
           taskName={taskName}
-          description={description}
+          description={taskDescription}
+          taskId={taskId}
         />
       )}
     </div>

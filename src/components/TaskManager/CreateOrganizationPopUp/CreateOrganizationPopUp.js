@@ -45,7 +45,6 @@ const CreateOrganizationPopUp = props => {
           <input
             id="organization-name"
             type="text"
-            placeholder="Organization Name"
             value={title}
             onChange={onChangeInput}
             className="create-organization-input"

@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import {uuid} from 'uuid'
 import './UpdateTaskDetailsPopUp.css'
 
 const UpdateTaskDetailsPopUp = ({
@@ -56,6 +55,10 @@ const UpdateTaskDetailsPopUp = ({
       e.preventDefault()
       handleAddComment()
     }
+  }
+
+  const onChangeComment = event => {
+    setNewComment(event.target.value)
   }
 
   const onClickUpdateTask = () => {
@@ -135,7 +138,7 @@ const UpdateTaskDetailsPopUp = ({
               src="https://res.cloudinary.com/dzki1pesn/image/upload/v1756360593/description-icon_jftqey.png"
               alt="description-icon"
             />
-            <h4 className="input-label">Description</h4>
+            <h4 className="task-input-label">Description</h4>
           </div>
           <textarea
             className="description-input"
@@ -153,7 +156,7 @@ const UpdateTaskDetailsPopUp = ({
                 src="https://res.cloudinary.com/dzki1pesn/image/upload/v1756360578/comment-icon_qhgat8.png"
                 alt="comments-icon"
               />
-              <h4 className="input-label">Comments</h4>
+              <h4 className="task-input-label">Comments</h4>
             </div>
             <div className="comment-box">
               <div className="avatar">{userInitials}</div>
@@ -162,7 +165,7 @@ const UpdateTaskDetailsPopUp = ({
                 className="comment-input"
                 placeholder="Write a Comment..."
                 value={newComment}
-                onChange={e => setNewComment(e.target.value)}
+                onChange={onChangeComment}
                 onKeyDown={handleKeyDown}
               />
             </div>

@@ -15,15 +15,17 @@ const BoardTasksList = props => {
     onListClosed,
     onTaskDeleted,
   } = props
+
   const [tasks, setTasks] = useState(cards)
   const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
   const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
   const [updatedListName, setUpdatedListName] = useState(listName)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const token = localStorage.getItem('pa_token')
+
   const onToggleMenu = () => setIsMenuOpen(prev => !prev)
 
   const onCloseList = async () => {
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${token}&value=true`
     await fetch(url, {method: 'PUT'})
     onListClosed(listId)
@@ -38,11 +40,8 @@ const BoardTasksList = props => {
   }
 
   const updateListNameApi = async name => {
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${token}&name=${name}`
-    const response = await fetch(url, {
-      method: 'PUT',
-    })
+    const response = await fetch(url, {method: 'PUT'})
     const data = await response.json()
     setUpdatedListName(data.name)
     setIsEditNameFormOpen(false)
@@ -53,29 +52,24 @@ const BoardTasksList = props => {
   }
 
   const onAddTask = async taskName => {
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${token}&name=${taskName}&idList=${listId}`
-    const response = await fetch(url, {
-      method: 'POST',
-    })
+    const response = await fetch(url, {method: 'POST'})
     const data = await response.json()
     setIsNewTaskEntryPopUpOpen(false)
     onTaskAdded(data)
   }
 
   const onDeleteTask = taskId => {
-    setTasks(prev => {
-      const filteredTasks = prev.filter(item => item.id !== taskId)
-      return filteredTasks
-    })
-    onTaskDeleted(taskId, listId)
+    setTasks(prev => prev.filter(item => item.id !== taskId))
+    onTaskDeleted(taskId)
   }
 
   useEffect(() => {
-    setTasks(cards)
+    setTasks([...cards].sort((a, b) => a.pos - b.pos))
   }, [cards])
+
   return (
-    <div className="task-list" id={listId}>
+    <div className="task-list">
       <div className="task-list-header">
         {isEditNameFormOpen ? (
           <EditListName onEditListName={updateListNameApi} />
@@ -109,41 +103,46 @@ const BoardTasksList = props => {
           )}
         </div>
       </div>
-      <div className="task-list-body">
-        <Droppable droppableId={String(listId)}>
-          {(droppableProvided, droppableSnapshot) => (
-            <ul
-              className="cards-list"
-              ref={droppableProvided.innerRef}
-              {...droppableProvided.droppableProps}
-            >
-              {tasks.map((task, index) => (
-                <Draggable
-                  key={task.id}
-                  draggableId={String(task.id)}
-                  index={index}
-                >
-                  {(draggableProvided, draggableSnapshot) => (
-                    <li
-                      ref={draggableProvided.innerRef}
-                      {...draggableProvided.draggableProps}
-                      {...draggableProvided.dragHandleProps}
-                    >
-                      <TaskCard
-                        name={task.name}
-                        taskId={task.id}
-                        onDeleteTask={onDeleteTask}
-                        description={task.desc}
-                      />
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {droppableProvided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </div>
+
+      {/* Removed DragDropContext from here - it's now in Board.js */}
+      <Droppable droppableId={String(listId)} type="CARD">
+        {(droppableProvided, droppableSnapshot) => (
+          <ul
+            className="cards-list"
+            ref={droppableProvided.innerRef}
+            {...droppableProvided.droppableProps}
+          >
+            {tasks.map((task, index) => (
+              <Draggable
+                key={task.id}
+                draggableId={String(task.id)}
+                index={index}
+              >
+                {(draggableProvided, draggableSnapshot) => (
+                  <li
+                    ref={draggableProvided.innerRef}
+                    {...draggableProvided.draggableProps}
+                    {...draggableProvided.dragHandleProps}
+                    style={{
+                      ...draggableProvided.draggableProps.style,
+                      // Add some visual feedback during drag
+                      opacity: draggableSnapshot.isDragging ? 0.8 : 1,
+                    }}
+                  >
+                    <TaskCard
+                      name={task.name}
+                      taskId={task.id}
+                      onDeleteTask={onDeleteTask}
+                      description={task.desc}
+                    />
+                  </li>
+                )}
+              </Draggable>
+            ))}
+            {droppableProvided.placeholder}
+          </ul>
+        )}
+      </Droppable>
 
       {isNewTaskEntryPopUpOpen ? (
         <AddTask onClickOfAddTask={onAddTask} onClickOfClose={onClickClose} />

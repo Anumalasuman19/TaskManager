@@ -45,7 +45,7 @@
 .heading-text {
   font-size: 16px;
   margin: 0px;
-  margin-top: 20px;
+  margin-top: 10px;
   font-weight: 500;
   color: #334155;
 }
@@ -91,7 +91,6 @@
   cursor: pointer;
 }
 
-/* ===== DESKTOP VIEW ===== */
 @media (min-width: 768px) {
   .popup-overlay {
     justify-content: center;

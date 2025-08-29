@@ -26,10 +26,12 @@ const TaskManager = props => {
     setShowCreateNewOrganizationPopup,
   ] = useState(false)
   const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
+  const token = localStorage.getItem('pa_token')
 
   const onClickSearchIcon = isSearchEnabled => {
     setIsSearchTasksEnabled(isSearchEnabled)
   }
+
   const onChangeOrganization = () => {
     const {history} = props
     history.replace('/')
@@ -47,8 +49,10 @@ const TaskManager = props => {
     setShowOrganizationsPopup(true)
   }
 
+  const getActiveOrganizationId = () => localStorage.getItem('organization_id')
+
   const getWorkspaceName = () => {
-    const activeOrganizationId = localStorage.getItem('organization_id')
+    const activeOrganizationId = getActiveOrganizationId()
     const organization = organizationData.find(
       item => item.id === activeOrganizationId,
     )
@@ -60,8 +64,8 @@ const TaskManager = props => {
   }
 
   const onClickOfCreateBoard = async name => {
-    const token = localStorage.getItem('pa_token')
-    const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${token}&name=${name}`
+    const organizationId = getActiveOrganizationId()
+    const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${token}&name=${name}&idOrganization=${organizationId}`
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({name}),
@@ -71,7 +75,7 @@ const TaskManager = props => {
     setNewCreatedBoard(data)
   }
 
-  const onClickClose = () => {
+  const onClickCloseOrganization = () => {
     setShowOrganizationsPopup(false)
   }
   const onClickCloseBoardPopup = () => {
@@ -79,7 +83,6 @@ const TaskManager = props => {
   }
 
   const onCreateOrganizationApi = async organizationName => {
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/organizations?key=${ApiKey}&token=${token}&displayName=${organizationName}`
     const response = await fetch(url, {
       method: 'POST',
@@ -91,10 +94,10 @@ const TaskManager = props => {
     setShowCreateNewOrganizationPopup(false)
   }
 
-  const onMouseMouseOnCreateOrganization = () => {
+  const onMouseEnterCreateOrganization = () => {
     setCreateNewOrganizationHover(true)
   }
-  const onMouseLeaveOnCreateOrganization = () => {
+  const onMouseLeaveCreateOrganization = () => {
     setCreateNewOrganizationHover(false)
   }
 
@@ -104,8 +107,6 @@ const TaskManager = props => {
   const onCloseOrganizationPopUp = () => {
     setShowCreateNewOrganizationPopup(false)
   }
-
-  const getActiveOrganizationId = () => localStorage.getItem('organization_id')
 
   const getContentContainerView = () => {
     let sectionView
@@ -135,8 +136,8 @@ const TaskManager = props => {
                     : ''
                 }`}
                 onClick={onClickCreateOrganization}
-                onMouseEnter={onMouseMouseOnCreateOrganization}
-                onMouseLeave={onMouseLeaveOnCreateOrganization}
+                onMouseEnter={onMouseEnterCreateOrganization}
+                onMouseLeave={onMouseLeaveCreateOrganization}
               >
                 <img
                   src={
@@ -173,7 +174,7 @@ const TaskManager = props => {
               {showOrganizationsPopup && (
                 <Organizations
                   workspacesOrganizations={organizationData}
-                  onClose={onClickClose}
+                  onClose={onClickCloseOrganization}
                   onChangeOrganizationItem={onChangeOrganization}
                 />
               )}

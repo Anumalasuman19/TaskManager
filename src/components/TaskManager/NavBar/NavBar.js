@@ -14,7 +14,6 @@ const NavBar = props => {
     newCreatedOrganization,
     onClickSearchIcon,
   } = props
-  const [isOrganizationInitialApi, setIsOrganizationInitialApi] = useState(true)
   const [organizationData, setOrganizationData] = useState()
   const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
     ApiStatus.initial,
@@ -23,26 +22,24 @@ const NavBar = props => {
   const [userData, setUserData] = useState()
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const {history} = props
+  const token = localStorage.getItem('pa_token')
 
   const onClickOfLogout = () => {
-    localStorage.removeItem('pa_token')
-    const {history} = props
+    localStorage.removeItem(token)
     history.replace('/login')
   }
 
   const onClickSearch = () => {
     setIsSearchOpen(prev => !prev)
-    onClickSearchIcon(isSearchOpen)
   }
 
   const onChangeOrganization = () => {
-    const {history} = props
     history.replace('/')
   }
 
   const getUserData = async () => {
     setUserDataApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/members/me?key=${ApiKey}&token=${token}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
@@ -58,18 +55,16 @@ const NavBar = props => {
   const organizationsDataApi = async () => {
     getOrganizationApiStatus(ApiStatus.inProgress)
     setOrganizationDataApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem('pa_token')
     const url = `https://api.trello.com/1/members/me/organizations?key=${ApiKey}&token=${token}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
-
     if (apiResponse.ok) {
       getOrganizationsData(jsonResponse)
-      if (isOrganizationInitialApi) {
+      const activeOrganizationId = localStorage.getItem('organization_id')
+      if (activeOrganizationId === null) {
         const firstOrgId = jsonResponse[0].id
         localStorage.setItem('organization_id', firstOrgId)
-        setIsOrganizationInitialApi(false)
       }
       setOrganizationData(jsonResponse)
       getOrganizationApiStatus(ApiStatus.success)
@@ -90,6 +85,10 @@ const NavBar = props => {
     setShowDropdown(false)
   }
 
+  const onClickBoards = () => {
+    history.replace('/')
+  }
+
   useEffect(() => {
     getUserData()
     organizationsDataApi()
@@ -100,6 +99,10 @@ const NavBar = props => {
       setOrganizationData(prev => [...prev, newCreatedOrganization])
     }
   }, [newCreatedOrganization])
+
+  useEffect(() => {
+    onClickSearchIcon(isSearchOpen)
+  }, [isSearchOpen])
 
   return (
     <div className="nav-bar-container">
@@ -149,7 +152,11 @@ const NavBar = props => {
             </div>
           )}
         </div>
-        <button type="button" className="board-btn no-mobile-view-display">
+        <button
+          type="button"
+          className="board-btn no-mobile-view-display"
+          onClick={onClickBoards}
+        >
           <img
             src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755866782/board-logo_uozurg.png"
             alt="dropdown-icon"
@@ -171,7 +178,11 @@ const NavBar = props => {
           onClick={onClickSearch}
         >
           <img
-            src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604225/search-icon_tvkupn.png"
+            src={
+              isSearchOpen
+                ? 'https://res.cloudinary.com/dzki1pesn/image/upload/v1756440456/search-active-icon_ps7rid.png'
+                : 'https://res.cloudinary.com/dzki1pesn/image/upload/v1755604225/search-icon_tvkupn.png'
+            }
             alt="search-icon"
             className="search-icon"
           />

@@ -54,3 +54,8 @@
   margin: 0;
   padding: 0;
 }
+@media (min-width: 769px) {
+  .board-lists-container {
+    padding: 24px 48px;
+  }
+}

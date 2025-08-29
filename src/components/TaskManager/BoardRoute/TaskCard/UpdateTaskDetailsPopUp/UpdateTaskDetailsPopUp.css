@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 }
 
 .task-details-container {
@@ -90,7 +91,7 @@
   align-items: center;
   gap: 8px;
 }
-.input-label {
+.task-input-label {
   font-size: 16px;
   font-weight: 500;
   color: #334155;
@@ -182,6 +183,7 @@
   margin: 0;
   max-height: 100px;
   overflow-y: auto;
+  margin-top: 10px;
 }
 
 .comment-item {
@@ -199,6 +201,11 @@
   font-size: 12px;
   font-weight: 400;
   margin: 0px;
+}
+.no-comments {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
 }
 @media (min-width: 769px) {
   .task-details-popup-overlay {
@@ -231,12 +238,12 @@
   .section {
     margin-bottom: 48px;
   }
-  .input-label {
+  .task-input-label {
     font-size: 20px;
   }
   .description-input {
     margin-left: 24px;
-    align-self: flex-end;
+    align-self: flex-start;
     padding: 14px 16px;
     font-size: 20px;
     min-width: 748px;
@@ -263,6 +270,9 @@
     font-size: 16px;
   }
 
+  .comment-input-box {
+    padding-right: 140px;
+  }
   .add-comment-btn {
     padding: 6px 16px;
     font-size: 16px;
@@ -274,6 +284,7 @@
   .comments-list {
     max-height: 200px;
     overflow-y: auto;
+    padding-right: 140px;
   }
 
   .error-message {

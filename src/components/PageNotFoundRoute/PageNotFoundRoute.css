@@ -7,8 +7,11 @@
   background-color: #0079bf;
   text-align: center;
   padding: 0px 24px;
+  border: 1px solid green;
 }
-
+.search-tasks-container {
+  margin-bottom: auto;
+}
 .page-not-found-title {
   font-size: 32px;
   font-weight: bold;
@@ -26,7 +29,7 @@
 }
 @media (min-width: 769px) {
   .page-not-found-container {
-    padding: 0px 606px;
+    padding: 0px 535px;
   }
   .page-not-found-title {
     font-size: 48px;
