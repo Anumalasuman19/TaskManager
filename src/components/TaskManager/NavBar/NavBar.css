@@ -65,6 +65,13 @@
 .no-mobile-view-display {
   display: none;
 }
+.board-btn {
+  background-color: transparent;
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+}
+
 .search-button {
   margin: 0px;
   border: 0px;
@@ -72,15 +79,6 @@
   background-color: transparent;
 }
 @media (min-width: 769px) {
-  .no-desktop-view-display {
-    display: none;
-  }
-  .profile-text {
-    font-size: 16px;
-  }
-  .nav-bar-container {
-    padding: 25px 48px;
-  }
   .board-btn {
     padding: 8px 16px;
     border: none;
@@ -94,6 +92,16 @@
   .board-btn:hover {
     background-color: #2fa9f1;
   }
+  .no-desktop-view-display {
+    display: none;
+  }
+  .profile-text {
+    font-size: 16px;
+  }
+  .nav-bar-container {
+    padding: 25px 48px;
+  }
+
   .board-text {
     margin: 0px;
     font-size: 20px;

@@ -170,16 +170,20 @@ const NavBar = props => {
           <p className="board-text">Boards</p>
         </button>
 
-        <Link to="/">
+        <button
+          type="button"
+          className="board-btn no-desktop-view-display"
+          onClick={onClickBoards}
+        >
           <img
             src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604213/board-icon_t6qjy4.png"
             alt="board-icon"
             className="no-desktop-view-display"
           />
-        </Link>
+        </button>
         <button
           type="button"
-          className="search-button  no-desktop-view-display"
+          className="search-button no-desktop-view-display"
           onClick={onClickSearch}
         >
           <img
