@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'
 import {Droppable, Draggable} from '@hello-pangea/dnd'
 import './BoardTasksList.css'
-import {ApiKey} from '../../CommonComponents/Constants'
+import {ApiKey, TokenKey, CardType} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
 import AddTask from '../AddTask/AddTask'
 import EditListName from './EditListName/EditListName'
@@ -21,7 +21,7 @@ const BoardTasksList = props => {
   const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
   const [updatedListName, setUpdatedListName] = useState(listName)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const token = localStorage.getItem('pa_token')
+  const token = localStorage.getItem(TokenKey)
 
   const onToggleMenu = () => setIsMenuOpen(prev => !prev)
 
@@ -47,7 +47,7 @@ const BoardTasksList = props => {
     setIsEditNameFormOpen(false)
   }
 
-  const onClickClose = () => {
+  const onClickCloseAddTaskPopUp = () => {
     setIsNewTaskEntryPopUpOpen(false)
   }
 
@@ -58,6 +58,12 @@ const BoardTasksList = props => {
     setIsNewTaskEntryPopUpOpen(false)
     onTaskAdded(data)
   }
+
+  const getTaskItemStyle = (isDragging, draggableStyle) => ({
+    background: isDragging ? '#CBD5E1' : '#FFFFFF',
+    borderRadius: '4px',
+    ...draggableStyle,
+  })
 
   const onDeleteTask = taskId => {
     setTasks(prev => prev.filter(item => item.id !== taskId))
@@ -103,9 +109,7 @@ const BoardTasksList = props => {
           )}
         </div>
       </div>
-
-      {/* Removed DragDropContext from here - it's now in Board.js */}
-      <Droppable droppableId={String(listId)} type="CARD">
+      <Droppable droppableId={String(listId)} type={CardType}>
         {(droppableProvided, droppableSnapshot) => (
           <ul
             className="cards-list"
@@ -123,11 +127,10 @@ const BoardTasksList = props => {
                     ref={draggableProvided.innerRef}
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
-                    style={{
-                      ...draggableProvided.draggableProps.style,
-                      // Add some visual feedback during drag
-                      opacity: draggableSnapshot.isDragging ? 0.8 : 1,
-                    }}
+                    style={getTaskItemStyle(
+                      draggableSnapshot.isDragging,
+                      draggableProvided.draggableProps.style,
+                    )}
                   >
                     <TaskCard
                       name={task.name}
@@ -139,13 +142,15 @@ const BoardTasksList = props => {
                 )}
               </Draggable>
             ))}
-            {droppableProvided.placeholder}
+            {tasks.length > 0 && droppableProvided.placeholder}
           </ul>
         )}
       </Droppable>
-
       {isNewTaskEntryPopUpOpen ? (
-        <AddTask onClickOfAddTask={onAddTask} onClickOfClose={onClickClose} />
+        <AddTask
+          onClickOfAddTask={onAddTask}
+          onClickOfClose={onClickCloseAddTaskPopUp}
+        />
       ) : (
         <button type="button" className="add-task" onClick={onClickOfAddTask}>
           <img

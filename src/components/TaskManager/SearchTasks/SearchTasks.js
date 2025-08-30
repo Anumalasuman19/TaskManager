@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import TaskCard from '../BoardRoute/TaskCard/TaskCard'
-import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
+import ApiStatus, {ApiKey, TokenKey} from '../CommonComponents/Constants'
 import './SearchTasks.css'
 
 const SearchTasks = () => {
@@ -11,7 +11,7 @@ const SearchTasks = () => {
 
   const searchTasksApi = async searchQuery => {
     setSearchApiStatus(ApiStatus.loading)
-    const token = localStorage.getItem('pa_token')
+    const token = localStorage.getItem(TokenKey)
 
     const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${token}&query=${encodeURIComponent(
       searchQuery,
@@ -68,7 +68,7 @@ const SearchTasks = () => {
           </ul>
         ) : (
           <p className="no-results">
-            We couldn’t find any cards or boards that matched your search.
+            We couldn’t find any cards that matched your search.
           </p>
         )
       case ApiStatus.failure:

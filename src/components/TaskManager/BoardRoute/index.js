@@ -3,7 +3,12 @@ import {DragDropContext, Droppable, Draggable} from '@hello-pangea/dnd'
 import './index.css'
 import NavBar from '../NavBar/NavBar'
 import Organizations from '../Organizations/Organizations'
-import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
+import ApiStatus, {
+  ApiKey,
+  TokenKey,
+  CardType,
+  ListType,
+} from '../CommonComponents/Constants'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 import BoardTasksList from './BoardTasksList/BoardTasksList'
 import AddList from './AddList/AddList'
@@ -19,7 +24,7 @@ const Board = props => {
   const [tasksData, setTasksData] = useState()
   const [isNewListEntryPopUpOpen, setIsNewListEntryPopUpOpen] = useState(false)
   const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
-  const token = localStorage.getItem('pa_token')
+  const token = localStorage.getItem(TokenKey)
 
   const onClickSearchIcon = isSearchEnabled => {
     setIsSearchTasksEnabled(isSearchEnabled)
@@ -110,7 +115,7 @@ const Board = props => {
     const {source, destination, draggableId, type} = result
     if (!destination) return
 
-    if (type === 'CARD') {
+    if (type === CardType) {
       const sourceListId = source.droppableId
       const destListId = destination.droppableId
 
@@ -155,7 +160,7 @@ const Board = props => {
         getTasks()
       }
     }
-    if (type === 'LIST') {
+    if (type === ListType) {
       let newPos
       const reorderedLists = [...boardListsData]
       const [moved] = reorderedLists.splice(source.index, 1)
@@ -199,7 +204,7 @@ const Board = props => {
             <Droppable
               droppableId="all-lists"
               direction="horizontal"
-              type="LIST"
+              type={ListType}
             >
               {(provided, snapshot) => (
                 <div

@@ -21,7 +21,7 @@ const CreateBoardPopUp = props => {
       <form onSubmit={handleCreate} className="create-board-container">
         <button
           type="button"
-          className="close-btn no-mobile-view-display-popup-element"
+          className="create-board-close-btn no-mobile-view-display-popup-element"
           onClick={onCreateBoardPopUpClose}
         >
           <img
@@ -40,7 +40,7 @@ const CreateBoardPopUp = props => {
           />
           <button
             type="button"
-            className="close-btn no-desktop-view-display-popup-element"
+            className="create-board-close-btn no-desktop-view-display-popup-element"
             onClick={onCreateBoardPopUpClose}
           >
             <img

@@ -31,6 +31,7 @@
   padding: 8px 16px;
   border-radius: 4px;
   border: 0px;
+  min-width: 282px;
   font-size: 16px;
   color: #f4f4f4;
   background-color: #a7b1bf;
@@ -41,11 +42,13 @@
   font-weight: 700;
   font-size: 16px;
 }
-.close-btn {
+.create-board-close-btn {
   border: none;
   cursor: pointer;
   background-color: transparent;
   align-self: flex-start;
+  margin: 0px;
+  padding: 0px;
 }
 .workspace-name-text {
   font-size: 14px;
@@ -74,7 +77,7 @@
   display: none;
 }
 @media (min-width: 769px) {
-  .close-btn {
+  .create-board-close-btn {
     display: block;
     align-self: flex-end;
     animation: none;

@@ -1,6 +1,10 @@
 import {useState} from 'react'
 import NavBar from './NavBar/NavBar'
-import ApiStatus, {ApiKey} from './CommonComponents/Constants'
+import ApiStatus, {
+  ApiKey,
+  ActiveOrganizationKey,
+  TokenKey,
+} from './CommonComponents/Constants'
 import Organizations from './Organizations/Organizations'
 import OrganizationBoardsSection from './OrganizationBoardsSection/OrganizationBoardsSection'
 import LoadingView from './CommonComponents/LoadingView/LoadingView'
@@ -26,7 +30,7 @@ const TaskManager = props => {
     setShowCreateNewOrganizationPopup,
   ] = useState(false)
   const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
-  const token = localStorage.getItem('pa_token')
+  const token = localStorage.getItem(TokenKey)
 
   const onClickSearchIcon = isSearchEnabled => {
     setIsSearchTasksEnabled(isSearchEnabled)
@@ -49,7 +53,8 @@ const TaskManager = props => {
     setShowOrganizationsPopup(true)
   }
 
-  const getActiveOrganizationId = () => localStorage.getItem('organization_id')
+  const getActiveOrganizationId = () =>
+    localStorage.getItem(ActiveOrganizationKey)
 
   const getWorkspaceName = () => {
     const activeOrganizationId = getActiveOrganizationId()

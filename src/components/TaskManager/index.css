@@ -54,13 +54,13 @@
   border: 0px;
   padding: 0px;
 }
-.create-new-organization:hover {
-  background-color: #2fa9f1;
-}
 
 @media (min-width: 769px) {
   .no-mobile-view {
     display: none;
+  }
+  .create-new-organization:hover {
+    background-color: #2fa9f1;
   }
   .organization-member-details-and-create-new-organization-button {
     padding: 0px;

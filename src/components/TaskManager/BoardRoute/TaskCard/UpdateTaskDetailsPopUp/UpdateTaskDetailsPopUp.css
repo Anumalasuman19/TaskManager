@@ -13,6 +13,7 @@
 
 .task-details-container {
   width: 90%;
+  height: 95%;
   position: relative;
   background: #ffffff;
   padding: 16px;
@@ -21,15 +22,19 @@
   flex-direction: column;
 }
 
-.close-button {
+.update-task-close-button {
   align-self: flex-end;
   background: none;
   border: none;
-  font-size: 20px;
   cursor: pointer;
   color: #475569;
+  margin: 0px;
+  padding: 0px;
 }
-
+.update-task-close-icon {
+  width: 16px;
+  height: 16px;
+}
 .task-title-button {
   margin: 0px;
   border: 0px;

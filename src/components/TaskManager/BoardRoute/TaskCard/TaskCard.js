@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {ApiKey} from '../../CommonComponents/Constants'
+import {ApiKey, TokenKey} from '../../CommonComponents/Constants'
 import UpdateTaskDetailsPopUp from './UpdateTaskDetailsPopUp/UpdateTaskDetailsPopUp'
 import './TaskCard.css'
 
@@ -10,7 +10,7 @@ const TaskCard = ({name, taskId, onDeleteTask, description}) => {
     isTaskAdditionalDetailsOpen,
     setIsTaskAdditionalDetailsOpen,
   ] = useState()
-  const token = localStorage.getItem('pa_token')
+  const token = localStorage.getItem(TokenKey)
 
   const onUpdateTaskApi = async (updatedTaskName, updatedDescription) => {
     const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${token}&name=${updatedTaskName}&desc=${updatedDescription}`

@@ -1,6 +1,11 @@
 import {useState, useEffect} from 'react'
 import './OrganizationBoardsSection.css'
-import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
+import ApiStatus, {
+  ApiKey,
+  NoBoardsText,
+  BoardsSubHeading,
+  TokenKey,
+} from '../CommonComponents/Constants'
 import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardItem'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 
@@ -11,7 +16,7 @@ const OrganizationBoardsSection = props => {
     isShowCreateBoardPopupOpen,
     activeOrganizationId,
   } = props
-  const [organizationBoardsData, setOrganizationBoardsData] = useState()
+  const [organizationBoardsData, setOrganizationBoardsData] = useState([])
   const [
     organizationBoardsApiStatus,
     setOrganizationBoardsApiStatus,
@@ -22,7 +27,7 @@ const OrganizationBoardsSection = props => {
 
   const getOrganizationBoards = async () => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem('pa_token')
+    const token = localStorage.getItem(TokenKey)
     const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${token}`
     const options = {
       method: 'GET',
@@ -37,10 +42,13 @@ const OrganizationBoardsSection = props => {
 
   const getSubHeaderText = () => {
     let subHeader
-    if (organizationBoardsData === null) {
-      subHeader = 'You Don’t have any workspace'
+    if (
+      organizationBoardsData === null ||
+      organizationBoardsData.length === 0
+    ) {
+      subHeader = NoBoardsText
     } else {
-      subHeader = 'Your Workspace boards'
+      subHeader = BoardsSubHeading
     }
     return subHeader
   }

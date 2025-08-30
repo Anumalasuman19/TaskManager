@@ -1,10 +1,11 @@
 import OrganizationItem from './OrganizationItem/OrganizationItem'
 import './Organizations.css'
+import {ActiveOrganizationKey} from '../CommonComponents/Constants'
 
 const Organizations = props => {
   const {workspacesOrganizations, onClose, onChangeOrganizationItem} = props
 
-  const activeOrganizationId = localStorage.getItem('organization_id')
+  const activeOrganizationId = localStorage.getItem(ActiveOrganizationKey)
   return (
     <div className="workspace-popup">
       <div className="workspace-popup-header">

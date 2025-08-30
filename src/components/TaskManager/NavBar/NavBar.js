@@ -1,6 +1,11 @@
 import {useEffect, useState} from 'react'
 import {Link, withRouter} from 'react-router-dom'
-import ApiStatus, {ApiKey} from '../CommonComponents/Constants'
+import ApiStatus, {
+  ApiKey,
+  ActiveOrganizationKey,
+  UserInitialsKey,
+  TokenKey,
+} from '../CommonComponents/Constants'
 import Organizations from '../Organizations/Organizations'
 import './NavBar.css'
 import SearchTasks from '../SearchTasks/SearchTasks'
@@ -23,10 +28,10 @@ const NavBar = props => {
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const {history} = props
-  const token = localStorage.getItem('pa_token')
+  const token = localStorage.getItem(TokenKey)
 
   const onClickOfLogout = () => {
-    localStorage.removeItem(token)
+    localStorage.removeItem(TokenKey)
     history.replace('/login')
   }
 
@@ -47,7 +52,7 @@ const NavBar = props => {
 
     if (apiResponse.ok) {
       setUserData(jsonResponse)
-      localStorage.setItem('user_initials', jsonResponse.initials)
+      localStorage.setItem(UserInitialsKey, jsonResponse.initials)
       setUserDataApiStatus(ApiStatus.success)
     }
   }
@@ -61,10 +66,10 @@ const NavBar = props => {
     const jsonResponse = await apiResponse.json()
     if (apiResponse.ok) {
       getOrganizationsData(jsonResponse)
-      const activeOrganizationId = localStorage.getItem('organization_id')
+      const activeOrganizationId = localStorage.getItem(ActiveOrganizationKey)
       if (activeOrganizationId === null) {
         const firstOrgId = jsonResponse[0].id
-        localStorage.setItem('organization_id', firstOrgId)
+        localStorage.setItem(ActiveOrganizationKey, firstOrgId)
       }
       setOrganizationData(jsonResponse)
       getOrganizationApiStatus(ApiStatus.success)

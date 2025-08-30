@@ -52,6 +52,10 @@
   margin-top: 32px;
   text-align: center;
 }
+.search-result-item {
+  background-color: #ffffff;
+  border-radius: 4px;
+}
 
 @media (min-width: 769px) {
   .search-container {
@@ -72,7 +76,6 @@
   }
   .search-result-item {
     border: 1px solid #0079bf;
-    border-radius: 4px;
   }
 
   .loading-text {

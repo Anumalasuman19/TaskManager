@@ -1,10 +1,11 @@
 import './OrganizationItem.css'
+import {ActiveOrganizationKey} from '../../CommonComponents/Constants'
 
 const OrganizationItem = props => {
   const {name, isActive, onChangeOrganization, id} = props
 
   const onClickOfOrganization = () => {
-    localStorage.setItem('organization_id', id)
+    localStorage.setItem(ActiveOrganizationKey, id)
     onChangeOrganization()
   }
 

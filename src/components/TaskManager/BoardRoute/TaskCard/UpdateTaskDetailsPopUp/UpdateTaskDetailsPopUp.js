@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import './UpdateTaskDetailsPopUp.css'
+import {UserInitialsKey} from '../../../CommonComponents/Constants'
 
 const UpdateTaskDetailsPopUp = ({
   onDelete,
@@ -16,6 +17,7 @@ const UpdateTaskDetailsPopUp = ({
   const [isNameEdit, setIsNameEdit] = useState(false)
   const [isNameEmpty, setIsNameEmpty] = useState(false)
   const [userInitials, setUserInitials] = useState()
+
   const onClickTaskName = () => {
     setIsNameEdit(true)
   }
@@ -46,7 +48,6 @@ const UpdateTaskDetailsPopUp = ({
     const updatedComments = [...updatedCommentsList, commentItem]
     setCommentsList(updatedComments)
     localStorage.setItem(taskId, JSON.stringify(updatedComments))
-
     setNewComment('')
   }
 
@@ -68,11 +69,12 @@ const UpdateTaskDetailsPopUp = ({
       setIsNameEmpty(true)
     }
   }
+
   useEffect(() => {
     const storedComments = localStorage.getItem(taskId)
     setName(taskName)
     setDescription(description)
-    const initials = localStorage.getItem('user_initials')
+    const initials = localStorage.getItem(UserInitialsKey)
     setUserInitials(initials)
     if (storedComments) {
       try {
@@ -83,14 +85,19 @@ const UpdateTaskDetailsPopUp = ({
       }
     }
   }, [taskId])
+
   return (
     <div className="task-details-popup-overlay">
       <div className="task-details-container">
-        <button type="button" onClick={onClosePopup} className="close-button">
+        <button
+          type="button"
+          onClick={onClosePopup}
+          className="update-task-close-button"
+        >
           <img
             src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755864143/close_oyomr8.png"
             alt="close-icon"
-            className="close-icon"
+            className="update-task-close-icon"
           />
         </button>
         <div className="task-name-and-delete-container">
