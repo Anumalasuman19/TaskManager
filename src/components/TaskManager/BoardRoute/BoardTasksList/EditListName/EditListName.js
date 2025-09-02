@@ -1,14 +1,20 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import './EditListName.css'
 
-const EditListName = ({onEditListName}) => {
-  const [listName, setListName] = useState('')
+const EditListName = ({onEditListName, previousListName}) => {
+  const [listName, setListName] = useState(previousListName)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   const onEditName = event => {
     event.preventDefault()
     if (listName.trim() === '') return
     onEditListName(listName.trim())
-    setListName('')
   }
 
   const onChangeListName = event => {
@@ -18,6 +24,7 @@ const EditListName = ({onEditListName}) => {
   return (
     <form onSubmit={onEditName} className="edit-list-container">
       <input
+        ref={inputRef}
         type="text"
         value={listName}
         placeholder="Enter list name..."

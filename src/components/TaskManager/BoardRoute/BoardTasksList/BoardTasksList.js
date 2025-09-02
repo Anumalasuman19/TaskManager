@@ -14,29 +14,28 @@ const BoardTasksList = props => {
     onTaskAdded,
     onListClosed,
     onTaskDeleted,
+    activePopup,
+    setActivePopup,
   } = props
 
   const [tasks, setTasks] = useState(cards)
-  const [isNewTaskEntryPopUpOpen, setIsNewTaskEntryPopUpOpen] = useState(false)
-  const [isEditNameFormOpen, setIsEditNameFormOpen] = useState(false)
   const [updatedListName, setUpdatedListName] = useState(listName)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const token = localStorage.getItem(TokenKey)
 
-  const onToggleMenu = () => setIsMenuOpen(prev => !prev)
+  const onClickOfAddTask = () => setActivePopup(`addTask-${listId}`)
+  const onClickListName = () => setActivePopup(`editList-${listId}`)
+  const onToggleMenu = () =>
+    setActivePopup(activePopup === `menu-${listId}` ? null : `menu-${listId}`)
+
+  const isAddTaskOpen = activePopup === `addTask-${listId}`
+  const isEditListOpen = activePopup === `editList-${listId}`
+  const isMenuOpen = activePopup === `menu-${listId}`
 
   const onCloseList = async () => {
     const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${token}&value=true`
     await fetch(url, {method: 'PUT'})
     onListClosed(listId)
-  }
-
-  const onClickOfAddTask = () => {
-    setIsNewTaskEntryPopUpOpen(true)
-  }
-
-  const onClickListName = () => {
-    setIsEditNameFormOpen(true)
+    setActivePopup(null)
   }
 
   const updateListNameApi = async name => {
@@ -44,18 +43,15 @@ const BoardTasksList = props => {
     const response = await fetch(url, {method: 'PUT'})
     const data = await response.json()
     setUpdatedListName(data.name)
-    setIsEditNameFormOpen(false)
+    setActivePopup(null)
   }
-
-  const onClickCloseAddTaskPopUp = () => {
-    setIsNewTaskEntryPopUpOpen(false)
-  }
+  const onClickCloseAddTaskPopUp = () => setActivePopup(null)
 
   const onAddTask = async taskName => {
     const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${token}&name=${taskName}&idList=${listId}`
     const response = await fetch(url, {method: 'POST'})
     const data = await response.json()
-    setIsNewTaskEntryPopUpOpen(false)
+    setActivePopup(null)
     onTaskAdded(data)
   }
 
@@ -77,8 +73,11 @@ const BoardTasksList = props => {
   return (
     <div className="task-list">
       <div className="task-list-header">
-        {isEditNameFormOpen ? (
-          <EditListName onEditListName={updateListNameApi} />
+        {isEditListOpen ? (
+          <EditListName
+            onEditListName={updateListNameApi}
+            previousListName={listName}
+          />
         ) : (
           <button type="button" className="list-name" onClick={onClickListName}>
             {updatedListName}
@@ -116,37 +115,42 @@ const BoardTasksList = props => {
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
           >
-            {tasks.map((task, index) => (
-              <Draggable
-                key={task.id}
-                draggableId={String(task.id)}
-                index={index}
-              >
-                {(draggableProvided, draggableSnapshot) => (
-                  <li
-                    ref={draggableProvided.innerRef}
-                    {...draggableProvided.draggableProps}
-                    {...draggableProvided.dragHandleProps}
-                    style={getTaskItemStyle(
-                      draggableSnapshot.isDragging,
-                      draggableProvided.draggableProps.style,
-                    )}
-                  >
-                    <TaskCard
-                      name={task.name}
-                      taskId={task.id}
-                      onDeleteTask={onDeleteTask}
-                      description={task.desc}
-                    />
-                  </li>
-                )}
-              </Draggable>
-            ))}
-            {tasks.length > 0 && droppableProvided.placeholder}
+            {tasks.length === 0 ? (
+              <li className="empty-task" />
+            ) : (
+              tasks.map((task, index) => (
+                <Draggable
+                  key={task.id}
+                  draggableId={String(task.id)}
+                  index={index}
+                >
+                  {(draggableProvided, draggableSnapshot) => (
+                    <li
+                      ref={draggableProvided.innerRef}
+                      {...draggableProvided.draggableProps}
+                      {...draggableProvided.dragHandleProps}
+                      style={getTaskItemStyle(
+                        draggableSnapshot.isDragging,
+                        draggableProvided.draggableProps.style,
+                      )}
+                    >
+                      <TaskCard
+                        name={task.name}
+                        taskId={task.id}
+                        onDeleteTask={onDeleteTask}
+                        description={task.desc}
+                      />
+                    </li>
+                  )}
+                </Draggable>
+              ))
+            )}
+            {droppableProvided.placeholder}
           </ul>
         )}
       </Droppable>
-      {isNewTaskEntryPopUpOpen ? (
+
+      {isAddTaskOpen ? (
         <AddTask
           onClickOfAddTask={onAddTask}
           onClickOfClose={onClickCloseAddTaskPopUp}

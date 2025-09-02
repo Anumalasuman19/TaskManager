@@ -12,6 +12,7 @@
   align-items: center;
   font-weight: 600;
   color: #172b4d;
+  margin-bottom: 8px;
 }
 
 .add-task {
@@ -22,6 +23,7 @@
   display: flex;
   gap: 4px;
   margin: 0px;
+  margin-top: 12px;
 }
 
 .add-task:hover {
@@ -56,6 +58,7 @@
 .cards-list {
   list-style-type: none;
   padding: 0px;
+  margin: 0px;
   display: flex;
   flex-direction: column;
   gap: 8px;

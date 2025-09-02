@@ -34,6 +34,7 @@ const TaskManager = props => {
 
   const onClickSearchIcon = isSearchEnabled => {
     setIsSearchTasksEnabled(isSearchEnabled)
+    setShowOrganizationsPopup(false)
   }
 
   const onChangeOrganization = () => {
@@ -51,6 +52,7 @@ const TaskManager = props => {
 
   const openOrganizationsPopUp = () => {
     setShowOrganizationsPopup(true)
+    setIsSearchTasksEnabled(false)
   }
 
   const getActiveOrganizationId = () =>
@@ -215,6 +217,7 @@ const TaskManager = props => {
         showOrganizationPopup={showOrganizationsPopup}
         newCreatedOrganization={newOrganizationItem}
         onClickSearchIcon={onClickSearchIcon}
+        isSearchTaskEnabled={isSearchTasksEnabled}
       />
       {isSearchTasksEnabled ? <SearchTasks /> : getContentContainerView()}
     </div>

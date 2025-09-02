@@ -15,6 +15,7 @@ import AddList from './AddList/AddList'
 import SearchTasks from '../SearchTasks/SearchTasks'
 
 const Board = props => {
+  const [activePopup, setActivePopup] = useState(null)
   const [organizationData, setOrganizationData] = useState()
   const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
   const [boardListsData, setBoardListsData] = useState()
@@ -22,7 +23,10 @@ const Board = props => {
     ApiStatus.initial,
   )
   const [tasksData, setTasksData] = useState()
-  const [isNewListEntryPopUpOpen, setIsNewListEntryPopUpOpen] = useState(false)
+  const isNewListEntryPopUpOpen = activePopup === 'addList'
+  const onClickOfAddListButton = () => setActivePopup('addList')
+  const onClickAddListClose = () => setActivePopup(null)
+
   const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
   const token = localStorage.getItem(TokenKey)
 
@@ -75,19 +79,17 @@ const Board = props => {
     setTasksData(prev => [...prev, addedTask])
   }
 
-  const onClickOfAddListButton = () => {
-    setIsNewListEntryPopUpOpen(true)
-  }
-
   const addListApi = async listName => {
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${token}&name=${listName}`
+    const url = `https://api.trello.com/1/lists?name=${encodeURIComponent(
+      listName,
+    )}&idBoard=${id}&pos=bottom&key=${ApiKey}&token=${token}`
     const response = await fetch(url, {method: 'POST'})
-    const newList = await response.json()
-    setBoardListsData(prev => [...prev, newList])
-    setIsNewListEntryPopUpOpen(false)
+    const data = await response.json()
+    setBoardListsData(prev => [...prev, data])
+    setActivePopup(null)
   }
 
   const onChangeOrganization = () => {
@@ -97,10 +99,6 @@ const Board = props => {
 
   const onClickCloseOrganization = () => {
     setShowOrganizationsPopup(false)
-  }
-
-  const onClickAddListClose = () => {
-    setIsNewListEntryPopUpOpen(false)
   }
 
   const handleListClosed = closedListId => {
@@ -243,6 +241,8 @@ const Board = props => {
                               onTaskAdded={onTaskAdded}
                               onListClosed={handleListClosed}
                               onTaskDeleted={onTaskDeleted}
+                              activePopup={activePopup}
+                              setActivePopup={setActivePopup}
                             />
                           </div>
                         )}

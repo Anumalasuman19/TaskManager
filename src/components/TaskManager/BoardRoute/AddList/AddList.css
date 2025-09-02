@@ -33,10 +33,12 @@
   cursor: pointer;
 }
 
-.close-btn {
+.add-list-close-btn {
   background: transparent;
   border: none;
-  font-size: 16px;
+  padding: 0px;
   cursor: pointer;
-  color: #64748b;
+  color: #333;
+  width: 24px;
+  height: 24px;
 }

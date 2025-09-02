@@ -1,9 +1,16 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import './CreateOrganizationPopUp.css'
 
 const CreateOrganizationPopUp = props => {
   const {onCreateOrganization, onCreateOrganizationPopUpClose} = props
   const [title, setTitle] = useState('')
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   const handleCreateOrganization = event => {
     event.preventDefault()
@@ -43,6 +50,7 @@ const CreateOrganizationPopUp = props => {
             ORGANIZATION NAME
           </label>
           <input
+            ref={inputRef}
             id="organization-name"
             type="text"
             value={title}

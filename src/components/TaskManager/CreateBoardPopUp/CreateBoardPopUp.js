@@ -1,9 +1,17 @@
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
+
 import './CreateBoardPopUp.css'
 
 const CreateBoardPopUp = props => {
   const {onCreateBoard, organizationName, onCreateBoardPopUpClose} = props
   const [title, setTitle] = useState('')
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
 
   const handleCreate = event => {
     event.preventDefault()
@@ -32,6 +40,7 @@ const CreateBoardPopUp = props => {
         </button>
         <div className="input-and-close-button">
           <input
+            ref={inputRef}
             type="text"
             placeholder="Add board title"
             value={title}

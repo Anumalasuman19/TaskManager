@@ -2,10 +2,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #f9fafb;
+  background-color: #ffffff;
   border-radius: 4px;
   padding: 0px 36px 0px 0px;
   cursor: pointer;
+  border: 1px solid #eeeeee;
 }
 
 .organization-item:hover {

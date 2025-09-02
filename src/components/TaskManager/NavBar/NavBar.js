@@ -17,6 +17,7 @@ const NavBar = props => {
     showOrganizationPopup,
     openOrganizationsPopUp,
     newCreatedOrganization,
+    isSearchTaskEnabled,
     onClickSearchIcon,
   } = props
   const [organizationData, setOrganizationData] = useState()
@@ -26,7 +27,7 @@ const NavBar = props => {
   const [showDropdown, setShowDropdown] = useState(false)
   const [userData, setUserData] = useState()
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
-  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(isSearchTaskEnabled)
   const {history} = props
   const token = localStorage.getItem(TokenKey)
 
@@ -98,6 +99,10 @@ const NavBar = props => {
     getUserData()
     organizationsDataApi()
   }, [])
+
+  useEffect(() => {
+    setIsSearchOpen(isSearchTaskEnabled)
+  }, [isSearchTaskEnabled])
 
   useEffect(() => {
     if (newCreatedOrganization) {

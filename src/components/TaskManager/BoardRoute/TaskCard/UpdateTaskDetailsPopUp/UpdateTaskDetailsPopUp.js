@@ -1,6 +1,10 @@
 import {useState, useEffect} from 'react'
+import {
+  ApiKey,
+  UserInitialsKey,
+  TokenKey,
+} from '../../../CommonComponents/Constants'
 import './UpdateTaskDetailsPopUp.css'
-import {UserInitialsKey} from '../../../CommonComponents/Constants'
 
 const UpdateTaskDetailsPopUp = ({
   onDelete,
@@ -30,6 +34,12 @@ const UpdateTaskDetailsPopUp = ({
     setDescription(event.target.value)
   }
 
+  const onAddComment = async commentText => {
+    const token = localStorage.getItem(TokenKey)
+    const url = `https://api.trello.com/1/cards/${taskId}/actions/comments?text=${commentText}&key=${ApiKey}&token=${token}`
+    const response = await fetch(url, {method: 'POST'})
+  }
+
   const handleAddComment = () => {
     const trimmedComment = newComment.trim()
     if (!trimmedComment) return
@@ -39,6 +49,7 @@ const UpdateTaskDetailsPopUp = ({
     if (jsonData) {
       count = jsonData.length
     }
+    onAddComment(trimmedComment)
 
     const commentItem = {
       comment: trimmedComment,
@@ -185,16 +196,12 @@ const UpdateTaskDetailsPopUp = ({
             </button>
           </div>
           <ul className="comments-list">
-            {updatedCommentsList.length === 0 ? (
-              <li className="no-comments">No comments yet</li>
-            ) : (
-              updatedCommentsList.map(item => (
-                <li key={item.id} className="comment-item">
-                  <div className="avatar small">{item.initials}</div>
-                  <p className="comment">{item.comment}</p>
-                </li>
-              ))
-            )}
+            {updatedCommentsList.map(item => (
+              <li key={item.id} className="comment-item">
+                <div className="avatar small">{item.initials}</div>
+                <p className="comment">{item.comment}</p>
+              </li>
+            ))}
           </ul>
         </div>
         <button

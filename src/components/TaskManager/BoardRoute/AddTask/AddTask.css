@@ -6,6 +6,7 @@
   border-radius: 4px;
   padding: 0px;
   margin: 0px;
+  margin-top: 8px;
 }
 
 .add-task-input {
@@ -40,10 +41,12 @@
   background-color: #2a37c7;
 }
 
-.close-btn {
+.add-task-close-btn {
   background: transparent;
   border: none;
-  font-size: 18px;
+  padding: 0px;
   cursor: pointer;
   color: #333;
+  width: 24px;
+  height: 24px;
 }

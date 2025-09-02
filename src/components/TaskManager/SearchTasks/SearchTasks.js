@@ -7,7 +7,7 @@ const SearchTasks = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searchApiStatus, setSearchApiStatus] = useState(ApiStatus.initial)
-  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [isInputFocused, setIsInputFocused] = useState(true)
 
   const searchTasksApi = async searchQuery => {
     setSearchApiStatus(ApiStatus.loading)
@@ -87,8 +87,6 @@ const SearchTasks = () => {
           type="search"
           value={query}
           onChange={handleSearch}
-          onFocus={onSearchFocus}
-          onBlur={onSearchBlur}
           placeholder="Search"
           className="search-input"
         />

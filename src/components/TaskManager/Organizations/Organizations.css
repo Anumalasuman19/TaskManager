@@ -32,12 +32,14 @@
   color: #7b8794;
   margin: 0px;
   padding: 0px;
+  margin-top: 8px;
 }
 
 .workspace-close-btn {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  padding: 0px;
 }
 .workspace-close-btn-icon {
   width: 16px;
@@ -52,6 +54,7 @@
   gap: 8px;
   max-height: 200px;
   overflow-y: auto;
+  padding-right: 4px;
 }
 
 @media (min-width: 769px) {
@@ -59,7 +62,7 @@
     animation: none;
     position: relative;
     top: 8px;
-    padding: 24px 16px 16px 16px;
+    padding: 16px 16px 26px 16px;
     border-radius: 4px;
     z-index: 999;
   }

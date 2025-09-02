@@ -78,6 +78,7 @@
   border: 1px solid #cbd2d9;
   border-radius: 4px;
   align-self: flex-start;
+  outline: none;
 }
 
 .create-organization-button {
