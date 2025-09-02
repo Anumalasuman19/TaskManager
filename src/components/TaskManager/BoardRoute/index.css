@@ -58,4 +58,7 @@
   .board-lists-container {
     padding: 24px 48px;
   }
+  .board-no-desktop-view {
+    display: none;
+  }
 }

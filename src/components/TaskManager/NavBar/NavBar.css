@@ -131,6 +131,7 @@
     height: 41px;
   }
   .organization-dropdown {
+    display: flex;
     position: absolute;
   }
   .org-dropdown-btn {

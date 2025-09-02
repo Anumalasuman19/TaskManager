@@ -62,6 +62,13 @@ const UpdateTaskDetailsPopUp = ({
     setNewComment('')
   }
 
+  const onCloseUpdateTaskPopup = () => {
+    if (name) {
+      onUpdateTask(name, description)
+    }
+    onClosePopup()
+  }
+
   const handleKeyDown = e => {
     if (e.key === 'Enter') {
       e.preventDefault()
@@ -102,7 +109,7 @@ const UpdateTaskDetailsPopUp = ({
       <div className="task-details-container">
         <button
           type="button"
-          onClick={onClosePopup}
+          onClick={onCloseUpdateTaskPopup}
           className="update-task-close-button"
         >
           <img

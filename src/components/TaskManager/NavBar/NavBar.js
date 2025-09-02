@@ -19,15 +19,17 @@ const NavBar = props => {
     newCreatedOrganization,
     isSearchTaskEnabled,
     onClickSearchIcon,
+    activePopup,
+    setActivePopup,
   } = props
   const [organizationData, setOrganizationData] = useState()
   const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
     ApiStatus.initial,
   )
-  const [showDropdown, setShowDropdown] = useState(false)
+  const showDropdown = activePopup === 'desktopViewOrganizationPopup'
+  const isSearchOpen = activePopup === 'mobileViewSearchSection'
   const [userData, setUserData] = useState()
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
-  const [isSearchOpen, setIsSearchOpen] = useState(isSearchTaskEnabled)
   const {history} = props
   const token = localStorage.getItem(TokenKey)
 
@@ -35,9 +37,12 @@ const NavBar = props => {
     localStorage.removeItem(TokenKey)
     history.replace('/login')
   }
-
   const onClickSearch = () => {
-    setIsSearchOpen(prev => !prev)
+    if (activePopup === 'mobileViewSearchSection') {
+      setActivePopup(null)
+    } else {
+      setActivePopup('mobileViewSearchSection')
+    }
   }
 
   const onChangeOrganization = () => {
@@ -84,11 +89,11 @@ const NavBar = props => {
   }
 
   const setOrganizationPopup = () => {
-    setShowDropdown(prev => !prev)
+    setActivePopup('desktopViewOrganizationPopup')
   }
 
   const onClickClose = () => {
-    setShowDropdown(false)
+    setActivePopup(null)
   }
 
   const onClickBoards = () => {
@@ -101,18 +106,10 @@ const NavBar = props => {
   }, [])
 
   useEffect(() => {
-    setIsSearchOpen(isSearchTaskEnabled)
-  }, [isSearchTaskEnabled])
-
-  useEffect(() => {
     if (newCreatedOrganization) {
       setOrganizationData(prev => [...prev, newCreatedOrganization])
     }
   }, [newCreatedOrganization])
-
-  useEffect(() => {
-    onClickSearchIcon(isSearchOpen)
-  }, [isSearchOpen])
 
   return (
     <div className="nav-bar-container">
@@ -153,7 +150,7 @@ const NavBar = props => {
           </button>
 
           {showDropdown && (
-            <div className="organization-dropdown">
+            <div className="organization-dropdown no-mobile-view-display">
               <Organizations
                 workspacesOrganizations={organizationData}
                 onClose={onClickClose}
@@ -209,7 +206,7 @@ const NavBar = props => {
       />
       <div className="logout-button-and-profile-and-search-input">
         <div className="search-box no-mobile-view-display">
-          <SearchTasks />
+          <SearchTasks setActivePopup={setActivePopup} />
         </div>
         <button
           type="button"

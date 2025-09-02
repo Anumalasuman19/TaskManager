@@ -1,22 +1,25 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import TaskCard from '../BoardRoute/TaskCard/TaskCard'
 import ApiStatus, {ApiKey, TokenKey} from '../CommonComponents/Constants'
 import './SearchTasks.css'
 
-const SearchTasks = () => {
+const SearchTasks = ({setActivePopup, activePopUp}) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searchApiStatus, setSearchApiStatus] = useState(ApiStatus.initial)
   const [isInputFocused, setIsInputFocused] = useState(true)
-
+  useEffect(() => {
+    if (activePopUp !== 'desktopSearchSection') {
+      setQuery('')
+      setResults([])
+    }
+  }, [activePopUp])
   const searchTasksApi = async searchQuery => {
     setSearchApiStatus(ApiStatus.loading)
     const token = localStorage.getItem(TokenKey)
-
     const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${token}&query=${encodeURIComponent(
       searchQuery,
     )}&modelTypes=cards&card_fields=id,name,desc,closed,pos,idList,idBoard,url`
-
     const response = await fetch(url)
     const data = await response.json()
     const tasks = data.cards || []
@@ -31,7 +34,9 @@ const SearchTasks = () => {
   const handleSearch = e => {
     const newQuery = e.target.value
     setQuery(newQuery)
-
+    if (setActivePopup) {
+      setActivePopup(null)
+    }
     if (newQuery.trim() !== '') {
       searchTasksApi(newQuery)
     } else {
@@ -41,10 +46,16 @@ const SearchTasks = () => {
   }
 
   const onSearchFocus = () => {
+    if (setActivePopup) {
+      setActivePopup('desktopSearchSection')
+    }
     setIsInputFocused(true)
   }
 
   const onSearchBlur = () => {
+    if (setActivePopup) {
+      setActivePopup(null)
+    }
     setIsInputFocused(false)
   }
 
@@ -87,6 +98,8 @@ const SearchTasks = () => {
           type="search"
           value={query}
           onChange={handleSearch}
+          onFocus={onSearchFocus}
+          onBlur={onSearchBlur}
           placeholder="Search"
           className="search-input"
         />

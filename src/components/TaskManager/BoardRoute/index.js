@@ -17,21 +17,26 @@ import SearchTasks from '../SearchTasks/SearchTasks'
 const Board = props => {
   const [activePopup, setActivePopup] = useState(null)
   const [organizationData, setOrganizationData] = useState()
-  const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
   const [boardListsData, setBoardListsData] = useState()
   const [boardListsDataApiStatus, setBoardListsDataApiStatus] = useState(
     ApiStatus.initial,
   )
   const [tasksData, setTasksData] = useState()
   const isNewListEntryPopUpOpen = activePopup === 'addList'
-  const onClickOfAddListButton = () => setActivePopup('addList')
-  const onClickAddListClose = () => setActivePopup(null)
-
-  const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
+  const showOrganizationsPopup = activePopup === 'mobileViewOrganizationPopup'
+  const isSearchTasksEnabled = activePopup === 'mobileViewSearchSection'
   const token = localStorage.getItem(TokenKey)
 
+  const onClickOfAddListButton = () => setActivePopup('addList')
+
+  const onClickAddListClose = () => setActivePopup(null)
+
   const onClickSearchIcon = isSearchEnabled => {
-    setIsSearchTasksEnabled(isSearchEnabled)
+    if (isSearchEnabled) {
+      setActivePopup('mobileViewSearchSection')
+    } else {
+      setActivePopup(null)
+    }
   }
 
   const onClickOfOrganizations = organizationsData => {
@@ -39,7 +44,7 @@ const Board = props => {
   }
 
   const openOrganizationsPopUp = () => {
-    setShowOrganizationsPopup(true)
+    setActivePopup('mobileViewOrganizationPopup')
   }
 
   const getBoardsList = async () => {
@@ -98,7 +103,7 @@ const Board = props => {
   }
 
   const onClickCloseOrganization = () => {
-    setShowOrganizationsPopup(false)
+    setActivePopup(null)
   }
 
   const handleListClosed = closedListId => {
@@ -293,8 +298,16 @@ const Board = props => {
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
         onClickSearchIcon={onClickSearchIcon}
+        activePopup={activePopup}
+        setActivePopup={setActivePopup}
       />
-      {isSearchTasksEnabled ? <SearchTasks /> : getContentContainerView()}
+      {isSearchTasksEnabled ? (
+        <div className="board-no-desktop-view">
+          <SearchTasks />
+        </div>
+      ) : (
+        getContentContainerView()
+      )}
       {showOrganizationsPopup && (
         <Organizations
           workspacesOrganizations={organizationData}
