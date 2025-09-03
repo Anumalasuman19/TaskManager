@@ -3,7 +3,9 @@ import NavBar from './NavBar/NavBar'
 import ApiStatus, {
   ApiKey,
   ActiveOrganizationKey,
-  TokenKey,
+  GetToken,
+  NavBarActivePopup,
+  HomeRouteActivePopup,
 } from './CommonComponents/Constants'
 import Organizations from './Organizations/Organizations'
 import OrganizationBoardsSection from './OrganizationBoardsSection/OrganizationBoardsSection'
@@ -14,28 +16,25 @@ import SearchTasks from './SearchTasks/SearchTasks'
 import './index.css'
 
 const TaskManager = props => {
+  const [activePopup, setActivePopup] = useState(null)
   const [organizationData, setOrganizationData] = useState()
   const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
     ApiStatus.initial,
   )
-  const [showOrganizationsPopup, setShowOrganizationsPopup] = useState(false)
-  const [showCreateBoardPopup, setShowCreateBoardPopup] = useState(false)
+  const showOrganizationsPopup =
+    activePopup === NavBarActivePopup.mobileViewOrganizationPopup
+  const isSearchTasksEnabled =
+    activePopup === NavBarActivePopup.mobileViewSearchSection
+  const showCreateBoardPopup =
+    activePopup === HomeRouteActivePopup.createBoardPopup
+  const showCreateNewOrganizationPopup =
+    activePopup === HomeRouteActivePopup.createNewOrganizationPopup
+
   const [newCreatedBoard, setNewCreatedBoard] = useState()
   const [newOrganizationItem, setNewOrganizationItem] = useState()
   const [createNewOrganizationHover, setCreateNewOrganizationHover] = useState(
     false,
   )
-  const [
-    showCreateNewOrganizationPopup,
-    setShowCreateNewOrganizationPopup,
-  ] = useState(false)
-  const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
-  const token = localStorage.getItem(TokenKey)
-
-  const onClickSearchIcon = isSearchEnabled => {
-    setIsSearchTasksEnabled(isSearchEnabled)
-    setShowOrganizationsPopup(false)
-  }
 
   const onChangeOrganization = () => {
     const {history} = props
@@ -51,13 +50,10 @@ const TaskManager = props => {
   }
 
   const openOrganizationsPopUp = () => {
-    setShowOrganizationsPopup(true)
-    setIsSearchTasksEnabled(false)
+    setActivePopup(NavBarActivePopup.mobileViewOrganizationPopup)
   }
-
   const getActiveOrganizationId = () =>
     localStorage.getItem(ActiveOrganizationKey)
-
   const getWorkspaceName = () => {
     const activeOrganizationId = getActiveOrganizationId()
     const organization = organizationData.find(
@@ -67,30 +63,31 @@ const TaskManager = props => {
   }
 
   const onClickOfCreateNewBoard = () => {
-    setShowCreateBoardPopup(true)
+    setActivePopup(HomeRouteActivePopup.createBoardPopup)
   }
 
   const onClickOfCreateBoard = async name => {
     const organizationId = getActiveOrganizationId()
-    const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${token}&name=${name}&idOrganization=${organizationId}`
+    const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${GetToken()}&name=${name}&idOrganization=${organizationId}`
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({name}),
     })
     const data = await response.json()
-    setShowCreateBoardPopup(false)
+    setActivePopup(null)
     setNewCreatedBoard(data)
   }
 
   const onClickCloseOrganization = () => {
-    setShowOrganizationsPopup(false)
+    setActivePopup(null)
   }
+
   const onClickCloseBoardPopup = () => {
-    setShowCreateBoardPopup(false)
+    setActivePopup(null)
   }
 
   const onCreateOrganizationApi = async organizationName => {
-    const url = `https://api.trello.com/1/organizations?key=${ApiKey}&token=${token}&displayName=${organizationName}`
+    const url = `https://api.trello.com/1/organizations?key=${ApiKey}&token=${GetToken()}&displayName=${organizationName}`
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({organizationName}),
@@ -98,21 +95,23 @@ const TaskManager = props => {
     const data = await response.json()
     setNewOrganizationItem(data)
     setOrganizationData(prev => [...prev, data])
-    setShowCreateNewOrganizationPopup(false)
+    setActivePopup(null)
   }
 
   const onMouseEnterCreateOrganization = () => {
     setCreateNewOrganizationHover(true)
   }
+
   const onMouseLeaveCreateOrganization = () => {
     setCreateNewOrganizationHover(false)
   }
 
   const onClickCreateOrganization = () => {
-    setShowCreateNewOrganizationPopup(true)
+    setActivePopup(HomeRouteActivePopup.createNewOrganizationPopup)
   }
+
   const onCloseOrganizationPopUp = () => {
-    setShowCreateNewOrganizationPopup(false)
+    setActivePopup(null)
   }
 
   const getContentContainerView = () => {
@@ -216,8 +215,8 @@ const TaskManager = props => {
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
         newCreatedOrganization={newOrganizationItem}
-        onClickSearchIcon={onClickSearchIcon}
-        isSearchTaskEnabled={isSearchTasksEnabled}
+        activePopup={activePopup}
+        setActivePopup={setActivePopup}
       />
       {isSearchTasksEnabled ? <SearchTasks /> : getContentContainerView()}
     </div>

@@ -1,23 +1,28 @@
 import {useState, useEffect} from 'react'
 import TaskCard from '../BoardRoute/TaskCard/TaskCard'
-import ApiStatus, {ApiKey, TokenKey} from '../CommonComponents/Constants'
+import ApiStatus, {
+  ApiKey,
+  GetToken,
+  NavBarActivePopup,
+} from '../CommonComponents/Constants'
 import './SearchTasks.css'
 
-const SearchTasks = ({setActivePopup, activePopUp}) => {
+const SearchTasks = ({setActivePopup, activePopup}) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searchApiStatus, setSearchApiStatus] = useState(ApiStatus.initial)
-  const [isInputFocused, setIsInputFocused] = useState(true)
+  const [isInputFocused, setIsInputFocused] = useState(false)
+
   useEffect(() => {
-    if (activePopUp !== 'desktopSearchSection') {
+    if (activePopup !== NavBarActivePopup.desktopSearchSection) {
       setQuery('')
       setResults([])
     }
-  }, [activePopUp])
+  }, [activePopup])
+
   const searchTasksApi = async searchQuery => {
     setSearchApiStatus(ApiStatus.loading)
-    const token = localStorage.getItem(TokenKey)
-    const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${token}&query=${encodeURIComponent(
+    const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${GetToken()}&query=${encodeURIComponent(
       searchQuery,
     )}&modelTypes=cards&card_fields=id,name,desc,closed,pos,idList,idBoard,url`
     const response = await fetch(url)
@@ -34,9 +39,7 @@ const SearchTasks = ({setActivePopup, activePopUp}) => {
   const handleSearch = e => {
     const newQuery = e.target.value
     setQuery(newQuery)
-    if (setActivePopup) {
-      setActivePopup(null)
-    }
+
     if (newQuery.trim() !== '') {
       searchTasksApi(newQuery)
     } else {
@@ -47,15 +50,12 @@ const SearchTasks = ({setActivePopup, activePopUp}) => {
 
   const onSearchFocus = () => {
     if (setActivePopup) {
-      setActivePopup('desktopSearchSection')
+      setActivePopup(NavBarActivePopup.desktopSearchSection)
     }
     setIsInputFocused(true)
   }
 
   const onSearchBlur = () => {
-    if (setActivePopup) {
-      setActivePopup(null)
-    }
     setIsInputFocused(false)
   }
 
@@ -73,6 +73,7 @@ const SearchTasks = ({setActivePopup, activePopUp}) => {
                   taskId={task.id}
                   onDeleteTask={() => {}}
                   description={task.desc}
+                  isDeleteRequired={false}
                 />
               </li>
             ))}
@@ -114,7 +115,7 @@ const SearchTasks = ({setActivePopup, activePopUp}) => {
         )}
       </div>
 
-      {isInputFocused && query !== '' ? (
+      {query !== '' ? (
         <div className="results-container">{getResultView()}</div>
       ) : (
         <></>

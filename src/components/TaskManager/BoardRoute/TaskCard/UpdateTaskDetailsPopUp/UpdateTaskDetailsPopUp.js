@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {
   ApiKey,
   UserInitialsKey,
-  TokenKey,
+  GetToken,
 } from '../../../CommonComponents/Constants'
 import './UpdateTaskDetailsPopUp.css'
 
@@ -13,6 +13,7 @@ const UpdateTaskDetailsPopUp = ({
   taskName,
   taskId,
   description,
+  isDeleteRequired,
 }) => {
   const [name, setName] = useState(taskName || '')
   const [updatedDescription, setDescription] = useState(description || '')
@@ -35,8 +36,7 @@ const UpdateTaskDetailsPopUp = ({
   }
 
   const onAddComment = async commentText => {
-    const token = localStorage.getItem(TokenKey)
-    const url = `https://api.trello.com/1/cards/${taskId}/actions/comments?text=${commentText}&key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/cards/${taskId}/actions/comments?text=${commentText}&key=${ApiKey}&token=${GetToken()}`
     const response = await fetch(url, {method: 'POST'})
   }
 
@@ -64,7 +64,7 @@ const UpdateTaskDetailsPopUp = ({
 
   const onCloseUpdateTaskPopup = () => {
     if (name) {
-      onUpdateTask(name, description)
+      onUpdateTask(name, updatedDescription)
     }
     onClosePopup()
   }
@@ -80,12 +80,16 @@ const UpdateTaskDetailsPopUp = ({
     setNewComment(event.target.value)
   }
 
-  const onClickUpdateTask = () => {
+  const updateTask = () => {
     if (name) {
       onUpdateTask(name, updatedDescription)
     } else {
       setIsNameEmpty(true)
     }
+  }
+
+  const onTaskNameOrDescriptionBlur = () => {
+    updateTask()
   }
 
   useEffect(() => {
@@ -133,6 +137,7 @@ const UpdateTaskDetailsPopUp = ({
                     className="name-input-field"
                     value={name}
                     onChange={onNameChange}
+                    onBlur={onTaskNameOrDescriptionBlur}
                   />
                   {isNameEmpty && <p className="error-message">*required</p>}
                 </>
@@ -148,13 +153,15 @@ const UpdateTaskDetailsPopUp = ({
               <p className="task-subtitle">in list done</p>
             </div>
           </div>
-          <button type="button" onClick={onDelete} className="delete-button">
-            <img
-              src="https://res.cloudinary.com/dzki1pesn/image/upload/v1756360757/delete_outline_xv2z7u.png"
-              alt="delete-icon"
-              className="delete-icon"
-            />
-          </button>
+          {isDeleteRequired && (
+            <button type="button" onClick={onDelete} className="delete-button">
+              <img
+                src="https://res.cloudinary.com/dzki1pesn/image/upload/v1756360757/delete_outline_xv2z7u.png"
+                alt="delete-icon"
+                className="delete-icon"
+              />
+            </button>
+          )}
         </div>
 
         <div className="section">
@@ -170,6 +177,7 @@ const UpdateTaskDetailsPopUp = ({
             placeholder="Add a more detailed description...."
             value={updatedDescription}
             onChange={onDescriptionChange}
+            onBlur={onTaskNameOrDescriptionBlur}
             rows="5"
           />
         </div>
@@ -211,13 +219,6 @@ const UpdateTaskDetailsPopUp = ({
             ))}
           </ul>
         </div>
-        <button
-          type="button"
-          onClick={onClickUpdateTask}
-          className="update-task-button"
-        >
-          Update task
-        </button>
       </div>
     </div>
   )

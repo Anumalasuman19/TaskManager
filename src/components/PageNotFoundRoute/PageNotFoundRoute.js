@@ -2,15 +2,22 @@ import {useState} from 'react'
 import NavBar from '../TaskManager/NavBar/NavBar'
 import Organizations from '../TaskManager/Organizations/Organizations'
 import './PageNotFoundRoute.css'
+import {NavBarActivePopup} from '../TaskManager/CommonComponents/Constants'
 import SearchTasks from '../TaskManager/SearchTasks/SearchTasks'
 
 const PageNotFound = props => {
+  const [activePopup, setActivePopup] = useState(null)
   const [organizationData, setOrganizationData] = useState()
-  const [showPopup, setShowPopup] = useState(false)
-  const [isSearchTasksEnabled, setIsSearchTasksEnabled] = useState(false)
-
+  const showPopup =
+    activePopup === NavBarActivePopup.mobileViewOrganizationPopup
+  const isSearchTasksEnabled =
+    activePopup === NavBarActivePopup.mobileViewSearchSection
   const onClickSearchIcon = isSearchEnabled => {
-    setIsSearchTasksEnabled(isSearchEnabled)
+    if (isSearchEnabled) {
+      setActivePopup(NavBarActivePopup.mobileViewSearchSection)
+    } else {
+      setActivePopup(null)
+    }
   }
 
   const onClickOfOrganizations = organizationsData => {
@@ -18,7 +25,7 @@ const PageNotFound = props => {
   }
 
   const openOrganizationsPopUp = () => {
-    setShowPopup(true)
+    setActivePopup(NavBarActivePopup.mobileViewOrganizationPopup)
   }
 
   const onChangeOrganization = () => {
@@ -27,7 +34,7 @@ const PageNotFound = props => {
   }
 
   const onClickClose = () => {
-    setShowPopup(false)
+    setActivePopup(null)
   }
   return (
     <div className="page-not-found">
@@ -36,6 +43,8 @@ const PageNotFound = props => {
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showPopup}
         onClickSearchIcon={onClickSearchIcon}
+        activePopup={activePopup}
+        setActivePopup={setActivePopup}
       />
       <div className="page-not-found-container">
         {isSearchTasksEnabled ? (

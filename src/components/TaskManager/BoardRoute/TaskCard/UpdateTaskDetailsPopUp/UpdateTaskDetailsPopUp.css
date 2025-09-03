@@ -181,17 +181,7 @@
   cursor: pointer;
   font-size: 14px;
 }
-.update-task-button {
-  margin-top: auto;
-  align-self: flex-end;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
+
 .add-comment-btn:hover {
   background: #2563eb;
 }
@@ -305,10 +295,7 @@
     padding: 6px 16px;
     font-size: 16px;
   }
-  .update-task-button {
-    padding: 6px 16px;
-    font-size: 16px;
-  }
+
   .comments-list {
     max-height: 200px;
     overflow-y: auto;

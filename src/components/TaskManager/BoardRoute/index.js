@@ -5,9 +5,11 @@ import NavBar from '../NavBar/NavBar'
 import Organizations from '../Organizations/Organizations'
 import ApiStatus, {
   ApiKey,
-  TokenKey,
+  GetToken,
   CardType,
   ListType,
+  NavBarActivePopup,
+  BoardRouteActivePopup,
 } from '../CommonComponents/Constants'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
 import BoardTasksList from './BoardTasksList/BoardTasksList'
@@ -22,29 +24,24 @@ const Board = props => {
     ApiStatus.initial,
   )
   const [tasksData, setTasksData] = useState()
-  const isNewListEntryPopUpOpen = activePopup === 'addList'
-  const showOrganizationsPopup = activePopup === 'mobileViewOrganizationPopup'
-  const isSearchTasksEnabled = activePopup === 'mobileViewSearchSection'
-  const token = localStorage.getItem(TokenKey)
+  const isNewListEntryPopUpOpen =
+    activePopup === BoardRouteActivePopup.addListPopup
+  const showOrganizationsPopup =
+    activePopup === NavBarActivePopup.mobileViewOrganizationPopup
+  const isSearchTasksEnabled =
+    activePopup === NavBarActivePopup.mobileViewSearchSection
 
-  const onClickOfAddListButton = () => setActivePopup('addList')
+  const onClickOfAddListButton = () =>
+    setActivePopup(BoardRouteActivePopup.addListPopup)
 
   const onClickAddListClose = () => setActivePopup(null)
-
-  const onClickSearchIcon = isSearchEnabled => {
-    if (isSearchEnabled) {
-      setActivePopup('mobileViewSearchSection')
-    } else {
-      setActivePopup(null)
-    }
-  }
 
   const onClickOfOrganizations = organizationsData => {
     setOrganizationData(organizationsData)
   }
 
   const openOrganizationsPopUp = () => {
-    setActivePopup('mobileViewOrganizationPopup')
+    setActivePopup(NavBarActivePopup.mobileViewOrganizationPopup)
   }
 
   const getBoardsList = async () => {
@@ -52,7 +49,7 @@ const Board = props => {
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${GetToken()}`
     const options = {
       method: 'GET',
     }
@@ -68,7 +65,7 @@ const Board = props => {
     const {match} = props
     const {params} = match
     const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/cards?key=${ApiKey}&token=${token}&filter=open`
+    const url = `https://api.trello.com/1/boards/${id}/cards?key=${ApiKey}&token=${GetToken()}&filter=open`
     const options = {
       method: 'GET',
     }
@@ -90,7 +87,7 @@ const Board = props => {
     const {id} = params
     const url = `https://api.trello.com/1/lists?name=${encodeURIComponent(
       listName,
-    )}&idBoard=${id}&pos=bottom&key=${ApiKey}&token=${token}`
+    )}&idBoard=${id}&pos=bottom&key=${ApiKey}&token=${GetToken()}`
     const response = await fetch(url, {method: 'POST'})
     const data = await response.json()
     setBoardListsData(prev => [...prev, data])
@@ -156,7 +153,7 @@ const Board = props => {
       })
 
       try {
-        const url = `https://api.trello.com/1/cards/${draggableId}?key=${ApiKey}&token=${token}&idList=${destListId}&pos=${newPos}`
+        const url = `https://api.trello.com/1/cards/${draggableId}?key=${ApiKey}&token=${GetToken()}&idList=${destListId}&pos=${newPos}`
         await fetch(url, {method: 'PUT'})
       } catch (err) {
         console.error('Error updating Trello card:', err)
@@ -186,7 +183,7 @@ const Board = props => {
       )
 
       try {
-        const url = `https://api.trello.com/1/lists/${draggableId}?key=${ApiKey}&token=${token}&pos=${newPos}`
+        const url = `https://api.trello.com/1/lists/${draggableId}?key=${ApiKey}&token=${GetToken()}&pos=${newPos}`
         await fetch(url, {method: 'PUT'})
       } catch (err) {
         console.error('Error updating Trello list:', err)
@@ -238,9 +235,9 @@ const Board = props => {
                               listName={list.name}
                               cards={
                                 tasksData
-                                  ? tasksData.filter(
-                                      card => card.idList === list.id,
-                                    )
+                                  ? tasksData
+                                      .filter(card => card.idList === list.id)
+                                      .sort((a, b) => a.pos - b.pos)
                                   : []
                               }
                               onTaskAdded={onTaskAdded}
@@ -297,7 +294,6 @@ const Board = props => {
         getOrganizationsData={onClickOfOrganizations}
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
-        onClickSearchIcon={onClickSearchIcon}
         activePopup={activePopup}
         setActivePopup={setActivePopup}
       />

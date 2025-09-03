@@ -4,7 +4,7 @@ import ApiStatus, {
   ApiKey,
   NoBoardsText,
   BoardsSubHeading,
-  TokenKey,
+  GetToken,
 } from '../CommonComponents/Constants'
 import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardItem'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
@@ -27,8 +27,7 @@ const OrganizationBoardsSection = props => {
 
   const getOrganizationBoards = async () => {
     setOrganizationBoardsApiStatus(ApiStatus.inProgress)
-    const token = localStorage.getItem(TokenKey)
-    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${GetToken()}`
     const options = {
       method: 'GET',
     }

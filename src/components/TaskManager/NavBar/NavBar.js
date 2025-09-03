@@ -5,6 +5,8 @@ import ApiStatus, {
   ActiveOrganizationKey,
   UserInitialsKey,
   TokenKey,
+  GetToken,
+  NavBarActivePopup,
 } from '../CommonComponents/Constants'
 import Organizations from '../Organizations/Organizations'
 import './NavBar.css'
@@ -17,31 +19,27 @@ const NavBar = props => {
     showOrganizationPopup,
     openOrganizationsPopUp,
     newCreatedOrganization,
-    isSearchTaskEnabled,
-    onClickSearchIcon,
     activePopup,
     setActivePopup,
   } = props
   const [organizationData, setOrganizationData] = useState()
-  const [organizationDataApiStatus, setOrganizationDataApiStatus] = useState(
-    ApiStatus.initial,
-  )
-  const showDropdown = activePopup === 'desktopViewOrganizationPopup'
-  const isSearchOpen = activePopup === 'mobileViewSearchSection'
+  const showDropdown =
+    activePopup === NavBarActivePopup.desktopViewOrganizationPopup
+  const isSearchOpen = activePopup === NavBarActivePopup.mobileViewSearchSection
   const [userData, setUserData] = useState()
   const [userDataApiStatus, setUserDataApiStatus] = useState(ApiStatus.initial)
   const {history} = props
-  const token = localStorage.getItem(TokenKey)
 
   const onClickOfLogout = () => {
     localStorage.removeItem(TokenKey)
     history.replace('/login')
   }
+
   const onClickSearch = () => {
-    if (activePopup === 'mobileViewSearchSection') {
+    if (activePopup === NavBarActivePopup.mobileViewSearchSection) {
       setActivePopup(null)
     } else {
-      setActivePopup('mobileViewSearchSection')
+      setActivePopup(NavBarActivePopup.mobileViewSearchSection)
     }
   }
 
@@ -51,7 +49,7 @@ const NavBar = props => {
 
   const getUserData = async () => {
     setUserDataApiStatus(ApiStatus.inProgress)
-    const url = `https://api.trello.com/1/members/me?key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/members/me?key=${ApiKey}&token=${GetToken()}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
@@ -65,8 +63,7 @@ const NavBar = props => {
 
   const organizationsDataApi = async () => {
     getOrganizationApiStatus(ApiStatus.inProgress)
-    setOrganizationDataApiStatus(ApiStatus.inProgress)
-    const url = `https://api.trello.com/1/members/me/organizations?key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/members/me/organizations?key=${ApiKey}&token=${GetToken()}`
     const options = {method: 'GET'}
     const apiResponse = await fetch(url, options)
     const jsonResponse = await apiResponse.json()
@@ -79,7 +76,6 @@ const NavBar = props => {
       }
       setOrganizationData(jsonResponse)
       getOrganizationApiStatus(ApiStatus.success)
-      setOrganizationDataApiStatus(ApiStatus.success)
     }
     return null
   }
@@ -89,7 +85,7 @@ const NavBar = props => {
   }
 
   const setOrganizationPopup = () => {
-    setActivePopup('desktopViewOrganizationPopup')
+    setActivePopup(NavBarActivePopup.desktopViewOrganizationPopup)
   }
 
   const onClickClose = () => {
@@ -206,7 +202,10 @@ const NavBar = props => {
       />
       <div className="logout-button-and-profile-and-search-input">
         <div className="search-box no-mobile-view-display">
-          <SearchTasks setActivePopup={setActivePopup} />
+          <SearchTasks
+            setActivePopup={setActivePopup}
+            activePopup={activePopup}
+          />
         </div>
         <button
           type="button"

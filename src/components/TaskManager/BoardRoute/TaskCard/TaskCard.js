@@ -1,30 +1,34 @@
 import {useState} from 'react'
-import {ApiKey, TokenKey} from '../../CommonComponents/Constants'
+import {ApiKey, GetToken} from '../../CommonComponents/Constants'
 import UpdateTaskDetailsPopUp from './UpdateTaskDetailsPopUp/UpdateTaskDetailsPopUp'
 import './TaskCard.css'
 
-const TaskCard = ({name, taskId, onDeleteTask, description}) => {
+const TaskCard = ({
+  name,
+  taskId,
+  onDeleteTask,
+  description,
+  isDeleteRequired = true,
+}) => {
   const [taskName, setTaskName] = useState(name)
   const [taskDescription, setDescription] = useState(description)
   const [
     isTaskAdditionalDetailsOpen,
     setIsTaskAdditionalDetailsOpen,
   ] = useState()
-  const token = localStorage.getItem(TokenKey)
 
   const onUpdateTaskApi = async (updatedTaskName, updatedDescription) => {
-    const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${token}&name=${updatedTaskName}&desc=${updatedDescription}`
+    const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${GetToken()}&name=${updatedTaskName}&desc=${updatedDescription}`
     const response = await fetch(url, {
       method: 'PUT',
     })
     const data = await response.json()
     setTaskName(data.name)
     setDescription(data.desc)
-    setIsTaskAdditionalDetailsOpen(false)
   }
 
   const onDeleteTaskApi = async () => {
-    const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${token}`
+    const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${GetToken()}`
     const response = await fetch(url, {
       method: 'DELETE',
     })
@@ -54,6 +58,7 @@ const TaskCard = ({name, taskId, onDeleteTask, description}) => {
       {isTaskAdditionalDetailsOpen && (
         <UpdateTaskDetailsPopUp
           onDelete={onDeleteTaskApi}
+          isDeleteRequired={isDeleteRequired}
           onUpdateTask={onUpdateTaskApi}
           onClosePopup={onCloseAdditionalDetailsPopUp}
           taskName={taskName}

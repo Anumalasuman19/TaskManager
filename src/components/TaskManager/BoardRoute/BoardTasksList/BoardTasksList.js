@@ -1,7 +1,12 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import {Droppable, Draggable} from '@hello-pangea/dnd'
 import './BoardTasksList.css'
-import {ApiKey, TokenKey, CardType} from '../../CommonComponents/Constants'
+import {
+  ApiKey,
+  GetToken,
+  CardType,
+  BoardRouteActivePopup,
+} from '../../CommonComponents/Constants'
 import TaskCard from '../TaskCard/TaskCard'
 import AddTask from '../AddTask/AddTask'
 import EditListName from './EditListName/EditListName'
@@ -18,28 +23,35 @@ const BoardTasksList = props => {
     setActivePopup,
   } = props
 
-  const [tasks, setTasks] = useState(cards)
   const [updatedListName, setUpdatedListName] = useState(listName)
-  const token = localStorage.getItem(TokenKey)
 
-  const onClickOfAddTask = () => setActivePopup(`addTask-${listId}`)
-  const onClickListName = () => setActivePopup(`editList-${listId}`)
+  const isAddTaskOpen =
+    activePopup === `${BoardRouteActivePopup.addTaskPopup}-${listId}`
+  const isEditListOpen =
+    activePopup === `${BoardRouteActivePopup.editListPopup}-${listId}`
+  const isMenuOpen =
+    activePopup === `${BoardRouteActivePopup.closeListPopup}-${listId}`
+
+  const onClickOfAddTask = () =>
+    setActivePopup(`${BoardRouteActivePopup.addTaskPopup}-${listId}`)
+  const onClickListName = () =>
+    setActivePopup(`${BoardRouteActivePopup.editListPopup}-${listId}`)
   const onToggleMenu = () =>
-    setActivePopup(activePopup === `menu-${listId}` ? null : `menu-${listId}`)
-
-  const isAddTaskOpen = activePopup === `addTask-${listId}`
-  const isEditListOpen = activePopup === `editList-${listId}`
-  const isMenuOpen = activePopup === `menu-${listId}`
+    setActivePopup(
+      activePopup === `${BoardRouteActivePopup.closeListPopup}-${listId}`
+        ? null
+        : `${BoardRouteActivePopup.closeListPopup}-${listId}`,
+    )
 
   const onCloseList = async () => {
-    const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${token}&value=true`
+    const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${GetToken()}&value=true`
     await fetch(url, {method: 'PUT'})
     onListClosed(listId)
     setActivePopup(null)
   }
 
   const updateListNameApi = async name => {
-    const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${token}&name=${name}`
+    const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${GetToken()}&name=${name}`
     const response = await fetch(url, {method: 'PUT'})
     const data = await response.json()
     setUpdatedListName(data.name)
@@ -48,7 +60,7 @@ const BoardTasksList = props => {
   const onClickCloseAddTaskPopUp = () => setActivePopup(null)
 
   const onAddTask = async taskName => {
-    const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${token}&name=${taskName}&idList=${listId}`
+    const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${GetToken()}&name=${taskName}&idList=${listId}`
     const response = await fetch(url, {method: 'POST'})
     const data = await response.json()
     setActivePopup(null)
@@ -62,13 +74,8 @@ const BoardTasksList = props => {
   })
 
   const onDeleteTask = taskId => {
-    setTasks(prev => prev.filter(item => item.id !== taskId))
     onTaskDeleted(taskId)
   }
-
-  useEffect(() => {
-    setTasks([...cards].sort((a, b) => a.pos - b.pos))
-  }, [cards])
 
   return (
     <div className="task-list">
@@ -115,10 +122,10 @@ const BoardTasksList = props => {
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
           >
-            {tasks.length === 0 ? (
+            {cards.length === 0 ? (
               <li className="empty-task" />
             ) : (
-              tasks.map((task, index) => (
+              cards.map((task, index) => (
                 <Draggable
                   key={task.id}
                   draggableId={String(task.id)}
