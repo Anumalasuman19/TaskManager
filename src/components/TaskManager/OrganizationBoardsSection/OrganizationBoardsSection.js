@@ -1,4 +1,5 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
+import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
 import './OrganizationBoardsSection.css'
 import ApiStatus, {
   ApiKey,
@@ -14,8 +15,8 @@ const OrganizationBoardsSection = props => {
     onClickOfCreateBoard,
     newCreatedBoard,
     isShowCreateBoardPopupOpen,
-    activeOrganizationId,
   } = props
+  const {activeOrganizationId} = useContext(TaskManagerContext)
   const [organizationBoardsData, setOrganizationBoardsData] = useState([])
   const [
     organizationBoardsApiStatus,

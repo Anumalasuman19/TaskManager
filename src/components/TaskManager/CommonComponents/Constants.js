@@ -21,10 +21,9 @@ export const BoardRouteActivePopup = {
   addTaskPopup: 'ADD_TASK_POPUP',
   editListPopup: 'EDIT_LIST_POPUP',
   closeListPopup: 'CLOSE_LIST_POPUP',
+  taskDetailsPopup: 'TASK_DETAILS_POPUP',
 }
 
-export const ActiveOrganizationKey = 'organization_id'
-export const UserInitialsKey = 'user_initials'
 export const TokenKey = 'pa_token'
 
 export const GetToken = () => {

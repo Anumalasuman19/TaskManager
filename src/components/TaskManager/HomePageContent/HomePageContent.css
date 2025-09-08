@@ -1,0 +1,92 @@
+.home-page-content-container {
+  flex: 1;
+  background-color: #0079bf;
+  overflow-y: auto;
+}
+.organization-member-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.organization-member-profile-bg {
+  background: radial-gradient(circle, #ff8800, #e63535);
+  height: 56px;
+  width: 56px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.organization-member-profile {
+  height: 42px;
+  width: 42px;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.organization-member-name {
+  margin: 0px;
+  max-width: 198px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+.no-desktop-view {
+  display: none;
+}
+.organization-member-details-and-create-new-organization-button {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px;
+}
+.create-new-organization {
+  background-color: transparent;
+  border: 0px;
+  padding: 0px;
+}
+
+@media (min-width: 769px) {
+  .no-mobile-view {
+    display: none;
+  }
+  .create-new-organization:hover {
+    background-color: #2fa9f1;
+  }
+  .organization-member-details-and-create-new-organization-button {
+    padding: 0px;
+    align-items: center;
+  }
+  .create-new-organization {
+    background-color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .create-new-organization-active {
+    background-color: #2fa9f1;
+  }
+  .create-organization-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+    padding: 0px;
+    margin: 0px;
+  }
+  .create-organization-text-active {
+    color: #ffffff;
+  }
+  .home-page-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 32px 48px 32px 150px;
+  }
+  .organization-member-details {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

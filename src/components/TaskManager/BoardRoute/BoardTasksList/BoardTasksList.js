@@ -34,8 +34,10 @@ const BoardTasksList = props => {
 
   const onClickOfAddTask = () =>
     setActivePopup(`${BoardRouteActivePopup.addTaskPopup}-${listId}`)
+
   const onClickListName = () =>
     setActivePopup(`${BoardRouteActivePopup.editListPopup}-${listId}`)
+
   const onToggleMenu = () =>
     setActivePopup(
       activePopup === `${BoardRouteActivePopup.closeListPopup}-${listId}`

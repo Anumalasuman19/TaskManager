@@ -1,9 +1,6 @@
-import {useState, useEffect} from 'react'
-import {
-  ApiKey,
-  UserInitialsKey,
-  GetToken,
-} from '../../../CommonComponents/Constants'
+import {useState, useEffect, useContext} from 'react'
+import {TaskManagerContext} from '../../../../TaskManagerContext/TaskManagerContext'
+import {ApiKey, GetToken} from '../../../CommonComponents/Constants'
 import './UpdateTaskDetailsPopUp.css'
 
 const UpdateTaskDetailsPopUp = ({
@@ -15,13 +12,13 @@ const UpdateTaskDetailsPopUp = ({
   description,
   isDeleteRequired,
 }) => {
+  const {userData} = useContext(TaskManagerContext)
   const [name, setName] = useState(taskName || '')
   const [updatedDescription, setDescription] = useState(description || '')
   const [updatedCommentsList, setCommentsList] = useState([])
   const [newComment, setNewComment] = useState('')
   const [isNameEdit, setIsNameEdit] = useState(false)
   const [isNameEmpty, setIsNameEmpty] = useState(false)
-  const [userInitials, setUserInitials] = useState()
 
   const onClickTaskName = () => {
     setIsNameEdit(true)
@@ -54,7 +51,7 @@ const UpdateTaskDetailsPopUp = ({
     const commentItem = {
       comment: trimmedComment,
       id: count + 1,
-      initials: userInitials,
+      initials: userData.initials,
     }
     const updatedComments = [...updatedCommentsList, commentItem]
     setCommentsList(updatedComments)
@@ -96,8 +93,6 @@ const UpdateTaskDetailsPopUp = ({
     const storedComments = localStorage.getItem(taskId)
     setName(taskName)
     setDescription(description)
-    const initials = localStorage.getItem(UserInitialsKey)
-    setUserInitials(initials)
     if (storedComments) {
       try {
         setCommentsList(JSON.parse(storedComments))
@@ -192,7 +187,7 @@ const UpdateTaskDetailsPopUp = ({
               <h4 className="task-input-label">Comments</h4>
             </div>
             <div className="comment-box">
-              <div className="avatar">{userInitials}</div>
+              <div className="avatar">{userData.initials}</div>
               <input
                 type="text"
                 className="comment-input"

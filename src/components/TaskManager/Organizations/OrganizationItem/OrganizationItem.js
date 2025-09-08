@@ -1,11 +1,12 @@
+import {useContext} from 'react'
+import {TaskManagerContext} from '../../../TaskManagerContext/TaskManagerContext'
 import './OrganizationItem.css'
-import {ActiveOrganizationKey} from '../../CommonComponents/Constants'
 
 const OrganizationItem = props => {
   const {name, isActive, onChangeOrganization, id} = props
-
+  const {setActiveOrganizationId} = useContext(TaskManagerContext)
   const onClickOfOrganization = () => {
-    localStorage.setItem(ActiveOrganizationKey, id)
+    setActiveOrganizationId(id)
     onChangeOrganization()
   }
 

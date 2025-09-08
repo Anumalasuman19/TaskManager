@@ -1,11 +1,13 @@
+import {useContext} from 'react'
+import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
 import OrganizationItem from './OrganizationItem/OrganizationItem'
 import './Organizations.css'
-import {ActiveOrganizationKey} from '../CommonComponents/Constants'
 
 const Organizations = props => {
-  const {workspacesOrganizations, onClose, onChangeOrganizationItem} = props
-
-  const activeOrganizationId = localStorage.getItem(ActiveOrganizationKey)
+  const {onClose, onChangeOrganizationItem} = props
+  const {activeOrganizationId, organizationData} = useContext(
+    TaskManagerContext,
+  )
   return (
     <div className="workspace-popup">
       <div className="workspace-popup-header">
@@ -19,7 +21,7 @@ const Organizations = props => {
         </button>
       </div>
       <ul className="workspace-list">
-        {workspacesOrganizations.map(organization => (
+        {organizationData.map(organization => (
           <OrganizationItem
             key={organization.id}
             name={organization.displayName}

@@ -38,7 +38,6 @@ const TaskCard = ({
 
   const onClickTask = () => {
     setIsTaskAdditionalDetailsOpen(true)
-    console.log('Task clicked')
   }
 
   const onCloseAdditionalDetailsPopUp = () => {

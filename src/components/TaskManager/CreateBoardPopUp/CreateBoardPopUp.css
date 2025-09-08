@@ -6,7 +6,6 @@
   padding: 24px 16px;
   background-color: #fdfcfc;
   border-radius: 4px 4px 0px 0px;
-  margin-top: 10px;
   animation: slideUp 0.3s ease-out;
 }
 
@@ -102,6 +101,7 @@
   }
   .create-board-input {
     width: 352px;
+    padding: 10px 17px;
     animation: none;
   }
   .create-board-container {
@@ -116,6 +116,7 @@
     border-radius: 4px;
   }
   .workspace-name-text {
+    margin-bottom: 32px;
     margin-left: 0px;
     animation: none;
   }

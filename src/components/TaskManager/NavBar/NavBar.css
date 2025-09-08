@@ -1,3 +1,4 @@
+/* NavBar.css */
 .nav-bar-container {
   background-color: #026aa7;
   display: flex;
@@ -5,34 +6,17 @@
   justify-content: space-between;
   padding: 16px;
 }
-.nav-buttons-container {
-  display: flex;
-  gap: 4px;
-}
+
 .logout-button-and-profile-and-search-input {
   display: flex;
   gap: 4px;
 }
-.home-link {
-  width: 24px;
-  height: 24px;
-  text-decoration: none;
-}
-.organization-button {
-  width: 24px;
-  height: 24px;
-  padding: 0px 0px 0px 0px;
-  background-color: transparent;
-  border: 0px;
-}
-.search-icon {
-  width: 24px;
-  height: 24px;
-}
+
 .trello-logo-title-icon {
   width: 109px;
   height: 25px;
 }
+
 .logout-button {
   padding: 0px;
   width: 53px;
@@ -54,6 +38,7 @@
   width: 24px;
   height: 24px;
 }
+
 .profile-text {
   padding: 0px;
   margin: 0px;
@@ -62,127 +47,36 @@
   font-size: 12px;
   font-weight: 600;
 }
-.no-mobile-view-display {
-  display: none;
-}
-.board-btn {
-  background-color: transparent;
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-}
 
-.search-button {
-  margin: 0px;
-  border: 0px;
-  padding: 0px;
-  background-color: transparent;
-}
 @media (min-width: 769px) {
-  .board-btn {
-    padding: 8px 16px;
-    border: none;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    background-color: #4e97c2;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .board-btn:hover {
-    background-color: #2fa9f1;
-  }
-  .no-desktop-view-display {
-    display: none;
-  }
-  .profile-text {
-    font-size: 16px;
-  }
   .nav-bar-container {
     padding: 25px 48px;
   }
 
-  .board-text {
-    margin: 0px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #ffffff;
-  }
-  .home-link {
-    width: 41px;
-    height: 41px;
-  }
-  .home-icon {
-    width: 41px;
-    height: 41px;
-  }
   .trello-logo-title-icon {
     width: 184px;
     height: 42px;
   }
+
   .logout-button {
     font-size: 18px;
     width: 69px;
   }
+
+  .profile-text {
+    font-size: 16px;
+  }
+
   .profile-bg {
     border-radius: 50%;
     text-align: center;
     width: 41px;
     height: 41px;
   }
-  .organization-dropdown {
-    display: flex;
-    position: absolute;
-  }
-  .org-dropdown-btn {
-    background-color: #4e97c2;
-    border: 0px;
-    padding: 8px 12px 9px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-  .org-dropdown-btn:hover {
-    background-color: #2fa9f1;
-  }
-  .org-dropdown-wrapper {
-    position: relative;
-    display: block;
-  }
-  .organization-text {
-    font-size: 16px;
-    font-weight: 600;
-    color: #ffffff;
-    margin: 0px;
-  }
-  .dropdown-icon {
-    width: 24px;
-    height: 24px;
-  }
 
-  .search-box {
-    display: flex;
-    align-items: center;
-  }
-
-  .search-box ::placeholder {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .search-icon {
-    width: 20px;
-    height: 20px;
-  }
   .logout-button-and-profile-and-search-input {
     display: flex;
     gap: 12px;
     align-items: center;
-  }
-  .nav-buttons-container {
-    gap: 12px;
   }
 }
