@@ -84,6 +84,10 @@ const HomePageContent = ({
     setActivePopup(null)
   }
 
+  const onClickCreateOrganization = () => {
+    setActivePopup(HomeRouteActivePopup.createNewOrganizationPopup)
+  }
+
   return (
     <>
       {organizationDataApiStatus === ApiStatus.inProgress && <LoadingView />}
@@ -107,9 +111,7 @@ const HomePageContent = ({
                   ? 'create-new-organization-active'
                   : ''
               }`}
-              onClick={() =>
-                setActivePopup(HomeRouteActivePopup.createNewOrganizationPopup)
-              }
+              onClick={onClickCreateOrganization}
               onMouseEnter={onMouseEnterCreateOrganization}
               onMouseLeave={onMouseLeaveCreateOrganization}
             >

@@ -59,6 +59,7 @@ const BoardTasksList = props => {
     setUpdatedListName(data.name)
     setActivePopup(null)
   }
+
   const onClickCloseAddTaskPopUp = () => setActivePopup(null)
 
   const onAddTask = async taskName => {

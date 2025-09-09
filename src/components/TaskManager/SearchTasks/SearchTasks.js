@@ -74,8 +74,6 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
                   onDeleteTask={() => {}}
                   description={task.desc}
                   isDeleteRequired={false}
-                  setActivePopup={setActivePopup}
-                  activePopup={activePopup}
                 />
               </li>
             ))}

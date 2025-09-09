@@ -16,9 +16,7 @@ const NavBar = props => {
     history,
   } = props
 
-  const {organizationData, setOrganizationData, userData} = useContext(
-    TaskManagerContext,
-  )
+  const {setOrganizationData, userData} = useContext(TaskManagerContext)
 
   const onClickOfLogout = () => {
     localStorage.removeItem(TokenKey)
@@ -27,6 +25,7 @@ const NavBar = props => {
 
   const onClickBoards = () => {
     history.replace('/')
+    setActivePopup(null)
   }
 
   const onChangeOrganization = () => {
@@ -47,7 +46,6 @@ const NavBar = props => {
         openOrganizationsPopUp={openOrganizationsPopUp}
         activePopup={activePopup}
         setActivePopup={setActivePopup}
-        organizationData={organizationData}
         onClickBoards={onClickBoards}
         onChangeOrganization={onChangeOrganization}
       />

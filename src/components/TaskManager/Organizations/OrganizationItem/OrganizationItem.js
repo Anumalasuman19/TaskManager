@@ -5,6 +5,7 @@ import './OrganizationItem.css'
 const OrganizationItem = props => {
   const {name, isActive, onChangeOrganization, id} = props
   const {setActiveOrganizationId} = useContext(TaskManagerContext)
+
   const onClickOfOrganization = () => {
     setActiveOrganizationId(id)
     onChangeOrganization()

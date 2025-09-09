@@ -8,22 +8,21 @@ const NavButtons = ({
   openOrganizationsPopUp,
   activePopup,
   setActivePopup,
-  organizationData,
   onClickBoards,
   onChangeOrganization,
 }) => {
   const showDropdown =
     activePopup === NavBarActivePopup.desktopViewOrganizationPopup
 
+  const isSearchOpen = activePopup === NavBarActivePopup.mobileViewSearchSection
+
   const setOrganizationPopup = () => {
     setActivePopup(NavBarActivePopup.desktopViewOrganizationPopup)
   }
 
-  const onClickClose = () => {
+  const onClickCloseOrganizations = () => {
     setActivePopup(null)
   }
-
-  const isSearchOpen = activePopup === NavBarActivePopup.mobileViewSearchSection
 
   const onClickSearch = () => {
     if (isSearchOpen) {
@@ -76,8 +75,7 @@ const NavButtons = ({
         {showDropdown && (
           <div className="organization-dropdown no-mobile-view-display">
             <Organizations
-              workspacesOrganizations={organizationData}
-              onClose={onClickClose}
+              onClose={onClickCloseOrganizations}
               onChangeOrganizationItem={onChangeOrganization}
             />
           </div>
