@@ -9,6 +9,7 @@ import ApiStatus, {
 } from '../CommonComponents/Constants'
 import OrganizationBoardItem from '../OrganizationBoardItem/OrganizationBoardItem'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
+import useApi from '../CommonComponents/UseApi/UseApi'
 
 const OrganizationBoardsSection = props => {
   const {
@@ -17,35 +18,16 @@ const OrganizationBoardsSection = props => {
     isShowCreateBoardPopupOpen,
   } = props
   const {activeOrganizationId} = useContext(TaskManagerContext)
-  const [organizationBoardsData, setOrganizationBoardsData] = useState([])
-  const [
-    organizationBoardsApiStatus,
-    setOrganizationBoardsApiStatus,
-  ] = useState(ApiStatus.initial)
   const [isMouseHoverOnCreateBoard, setIsMouseHoverOnCreateBoard] = useState(
     false,
   )
 
-  const getOrganizationBoards = async () => {
-    setOrganizationBoardsApiStatus(ApiStatus.inProgress)
-    const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${GetToken()}`
-    const options = {
-      method: 'GET',
-    }
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-    if (apiResponse.ok) {
-      setOrganizationBoardsData(jsonResponse)
-      setOrganizationBoardsApiStatus(ApiStatus.success)
-    }
-  }
+  const url = `https://api.trello.com/1/organizations/${activeOrganizationId}/boards?key=${ApiKey}&token=${GetToken()}`
+  const {data: boards, status, error, setData} = useApi(url)
 
   const getSubHeaderText = () => {
     let subHeader
-    if (
-      organizationBoardsData === null ||
-      organizationBoardsData.length === 0
-    ) {
+    if (boards === null || boards.length === 0) {
       subHeader = NoBoardsText
     } else {
       subHeader = BoardsSubHeading
@@ -62,16 +44,13 @@ const OrganizationBoardsSection = props => {
   }
 
   useEffect(() => {
-    if (activeOrganizationId) {
-      getOrganizationBoards()
-    }
-  }, [activeOrganizationId])
-
-  useEffect(() => {
     if (newCreatedBoard) {
-      setOrganizationBoardsData(prev => [...prev, newCreatedBoard])
+      setData(prev => [...(prev || []), newCreatedBoard])
     }
-  }, [newCreatedBoard])
+  }, [newCreatedBoard, setData])
+
+  if (status === ApiStatus.inProgress) return <LoadingView />
+  if (status === ApiStatus.failure) return <p>Error: {error?.message}</p>
 
   return (
     <div className="boards-container">
@@ -83,10 +62,10 @@ const OrganizationBoardsSection = props => {
         />
         <h2 className="sub-heading">{getSubHeaderText()}</h2>
       </div>
-      {organizationBoardsApiStatus === ApiStatus.success ? (
+      {status === ApiStatus.success && (
         <div className="boards-list-container">
           <ul className="boards-list">
-            {organizationBoardsData.map(board => (
+            {boards.map(board => (
               <OrganizationBoardItem
                 key={board.id}
                 id={board.id}
@@ -127,8 +106,6 @@ const OrganizationBoardsSection = props => {
             </li>
           </ul>
         </div>
-      ) : (
-        <LoadingView />
       )}
     </div>
   )

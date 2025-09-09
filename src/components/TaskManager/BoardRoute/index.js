@@ -1,62 +1,36 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import './index.css'
 import Organizations from '../Organizations/Organizations'
 import NavBar from '../NavBar/NavBar'
-import ApiStatus, {
+import {
   ApiKey,
   GetToken,
   NavBarActivePopup,
 } from '../CommonComponents/Constants'
 import BoardContent from './BoardContent/BoardContent'
 import SearchTasks from '../SearchTasks/SearchTasks'
+import useApi from '../CommonComponents/UseApi/UseApi'
 
 const Board = props => {
+  const {match} = props
+  const {id} = match.params
   const [activePopup, setActivePopup] = useState(null)
-  const [boardListsData, setBoardListsData] = useState()
-  const [boardListsDataApiStatus, setBoardListsDataApiStatus] = useState(
-    ApiStatus.initial,
-  )
-  const [tasksData, setTasksData] = useState()
   const showOrganizationsPopup =
     activePopup === NavBarActivePopup.mobileViewOrganizationPopup
   const isSearchTasksEnabled =
     activePopup === NavBarActivePopup.mobileViewSearchSection
 
+  const listsUrl = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${GetToken()}`
+  const tasksUrl = `https://api.trello.com/1/boards/${id}/cards?key=${ApiKey}&token=${GetToken()}&filter=open`
+
+  const {
+    data: boardListsData,
+    status: boardListsStatus,
+    setData: setBoardListsData,
+  } = useApi(listsUrl)
+  const {data: tasksData, setData: setTasksData} = useApi(tasksUrl)
   const openOrganizationsPopUp = () => {
     setActivePopup(NavBarActivePopup.mobileViewOrganizationPopup)
-  }
-
-  const getBoardsList = async () => {
-    setBoardListsDataApiStatus(ApiStatus.inProgress)
-    const {match} = props
-    const {params} = match
-    const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/lists?key=${ApiKey}&token=${GetToken()}`
-    const options = {
-      method: 'GET',
-    }
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-    if (apiResponse.ok) {
-      setBoardListsData(jsonResponse)
-      setBoardListsDataApiStatus(ApiStatus.success)
-    }
-  }
-
-  const getTasks = async () => {
-    const {match} = props
-    const {params} = match
-    const {id} = params
-    const url = `https://api.trello.com/1/boards/${id}/cards?key=${ApiKey}&token=${GetToken()}&filter=open`
-    const options = {
-      method: 'GET',
-    }
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-    if (apiResponse.ok) {
-      const sortedTasks = jsonResponse.sort((a, b) => a.pos - b.pos)
-      setTasksData(sortedTasks)
-    }
   }
 
   const onChangeOrganization = () => {
@@ -67,11 +41,6 @@ const Board = props => {
   const onClickCloseOrganization = () => {
     setActivePopup(null)
   }
-
-  useEffect(() => {
-    getBoardsList()
-    getTasks()
-  }, [])
 
   return (
     <div className="board-container">
@@ -88,14 +57,12 @@ const Board = props => {
       ) : (
         <BoardContent
           boardListsData={boardListsData}
-          boardListsDataApiStatus={boardListsDataApiStatus}
+          boardListsDataApiStatus={boardListsStatus}
           tasksData={tasksData}
           setTasksData={setTasksData}
           setBoardListsData={setBoardListsData}
           activePopup={activePopup}
           setActivePopup={setActivePopup}
-          getBoardsList={getBoardsList}
-          getTasks={getTasks}
         />
       )}
       {showOrganizationsPopup && (

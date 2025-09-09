@@ -10,6 +10,7 @@ import ApiStatus, {
   GetToken,
 } from '../../CommonComponents/Constants'
 import './BoardContent.css'
+import useApi from '../../CommonComponents/UseApi/UseApi'
 
 const BoardContent = ({
   boardListsData,
@@ -19,12 +20,9 @@ const BoardContent = ({
   setBoardListsData,
   activePopup,
   setActivePopup,
-  getBoardsList,
-  getTasks,
 }) => {
   const isNewListEntryPopUpOpen =
     activePopup === BoardRouteActivePopup.addListPopup
-
   const onTaskAdded = addedTask => {
     setTasksData(prev => [...prev, addedTask])
   }
@@ -91,7 +89,6 @@ const BoardContent = ({
         await fetch(url, {method: 'PUT'})
       } catch (err) {
         console.error('Error updating Trello card:', err)
-        getTasks()
       }
     }
 
@@ -122,7 +119,6 @@ const BoardContent = ({
         await fetch(url, {method: 'PUT'})
       } catch (err) {
         console.error('Error updating Trello list:', err)
-        getBoardsList()
       }
     }
   }
