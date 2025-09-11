@@ -1,7 +1,8 @@
-import {useState, useEffect, useContext} from 'react'
-import {TaskManagerContext} from '../../../../TaskManagerContext/TaskManagerContext'
+import {useState, useEffect} from 'react'
+import useTaskManager from '../../../CommonComponents/UseTaskManager/UseTaskManager'
 import {ApiKey, GetToken} from '../../../CommonComponents/Constants'
 import './UpdateTaskDetailsPopUp.css'
+import useApi from '../../../CommonComponents/UseApi/UseApi'
 
 const UpdateTaskDetailsPopUp = ({
   onDelete,
@@ -12,13 +13,15 @@ const UpdateTaskDetailsPopUp = ({
   description,
   isDeleteRequired,
 }) => {
-  const {userData} = useContext(TaskManagerContext)
+  const {userData} = useTaskManager()
   const [name, setName] = useState(taskName || '')
   const [updatedDescription, setDescription] = useState(description || '')
   const [updatedCommentsList, setCommentsList] = useState([])
   const [newComment, setNewComment] = useState('')
   const [isNameEdit, setIsNameEdit] = useState(false)
   const [isNameEmpty, setIsNameEmpty] = useState(false)
+
+  const {refetch: addComment} = useApi(null, {method: 'POST'}, false)
 
   const onClickTaskName = () => {
     setIsNameEdit(true)
@@ -34,7 +37,12 @@ const UpdateTaskDetailsPopUp = ({
 
   const onAddComment = async commentText => {
     const url = `https://api.trello.com/1/cards/${taskId}/actions/comments?text=${commentText}&key=${ApiKey}&token=${GetToken()}`
-    const response = await fetch(url, {method: 'POST'})
+
+    try {
+      const response = await addComment({url, method: 'POST'})
+    } catch (err) {
+      console.error('Error adding comment:', err)
+    }
   }
 
   const handleAddComment = () => {

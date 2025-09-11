@@ -1,5 +1,5 @@
-import {useState, useEffect, useContext} from 'react'
-import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
+import {useState, useEffect} from 'react'
+import useTaskManager from '../CommonComponents/UseTaskManager/UseTaskManager'
 import './OrganizationBoardsSection.css'
 import ApiStatus, {
   ApiKey,
@@ -17,7 +17,7 @@ const OrganizationBoardsSection = props => {
     newCreatedBoard,
     isShowCreateBoardPopupOpen,
   } = props
-  const {activeOrganizationId} = useContext(TaskManagerContext)
+  const {activeOrganizationId} = useTaskManager()
   const [isMouseHoverOnCreateBoard, setIsMouseHoverOnCreateBoard] = useState(
     false,
   )

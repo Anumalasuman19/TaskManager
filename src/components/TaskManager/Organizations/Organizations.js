@@ -1,13 +1,10 @@
-import {useContext} from 'react'
-import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
+import useTaskManager from '../CommonComponents/UseTaskManager/UseTaskManager'
 import OrganizationItem from './OrganizationItem/OrganizationItem'
 import './Organizations.css'
 
 const Organizations = props => {
   const {onClose, onChangeOrganizationItem} = props
-  const {activeOrganizationId, organizationData} = useContext(
-    TaskManagerContext,
-  )
+  const {activeOrganizationId, organizationData} = useTaskManager()
   return (
     <div className="workspace-popup">
       <div className="workspace-popup-header">

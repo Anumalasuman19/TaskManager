@@ -10,6 +10,7 @@ import {
 import TaskCard from '../TaskCard/TaskCard'
 import AddTask from '../AddTask/AddTask'
 import EditListName from './EditListName/EditListName'
+import useApi from '../../CommonComponents/UseApi/UseApi'
 
 const BoardTasksList = props => {
   const {
@@ -24,6 +25,10 @@ const BoardTasksList = props => {
   } = props
 
   const [updatedListName, setUpdatedListName] = useState(listName)
+
+  const {refetch: closeListApi} = useApi(null, {method: 'PUT'}, false)
+  const {refetch: updateListNameApiCall} = useApi(null, {method: 'PUT'}, false)
+  const {refetch: addTaskApi} = useApi(null, {method: 'POST'}, false)
 
   const isAddTaskOpen =
     activePopup === `${BoardRouteActivePopup.addTaskPopup}-${listId}`
@@ -46,28 +51,38 @@ const BoardTasksList = props => {
     )
 
   const onCloseList = async () => {
-    const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${GetToken()}&value=true`
-    await fetch(url, {method: 'PUT'})
-    onListClosed(listId)
-    setActivePopup(null)
+    try {
+      const url = `https://api.trello.com/1/lists/${listId}/closed?key=${ApiKey}&token=${GetToken()}&value=true`
+      await closeListApi({url})
+      onListClosed(listId)
+      setActivePopup(null)
+    } catch (err) {
+      console.error('Error closing list:', err)
+    }
   }
 
   const updateListNameApi = async name => {
-    const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${GetToken()}&name=${name}`
-    const response = await fetch(url, {method: 'PUT'})
-    const data = await response.json()
-    setUpdatedListName(data.name)
-    setActivePopup(null)
+    try {
+      const url = `https://api.trello.com/1/lists/${listId}?key=${ApiKey}&token=${GetToken()}&name=${name}`
+      const data = await updateListNameApiCall({url})
+      setUpdatedListName(data.name)
+      setActivePopup(null)
+    } catch (err) {
+      console.error('Error updating list name:', err)
+    }
   }
 
   const onClickCloseAddTaskPopUp = () => setActivePopup(null)
 
   const onAddTask = async taskName => {
-    const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${GetToken()}&name=${taskName}&idList=${listId}`
-    const response = await fetch(url, {method: 'POST'})
-    const data = await response.json()
-    setActivePopup(null)
-    onTaskAdded(data)
+    try {
+      const url = `https://api.trello.com/1/cards?key=${ApiKey}&token=${GetToken()}&name=${taskName}&idList=${listId}`
+      const data = await addTaskApi({url})
+      onTaskAdded(data)
+      setActivePopup(null)
+    } catch (err) {
+      console.error('Error adding task:', err)
+    }
   }
 
   const getTaskItemStyle = (isDragging, draggableStyle) => ({
@@ -118,6 +133,8 @@ const BoardTasksList = props => {
           )}
         </div>
       </div>
+
+      {/* Cards */}
       <Droppable droppableId={String(listId)} type={CardType}>
         {(droppableProvided, droppableSnapshot) => (
           <ul
@@ -160,6 +177,7 @@ const BoardTasksList = props => {
         )}
       </Droppable>
 
+      {/* Add Task Section */}
       {isAddTaskOpen ? (
         <AddTask
           onClickOfAddTask={onAddTask}
@@ -175,6 +193,8 @@ const BoardTasksList = props => {
           <p className="add-task-text">Add Task</p>
         </button>
       )}
+
+      {/* Mobile Close Menu */}
       {isMenuOpen && (
         <div className="close-list-container list-no-desktop-view">
           <button type="button" className="close-button" onClick={onToggleMenu}>

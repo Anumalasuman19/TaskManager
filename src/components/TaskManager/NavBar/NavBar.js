@@ -1,6 +1,6 @@
-import {useEffect, useContext} from 'react'
+import {useEffect} from 'react'
 import {withRouter} from 'react-router-dom'
-import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
+import useTaskManager from '../CommonComponents/UseTaskManager/UseTaskManager'
 import {TokenKey} from '../CommonComponents/Constants'
 import SearchTasks from '../SearchTasks/SearchTasks'
 import NavButtons from './NavButtons/NavButtons'
@@ -16,7 +16,7 @@ const NavBar = props => {
     history,
   } = props
 
-  const {setOrganizationData, userData} = useContext(TaskManagerContext)
+  const {setOrganizationData, userData} = useTaskManager()
 
   const onClickOfLogout = () => {
     localStorage.removeItem(TokenKey)

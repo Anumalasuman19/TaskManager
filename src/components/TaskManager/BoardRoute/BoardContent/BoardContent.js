@@ -23,6 +23,9 @@ const BoardContent = ({
 }) => {
   const isNewListEntryPopUpOpen =
     activePopup === BoardRouteActivePopup.addListPopup
+
+  const {refetch: createListApi} = useApi(null, {method: 'POST'}, false)
+
   const onTaskAdded = addedTask => {
     setTasksData(prev => [...prev, addedTask])
   }
@@ -41,10 +44,13 @@ const BoardContent = ({
     )}&idBoard=${
       boardListsData[0].idBoard
     }&pos=bottom&key=${ApiKey}&token=${GetToken()}`
-    const response = await fetch(url, {method: 'POST'})
-    const data = await response.json()
-    setBoardListsData(prev => [...prev, data])
-    setActivePopup(null)
+    try {
+      const createdList = await createListApi({url, method: 'POST'})
+      setBoardListsData(prev => [...prev, createdList])
+      setActivePopup(null)
+    } catch (err) {
+      console.error('Error creating list:', err)
+    }
   }
 
   const onDragEnd = async result => {

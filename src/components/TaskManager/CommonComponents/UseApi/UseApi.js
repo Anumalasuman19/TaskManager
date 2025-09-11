@@ -1,7 +1,7 @@
 import {useState, useEffect, useCallback} from 'react'
 import ApiStatus from '../Constants'
 
-function useApi(url, options = {}, autoFetch = true) {
+function useApi(initialUrl, options = {}, autoFetch = true) {
   const [data, setData] = useState(null)
   const [status, setStatus] = useState(ApiStatus.initial)
   const [error, setError] = useState(null)
@@ -11,9 +11,17 @@ function useApi(url, options = {}, autoFetch = true) {
     async (overrideOptions = {}) => {
       try {
         setStatus(ApiStatus.inProgress)
-        const response = await fetch(url, {
+
+        const finalUrl = overrideOptions.url || initialUrl
+        if (!finalUrl) {
+          throw new Error('No URL provided to useApi')
+        }
+
+        const {url: apiUrl, ...restOptions} = overrideOptions
+
+        const response = await fetch(finalUrl, {
           ...options,
-          ...overrideOptions,
+          ...restOptions,
         })
 
         const json = await response.json()
@@ -21,6 +29,7 @@ function useApi(url, options = {}, autoFetch = true) {
         if (response.ok) {
           setData(json)
           setStatus(ApiStatus.success)
+          console.log('API called')
           return json
         }
 
@@ -33,13 +42,13 @@ function useApi(url, options = {}, autoFetch = true) {
         throw err
       }
     },
-    [url],
+    [initialUrl],
   )
 
   // Auto-fetch only on mount/url change if enabled
   useEffect(() => {
-    if (autoFetch && url) fetchData()
-  }, [url, autoFetch, fetchData])
+    if (autoFetch && initialUrl) fetchData()
+  }, [initialUrl, autoFetch, fetchData])
 
   return {data, status, error, setData, refetch: fetchData}
 }

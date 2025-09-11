@@ -1,10 +1,9 @@
-import {useContext} from 'react'
-import {TaskManagerContext} from '../../../TaskManagerContext/TaskManagerContext'
+import useTaskManager from '../../CommonComponents/UseTaskManager/UseTaskManager'
 import './OrganizationItem.css'
 
 const OrganizationItem = props => {
   const {name, isActive, onChangeOrganization, id} = props
-  const {setActiveOrganizationId} = useContext(TaskManagerContext)
+  const {setActiveOrganizationId} = useTaskManager()
 
   const onClickOfOrganization = () => {
     setActiveOrganizationId(id)

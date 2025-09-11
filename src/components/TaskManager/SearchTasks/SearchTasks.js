@@ -5,13 +5,20 @@ import ApiStatus, {
   GetToken,
   NavBarActivePopup,
 } from '../CommonComponents/Constants'
+import useApi from '../CommonComponents/UseApi/UseApi'
 import './SearchTasks.css'
 
 const SearchTasks = ({setActivePopup, activePopup}) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
-  const [searchApiStatus, setSearchApiStatus] = useState(ApiStatus.initial)
   const [isInputFocused, setIsInputFocused] = useState(false)
+
+  // ✅ useApi hook (manual fetch mode)
+  const {refetch: searchTasksApi, status: searchApiStatus} = useApi(
+    null,
+    {method: 'GET'},
+    false,
+  )
 
   useEffect(() => {
     if (activePopup !== NavBarActivePopup.desktopSearchSection) {
@@ -20,19 +27,18 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
     }
   }, [activePopup])
 
-  const searchTasksApi = async searchQuery => {
-    setSearchApiStatus(ApiStatus.loading)
+  // ✅ Search API wrapper using useApi
+  const performSearch = async searchQuery => {
     const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${GetToken()}&query=${encodeURIComponent(
       searchQuery,
     )}&modelTypes=cards&card_fields=id,name,desc,closed,pos,idList,idBoard,url`
-    const response = await fetch(url)
-    const data = await response.json()
-    const tasks = data.cards || []
-    setResults(tasks)
-    if (response.ok) {
-      setSearchApiStatus(ApiStatus.success)
-    } else {
-      setSearchApiStatus(ApiStatus.failure)
+
+    try {
+      const data = await searchTasksApi({url})
+      const tasks = data.cards || []
+      setResults(tasks)
+    } catch (err) {
+      setResults([])
     }
   }
 
@@ -41,10 +47,9 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
     setQuery(newQuery)
 
     if (newQuery.trim() !== '') {
-      searchTasksApi(newQuery)
+      performSearch(newQuery)
     } else {
       setResults([])
-      setSearchApiStatus(ApiStatus.initial)
     }
   }
 
@@ -61,7 +66,7 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
 
   const getResultView = () => {
     switch (searchApiStatus) {
-      case ApiStatus.loading:
+      case ApiStatus.inProgress:
         return <p className="loading-text">Searching...</p>
       case ApiStatus.success:
         return results.length > 0 ? (
@@ -104,9 +109,7 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
           placeholder="Search"
           className="search-input"
         />
-        {isInputFocused ? (
-          <></>
-        ) : (
+        {isInputFocused ? null : (
           <img
             src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755854561/search_p1o08q.png"
             className="search-input-icon"
@@ -117,9 +120,7 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
 
       {query !== '' ? (
         <div className="results-container">{getResultView()}</div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   )
 }

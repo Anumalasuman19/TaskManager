@@ -1,10 +1,11 @@
-import {useState, useContext} from 'react'
-import {TaskManagerContext} from '../../TaskManagerContext/TaskManagerContext'
+import {useState} from 'react'
+import useTaskManager from '../CommonComponents/UseTaskManager/UseTaskManager'
 import OrganizationBoardsSection from '../OrganizationBoardsSection/OrganizationBoardsSection'
 import Organizations from '../Organizations/Organizations'
 import CreateBoardPopUp from '../CreateBoardPopUp/CreateBoardPopUp'
 import CreateOrganizationPopUp from '../CreateOrganizationPopUp/CreateOrganizationPopUp'
 import LoadingView from '../CommonComponents/LoadingView/LoadingView'
+import useApi from '../CommonComponents/UseApi/UseApi'
 import ApiStatus, {
   ApiKey,
   GetToken,
@@ -24,11 +25,16 @@ const HomePageContent = ({
     organizationData,
     organizationDataApiStatus,
     setOrganizationData,
-  } = useContext(TaskManagerContext)
+  } = useTaskManager()
   const [newCreatedBoard, setNewCreatedBoard] = useState()
   const [createNewOrganizationHover, setCreateNewOrganizationHover] = useState(
     false,
   )
+
+  // ✅ useApi hooks
+  const {refetch: createBoardApi} = useApi(null, {method: 'POST'}, false)
+  const {refetch: createOrganizationApi} = useApi(null, {method: 'POST'}, false)
+
   const showOrganizationsPopup =
     activePopup === NavBarActivePopup.mobileViewOrganizationPopup
   const showCreateBoardPopup =
@@ -50,11 +56,7 @@ const HomePageContent = ({
   const onClickOfCreateBoard = async name => {
     const organizationId = activeOrganizationId
     const url = `https://api.trello.com/1/boards?key=${ApiKey}&token=${GetToken()}&name=${name}&idOrganization=${organizationId}`
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({name}),
-    })
-    const data = await response.json()
+    const data = await createBoardApi({url})
     setActivePopup(null)
     setNewCreatedBoard(data)
   }
@@ -74,11 +76,7 @@ const HomePageContent = ({
 
   const onCreateOrganizationApi = async organizationName => {
     const url = `https://api.trello.com/1/organizations?key=${ApiKey}&token=${GetToken()}&displayName=${organizationName}`
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({organizationName}),
-    })
-    const data = await response.json()
+    const data = await createOrganizationApi({url})
     setNewOrganizationItem(data)
     setOrganizationData(prev => [...prev, data])
     setActivePopup(null)

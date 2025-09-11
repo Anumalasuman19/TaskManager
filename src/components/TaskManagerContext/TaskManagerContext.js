@@ -3,6 +3,7 @@ import ApiStatus, {
   ApiKey,
   GetToken,
 } from '../TaskManager/CommonComponents/Constants'
+import useApi from '../TaskManager/CommonComponents/UseApi/UseApi'
 
 export const TaskManagerContext = createContext()
 
@@ -14,32 +15,36 @@ export const TaskManagerProvider = ({children}) => {
   const [activeOrganizationId, setActiveOrganizationId] = useState(null)
   const [userData, setUserData] = useState('')
 
+  const {refetch: fetchOrganizationsApi} = useApi(null, {method: 'GET'}, false)
+
+  const {refetch: fetchUserDataApi} = useApi(null, {method: 'GET'}, false)
+
   const fetchOrganizations = async () => {
     setOrganizationDataApiStatus(ApiStatus.inProgress)
     const url = `https://api.trello.com/1/members/me/organizations?key=${ApiKey}&token=${GetToken()}`
-    const response = await fetch(url)
-    const data = await response.json()
-
-    if (response.ok) {
+    try {
+      const data = await fetchOrganizationsApi({url})
       setOrganizationData(data)
       if (!activeOrganizationId && data.length > 0) {
         setActiveOrganizationId(data[0].id)
       }
       setOrganizationDataApiStatus(ApiStatus.success)
+    } catch (err) {
+      setOrganizationDataApiStatus(ApiStatus.failure)
     }
   }
 
   const getUserData = async () => {
     const url = `https://api.trello.com/1/members/me?key=${ApiKey}&token=${GetToken()}`
-    const options = {method: 'GET'}
-    const apiResponse = await fetch(url, options)
-    const jsonResponse = await apiResponse.json()
-
-    if (apiResponse.ok) {
-      setUserData(jsonResponse)
+    try {
+      const data = await fetchUserDataApi({url})
+      setUserData(data)
+    } catch (err) {
+      // optionally handle failure
     }
   }
 
+  // Run once on mount
   useEffect(() => {
     fetchOrganizations()
     getUserData()
