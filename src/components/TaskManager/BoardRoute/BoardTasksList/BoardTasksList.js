@@ -197,11 +197,15 @@ const BoardTasksList = props => {
       {/* Mobile Close Menu */}
       {isMenuOpen && (
         <div className="close-list-container list-no-desktop-view">
-          <button type="button" className="close-button" onClick={onToggleMenu}>
+          <button
+            type="button"
+            className="close-list-close-button"
+            onClick={onToggleMenu}
+          >
             <img
               src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755864143/close_oyomr8.png"
               alt="close-icon"
-              className="close-icon"
+              className="close-list-close-icon"
             />
           </button>
           <button

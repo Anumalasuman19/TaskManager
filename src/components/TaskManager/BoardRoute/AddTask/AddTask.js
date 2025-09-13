@@ -37,6 +37,7 @@ const AddTask = ({onClickOfAddTask, onClickOfClose}) => {
         onChange={onChangeTaskName}
         onKeyDown={handleKeyDown}
         className="add-task-input"
+        rows="3"
       />
       <div className="add-task-actions">
         <button type="submit" className="add-task-btn">
