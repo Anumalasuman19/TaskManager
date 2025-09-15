@@ -1,4 +1,3 @@
-import {useEffect} from 'react'
 import {withRouter} from 'react-router-dom'
 import useTaskManager from '../CommonComponents/UseTaskManager/UseTaskManager'
 import {TokenKey} from '../CommonComponents/Constants'
@@ -10,13 +9,12 @@ const NavBar = props => {
   const {
     showOrganizationPopup,
     openOrganizationsPopUp,
-    newCreatedOrganization,
     activePopup,
     setActivePopup,
     history,
   } = props
 
-  const {setOrganizationData, userData} = useTaskManager()
+  const {userData} = useTaskManager()
 
   const onClickOfLogout = () => {
     localStorage.removeItem(TokenKey)
@@ -31,12 +29,6 @@ const NavBar = props => {
   const onChangeOrganization = () => {
     history.replace('/')
   }
-
-  useEffect(() => {
-    if (newCreatedOrganization) {
-      setOrganizationData(prev => [...prev, newCreatedOrganization])
-    }
-  }, [newCreatedOrganization, setOrganizationData])
 
   return (
     <div className="nav-bar-container">

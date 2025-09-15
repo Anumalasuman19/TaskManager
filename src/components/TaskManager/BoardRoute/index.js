@@ -29,6 +29,7 @@ const Board = props => {
     setData: setBoardListsData,
   } = useApi(listsUrl)
   const {data: tasksData, setData: setTasksData} = useApi(tasksUrl)
+
   const openOrganizationsPopUp = () => {
     setActivePopup(NavBarActivePopup.mobileViewOrganizationPopup)
   }

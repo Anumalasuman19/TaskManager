@@ -18,7 +18,6 @@ const HomePageContent = ({
   activePopup,
   setActivePopup,
   onChangeOrganization,
-  setNewOrganizationItem,
 }) => {
   const {
     activeOrganizationId,
@@ -31,7 +30,6 @@ const HomePageContent = ({
     false,
   )
 
-  // ✅ useApi hooks
   const {refetch: createBoardApi} = useApi(null, {method: 'POST'}, false)
   const {refetch: createOrganizationApi} = useApi(null, {method: 'POST'}, false)
 
@@ -61,7 +59,10 @@ const HomePageContent = ({
     setNewCreatedBoard(data)
   }
 
-  const onClickCloseOrganization = () => setActivePopup(null)
+  const onClickCloseOrganization = () => {
+    setActivePopup(null)
+    setCreateNewOrganizationHover(false)
+  }
 
   const onClickCloseBoardPopup = () => setActivePopup(null)
 
@@ -77,9 +78,9 @@ const HomePageContent = ({
   const onCreateOrganizationApi = async organizationName => {
     const url = `https://api.trello.com/1/organizations?key=${ApiKey}&token=${GetToken()}&displayName=${organizationName}`
     const data = await createOrganizationApi({url})
-    setNewOrganizationItem(data)
-    setOrganizationData(prev => [...prev, data])
     setActivePopup(null)
+    setCreateNewOrganizationHover(false)
+    setOrganizationData(prev => [...prev, data])
   }
 
   const onClickCreateOrganization = () => {
@@ -92,7 +93,6 @@ const HomePageContent = ({
 
       {organizationDataApiStatus === ApiStatus.success && (
         <div className="home-page-content-container">
-          {/* Workspace header */}
           <div className="organization-member-details-and-create-new-organization-button">
             <div className="organization-member-details">
               <div className="organization-member-profile-bg">
@@ -133,15 +133,11 @@ const HomePageContent = ({
               </p>
             </button>
           </div>
-
-          {/* Boards */}
           <OrganizationBoardsSection
             onClickOfCreateBoard={onClickOfCreateNewBoard}
             newCreatedBoard={newCreatedBoard}
             isShowCreateBoardPopupOpen={showCreateBoardPopup}
           />
-
-          {/* Popups */}
           <div>
             {showOrganizationsPopup && (
               <Organizations

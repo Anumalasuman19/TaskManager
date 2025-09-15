@@ -101,7 +101,7 @@ const BoardTasksList = props => {
         {isEditListOpen ? (
           <EditListName
             onEditListName={updateListNameApi}
-            previousListName={listName}
+            previousListName={updatedListName}
           />
         ) : (
           <button type="button" className="list-name" onClick={onClickListName}>
@@ -166,6 +166,8 @@ const BoardTasksList = props => {
                         taskId={task.id}
                         onDeleteTask={onDeleteTask}
                         description={task.desc}
+                        setActivePopup={setActivePopup}
+                        activePopup={activePopup}
                       />
                     </li>
                   )}

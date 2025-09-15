@@ -21,4 +21,7 @@
     min-width: 341px;
     padding: 67px 80px;
   }
+  .board-name {
+    font-weight: 500;
+  }
 }

@@ -41,7 +41,6 @@ const NavButtons = ({
           className="home-icon"
         />
       </Link>
-
       {/* Organization (mobile) */}
       <button
         type="button"

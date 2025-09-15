@@ -6,7 +6,6 @@ function useApi(initialUrl, options = {}, autoFetch = true) {
   const [status, setStatus] = useState(ApiStatus.initial)
   const [error, setError] = useState(null)
 
-  // Generic fetch function
   const fetchData = useCallback(
     async (overrideOptions = {}) => {
       try {
@@ -23,9 +22,7 @@ function useApi(initialUrl, options = {}, autoFetch = true) {
           ...options,
           ...restOptions,
         })
-
         const json = await response.json()
-
         if (response.ok) {
           setData(json)
           setStatus(ApiStatus.success)
@@ -45,7 +42,6 @@ function useApi(initialUrl, options = {}, autoFetch = true) {
     [initialUrl],
   )
 
-  // Auto-fetch only on mount/url change if enabled
   useEffect(() => {
     if (autoFetch && initialUrl) fetchData()
   }, [initialUrl, autoFetch, fetchData])

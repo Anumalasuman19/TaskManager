@@ -7,7 +7,6 @@ import './index.css'
 
 const TaskManager = props => {
   const [activePopup, setActivePopup] = useState(null)
-  const [newOrganizationItem, setNewOrganizationItem] = useState()
 
   const showOrganizationsPopup =
     activePopup === NavBarActivePopup.mobileViewOrganizationPopup
@@ -28,7 +27,6 @@ const TaskManager = props => {
       <NavBar
         openOrganizationsPopUp={openOrganizationsPopUp}
         showOrganizationPopup={showOrganizationsPopup}
-        newCreatedOrganization={newOrganizationItem}
         activePopup={activePopup}
         setActivePopup={setActivePopup}
       />
@@ -40,7 +38,6 @@ const TaskManager = props => {
           activePopup={activePopup}
           setActivePopup={setActivePopup}
           onChangeOrganization={onChangeOrganization}
-          setNewOrganizationItem={setNewOrganizationItem}
         />
       )}
     </div>

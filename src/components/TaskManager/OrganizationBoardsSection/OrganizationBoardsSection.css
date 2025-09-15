@@ -73,6 +73,9 @@
   .boards-list-container {
     margin-top: 36px;
   }
+  .create-new-board-text {
+    font-weight: 500;
+  }
 
   .boards-container {
     margin-top: 127px;

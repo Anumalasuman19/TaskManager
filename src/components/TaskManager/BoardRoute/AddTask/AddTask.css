@@ -31,10 +31,11 @@
   background-color: #3b49df;
   color: #fff;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .add-task-btn:hover {

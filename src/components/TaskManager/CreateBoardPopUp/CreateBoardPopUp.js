@@ -17,7 +17,6 @@ const CreateBoardPopUp = props => {
     event.preventDefault()
     if (title.trim() === '') return
     onCreateBoard(title)
-    setTitle('')
   }
 
   const onChangeInput = event => {

@@ -2,7 +2,7 @@
   background-color: transparent;
   border-radius: 4px;
   padding: 8px 16px;
-  box-shadow: #00000026;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   min-width: 222px;
   border: 0px;
   text-align: left;

@@ -43,6 +43,11 @@ const OrganizationBoardsSection = props => {
     setIsMouseHoverOnCreateBoard(false)
   }
 
+  const onClickCreateBoard = () => {
+    onClickOfCreateBoard()
+    onMouseLeaveCreateBoard()
+  }
+
   useEffect(() => {
     if (newCreatedBoard) {
       setData(prev => [...(prev || []), newCreatedBoard])
@@ -82,7 +87,7 @@ const OrganizationBoardsSection = props => {
                     ? 'create-new-board-button-active'
                     : ''
                 }`}
-                onClick={onClickOfCreateBoard}
+                onClick={onClickCreateBoard}
               >
                 <img
                   src={

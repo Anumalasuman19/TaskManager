@@ -1,5 +1,9 @@
 import {useState} from 'react'
-import {ApiKey, GetToken} from '../../CommonComponents/Constants'
+import {
+  ApiKey,
+  GetToken,
+  BoardRouteActivePopup,
+} from '../../CommonComponents/Constants'
 import UpdateTaskDetailsPopUp from './UpdateTaskDetailsPopUp/UpdateTaskDetailsPopUp'
 import useApi from '../../CommonComponents/UseApi/UseApi'
 import './TaskCard.css'
@@ -7,48 +11,60 @@ import './TaskCard.css'
 const TaskCard = ({
   name,
   taskId,
-  onDeleteTask,
   description,
+  onDeleteTask,
   isDeleteRequired = true,
+  setActivePopup,
+  activePopup,
 }) => {
   const [taskName, setTaskName] = useState(name)
-  const [taskDescription, setDescription] = useState(description)
-  const [
-    isTaskAdditionalDetailsOpen,
-    setIsTaskAdditionalDetailsOpen,
-  ] = useState(false)
+  const [taskDescription, setTaskDescription] = useState(description)
+
+  const [isLocalPopupOpen, setIsLocalPopupOpen] = useState(false)
 
   const {refetch: updateTaskApi} = useApi(null, {method: 'PUT'}, false)
   const {refetch: deleteTaskApi} = useApi(null, {method: 'DELETE'}, false)
 
-  const onUpdateTaskApi = async (updatedTaskName, updatedDescription) => {
+  const isPopupOpen = setActivePopup
+    ? activePopup === `${BoardRouteActivePopup.taskDetailsPopup}-${taskId}`
+    : isLocalPopupOpen
+
+  const handleCardClick = () => {
+    if (setActivePopup) {
+      setActivePopup(`${BoardRouteActivePopup.taskDetailsPopup}-${taskId}`)
+    } else {
+      setIsLocalPopupOpen(true)
+    }
+  }
+
+  const handleClosePopup = () => {
+    if (setActivePopup) {
+      setActivePopup(null)
+    } else {
+      setIsLocalPopupOpen(false)
+    }
+  }
+
+  const handleUpdateTask = async (updatedName, updatedDesc) => {
     try {
-      const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${GetToken()}&name=${updatedTaskName}&desc=${updatedDescription}`
+      const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${GetToken()}&name=${updatedName}&desc=${updatedDesc}`
       const data = await updateTaskApi({url})
       setTaskName(data.name)
-      setDescription(data.desc)
+      setTaskDescription(data.desc)
     } catch (err) {
       console.error('Error updating task:', err)
     }
   }
 
-  const onDeleteTaskApi = async () => {
+  const handleDeleteTask = async () => {
     try {
       const url = `https://api.trello.com/1/cards/${taskId}?key=${ApiKey}&token=${GetToken()}`
       await deleteTaskApi({url})
-      setIsTaskAdditionalDetailsOpen(false)
-      onDeleteTask(taskId)
+      onDeleteTask?.(taskId)
+      handleClosePopup()
     } catch (err) {
       console.error('Error deleting task:', err)
     }
-  }
-
-  const onClickTask = () => {
-    setIsTaskAdditionalDetailsOpen(true)
-  }
-
-  const onCloseAdditionalDetailsPopUp = () => {
-    setIsTaskAdditionalDetailsOpen(false)
   }
 
   return (
@@ -57,16 +73,17 @@ const TaskCard = ({
         role="button"
         tabIndex={0}
         className="task-card"
-        onClick={onClickTask}
+        onClick={handleCardClick}
       >
         {taskName}
       </div>
-      {isTaskAdditionalDetailsOpen && (
+
+      {isPopupOpen && (
         <UpdateTaskDetailsPopUp
-          onDelete={onDeleteTaskApi}
+          onDelete={handleDeleteTask}
           isDeleteRequired={isDeleteRequired}
-          onUpdateTask={onUpdateTaskApi}
-          onClosePopup={onCloseAdditionalDetailsPopUp}
+          onUpdateTask={handleUpdateTask}
+          onClosePopup={handleClosePopup}
           taskName={taskName}
           description={taskDescription}
           taskId={taskId}

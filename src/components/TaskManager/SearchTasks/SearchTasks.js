@@ -13,7 +13,6 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
   const [results, setResults] = useState([])
   const [isInputFocused, setIsInputFocused] = useState(false)
 
-  // ✅ useApi hook (manual fetch mode)
   const {refetch: searchTasksApi, status: searchApiStatus} = useApi(
     null,
     {method: 'GET'},
@@ -27,7 +26,6 @@ const SearchTasks = ({setActivePopup, activePopup}) => {
     }
   }, [activePopup])
 
-  // ✅ Search API wrapper using useApi
   const performSearch = async searchQuery => {
     const url = `https://api.trello.com/1/search?key=${ApiKey}&token=${GetToken()}&query=${encodeURIComponent(
       searchQuery,

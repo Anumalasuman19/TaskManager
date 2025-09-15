@@ -16,7 +16,6 @@ const CreateOrganizationPopUp = props => {
     event.preventDefault()
     if (title.trim() === '') return
     onCreateOrganization(title)
-    setTitle('')
   }
 
   const onChangeInput = event => {
