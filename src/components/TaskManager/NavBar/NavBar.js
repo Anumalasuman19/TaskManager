@@ -41,13 +41,11 @@ const NavBar = props => {
         onClickBoards={onClickBoards}
         onChangeOrganization={onChangeOrganization}
       />
-
       <img
         src="https://res.cloudinary.com/dzki1pesn/image/upload/v1755604235/task-manager-text-icon_xlcvhz.png"
         alt="task-manager-logo"
         className="trello-logo-title-icon"
       />
-
       <div className="logout-button-and-profile-and-search-input">
         <div className="search-box no-mobile-view-display">
           <SearchTasks

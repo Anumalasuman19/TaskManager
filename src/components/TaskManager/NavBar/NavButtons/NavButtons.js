@@ -56,7 +56,6 @@ const NavButtons = ({
           alt="organization-icon"
         />
       </button>
-
       {/* Organization dropdown (desktop) */}
       <div className="org-dropdown-wrapper no-mobile-view-display">
         <button
@@ -80,7 +79,6 @@ const NavButtons = ({
           </div>
         )}
       </div>
-
       {/* Boards button (desktop + mobile) */}
       <button
         type="button"
@@ -94,7 +92,6 @@ const NavButtons = ({
         />
         <p className="board-text">Boards</p>
       </button>
-
       <button
         type="button"
         className="board-btn no-desktop-view-display"
